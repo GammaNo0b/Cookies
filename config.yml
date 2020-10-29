@@ -1,0 +1,12 @@
+block-breaker-delay: 20
+cobblestone-generator-delay: 20
+experience-absorber-delay: 10
+experience-absorber-range: 8
+farmer-delay: 1200
+farmer-range: 4
+farmer-height: 24
+item-absorber-delay: 10
+item-absorber-range: 8
+quarry-range: 16
+quarry-delay: 2
+max-storage-connectors: 8
