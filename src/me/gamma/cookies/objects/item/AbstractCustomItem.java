@@ -25,6 +25,10 @@ import me.gamma.cookies.event.PlayerArmorEquipEvent;
 
 
 public abstract class AbstractCustomItem {
+	
+	public static boolean isCustomItem(ItemStack stack) {
+		return stack != null && stack.hasItemMeta() && stack.getItemMeta().hasLocalizedName();
+	}
 
 	public abstract String getIdentifier();
 

@@ -99,6 +99,7 @@ public class RecipeManager {
 	public static void openRecipeGUI(Recipe recipe, ItemStack result, int variation, int currentPage, HumanEntity player, String title) {
 		Material craftingType = Material.CRAFTING_TABLE;
 		String craftingTypeName = "§cUnknown";
+		result.setAmount(recipe.getResult().getAmount());
 		Inventory gui = Bukkit.createInventory(null, 5 * 9, title);
 		for(int i = 0; i < 9; i++) {
 			gui.setItem(i, new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setName(" ").build());

@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.PlayerInventory;
 import com.google.common.collect.Lists;
 
 import me.gamma.cookies.managers.RecipeManager;
+import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CookieRecipe;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeType;
@@ -26,6 +28,19 @@ import me.gamma.cookies.util.Utilities;
 public class CustomCraftingListener implements Listener {
 
 	public static final String CUSTOM_CRAFTING_TITLE = "§2Custom §aCrafting";
+	
+	@EventHandler
+	public void onCraft(CraftItemEvent event) {
+		if(!(event.getRecipe() instanceof CookieRecipe)) {
+			for(ItemStack ingredient : event.getInventory().getMatrix()) {
+				if(AbstractCustomItem.isCustomItem(ingredient)) {
+					event.setCancelled(true);
+					return;
+				}
+			}
+		}
+	}
+	
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
