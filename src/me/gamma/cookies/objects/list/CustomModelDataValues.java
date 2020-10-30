@@ -13,11 +13,18 @@ public class CustomModelDataValues {
 	// Brick
 	public static final int COPPER_INGOT = 1;
 
+	// Iron Nugget
+	public static final int BRONZE_COIN = 1;
+	public static final int SILVER_COIN = 2;
+
 	// Iron Ingot
 	public static final int ALUMINUM_INGOT = 1;
 	public static final int SILVER_INGOT = 2;
 	public static final int STEEL_INGOT = 3;
 	public static final int LEAD_INGOT = 4;
+
+	// Gold Nugget
+	public static final int GOLD_COIN = 1;
 
 	// Glowstone Dust
 	public static final int GOLD_DUST = 1;
@@ -52,7 +59,5 @@ public class CustomModelDataValues {
 	// Leather
 	public static final int INEXHAUSTIBLE_GOLD_BAG = 1;
 
-	// Gold Nugget
-	public static final int GOLD_COIN = 1;
 
 }

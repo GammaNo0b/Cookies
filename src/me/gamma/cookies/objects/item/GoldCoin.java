@@ -3,14 +3,11 @@ package me.gamma.cookies.objects.item;
 
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapelessRecipe;
 
-import me.gamma.cookies.Cookies;
 import me.gamma.cookies.objects.list.CustomModelDataValues;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
-import me.gamma.cookies.util.ItemBuilder;
+import me.gamma.cookies.objects.recipe.ShowcaseRecipe;
 
 
 
@@ -42,9 +39,7 @@ public class GoldCoin extends AbstractCustomItem {
 
 	@Override
 	public Recipe getRecipe() {
-		Recipe recipe = new ShapelessRecipe(new NamespacedKey(Cookies.INSTANCE, "gold_coin"), new ItemBuilder(this.createDefaultItemStack()).setAmount(9).build()).addIngredient(Material.GOLD_NUGGET);
-		RecipeCategory.RESOURCES.registerRecipe(recipe);
-		return recipe;
+		return new ShowcaseRecipe(this.createDefaultItemStack(), RecipeCategory.RESOURCES);
 	}
 
 }

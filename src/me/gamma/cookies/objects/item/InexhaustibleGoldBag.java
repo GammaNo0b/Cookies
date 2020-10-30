@@ -4,6 +4,7 @@ package me.gamma.cookies.objects.item;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,6 +17,7 @@ import me.gamma.cookies.objects.list.CustomModelDataValues;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.ShowcaseRecipe;
 import me.gamma.cookies.setup.CustomItemSetup;
+import me.gamma.cookies.util.ItemBuilder;
 import me.gamma.cookies.util.Utilities;
 
 
@@ -73,7 +75,10 @@ public class InexhaustibleGoldBag extends AbstractCustomItem {
 
 
 	private void giveGold(Player player) {
-		Utilities.giveItemToPlayer(player, CustomItemSetup.GOLD_COIN.createDefaultItemStack());
+		Random r = new Random();
+		Utilities.giveItemToPlayer(player, new ItemBuilder(CustomItemSetup.GOLD_COIN.createDefaultItemStack()).setAmount(r.nextInt(2)).build());
+		Utilities.giveItemToPlayer(player, new ItemBuilder(CustomItemSetup.SILVER_COIN.createDefaultItemStack()).setAmount(r.nextInt(3) + 1).build());
+		Utilities.giveItemToPlayer(player, new ItemBuilder(CustomItemSetup.BRONZE_COIN.createDefaultItemStack()).setAmount(r.nextInt(4) + 2).build());
 	}
 
 }
