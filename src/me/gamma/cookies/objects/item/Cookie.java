@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
+import me.gamma.cookies.setup.CustomItemSetup;
 import me.gamma.cookies.util.Utilities;
 
 
@@ -46,16 +47,9 @@ public class Cookie extends AbstractCustomItem {
 	@Override
 	public Recipe getRecipe() {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.FOOD, RecipeType.KITCHEN);
-		recipe.setShape("187", "2C6", "345");
-		recipe.setIngredient('1', Material.RED_DYE);
-		recipe.setIngredient('2', Material.ORANGE_DYE);
-		recipe.setIngredient('3', Material.YELLOW_DYE);
-		recipe.setIngredient('4', Material.LIME_DYE);
-		recipe.setIngredient('5', Material.GREEN_DYE);
-		recipe.setIngredient('6', Material.CYAN_DYE);
-		recipe.setIngredient('7', Material.BLUE_DYE);
-		recipe.setIngredient('8', Material.PURPLE_DYE);
+		recipe.setShape(" R ", "RCR", " R ");
 		recipe.setIngredient('C', Material.COOKIE);
+		recipe.setIngredient('R', CustomItemSetup.RAINBOW_DUST.createDefaultItemStack());
 		return recipe;
 	}
 	
