@@ -39,8 +39,7 @@ public class Electromagnet extends AbstractSkullBlock {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.ELECTRIC_COMPONENTS, RecipeType.ENGINEER);
 		recipe.setShape(" I ", " I ", "ACA");
 		recipe.setIngredient('I', Material.IRON_NUGGET);
-		recipe.setIngredient('A', CustomItemSetup.ALUMINUM_FOIL.createDefaultItemStack());
-		recipe.setIngredient('C', CustomBlockSetup.COPPER_COIL.createDefaultItemStack());
+		recipe.setIngredient('A', CustomItemSetup.ALUMINUM_FOIL.createDefaultItemStack());		recipe.setIngredient('C', CustomBlockSetup.COPPER_COIL.createDefaultItemStack());
 		return recipe;
 	}
 

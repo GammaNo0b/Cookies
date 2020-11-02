@@ -26,6 +26,7 @@ public class Compressor extends BasicMachine {
 		recipes.add(new CompressionRecipe("wheat_to_hay_block", new ItemStack(Material.HAY_BLOCK), new ItemStack(Material.WHEAT, 9), 60));
 		recipes.add(new CompressionRecipe("melons_to_block", new ItemStack(Material.MELON), new ItemStack(Material.MELON_SLICE, 9), 80));
 		recipes.add(new CompressionRecipe("dried_kelp_to_block", new ItemStack(Material.DRIED_KELP_BLOCK), new ItemStack(Material.DRIED_KELP, 9), 60));
+		recipes.add(new CompressionRecipe("clay_to_clay_block", new ItemStack(Material.CLAY), new ItemStack(Material.CLAY, 4), 60));
 		recipes.add(new CompressionRecipe("string_to_wool", new ItemStack(Material.WHITE_WOOL), new ItemStack(Material.STRING, 4), 80));
 		recipes.add(new CompressionRecipe("glowstone_to_block", new ItemStack(Material.GLOWSTONE), new ItemStack(Material.GLOWSTONE_DUST, 4), 80));
 		recipes.add(new CompressionRecipe("nether_warts_to_block", new ItemStack(Material.NETHER_WART_BLOCK), new ItemStack(Material.NETHER_WART, 9), 80));

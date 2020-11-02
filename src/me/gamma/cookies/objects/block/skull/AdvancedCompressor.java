@@ -32,6 +32,7 @@ public class AdvancedCompressor extends AdvancedMachine {
 		recipes.add(new CompressionRecipe("lapis_to_lapis_block", new ItemStack(Material.LAPIS_BLOCK), new ItemStack(Material.LAPIS_LAZULI, 9), 120));
 		recipes.add(new CompressionRecipe("emerald_to_emerald_block", new ItemStack(Material.EMERALD_BLOCK), new ItemStack(Material.EMERALD, 9), 120));
 		recipes.add(new CompressionRecipe("diamond_to_diamond_block", new ItemStack(Material.DIAMOND_BLOCK), new ItemStack(Material.DIAMOND, 9), 120));
+		recipes.add(new CompressionRecipe("quartz_to_quartz_block", new ItemStack(Material.QUARTZ_BLOCK), new ItemStack(Material.QUARTZ, 4), 120));
 		recipes.add(new CompressionRecipe("netherite_to_netherite_block", new ItemStack(Material.NETHERITE_BLOCK), new ItemStack(Material.NETHERITE_INGOT, 9), 120));
 		return recipes;
 	}

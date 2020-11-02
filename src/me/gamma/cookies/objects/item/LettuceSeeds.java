@@ -7,14 +7,19 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFertilizeEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 
@@ -106,6 +111,47 @@ public class LettuceSeeds extends AbstractCustomItem {
 								event.getBlock().getWorld().dropItem(event.getBlock().getLocation().add(0.5D, 0.5D, 0.5D), drop);
 							}
 						}
+					}
+				}
+			}
+
+
+			@EventHandler
+			public void onJump(PlayerInteractEvent event) {
+				if(event.getAction() == Action.PHYSICAL && event.getClickedBlock().getType() == Material.FARMLAND && event.getClickedBlock().getRelative(BlockFace.UP).getType() == Material.WHEAT && ((Ageable) event.getClickedBlock().getRelative(BlockFace.UP).getBlockData()).getAge() < 4 && !CustomItemSetup.FARMER_BOOTS.isInstanceOf(event.getPlayer().getInventory().getBoots())) {
+					event.setCancelled(true);
+					List<ItemStack> drops = new ArrayList<>();
+					drops.add(createDefaultItemStack());
+					if(((Ageable) event.getClickedBlock().getRelative(BlockFace.UP).getBlockData()).getAge() == 3) {
+						drops.add(CustomItemSetup.LETTUCE.createDefaultItemStack());
+						if(new Random().nextBoolean())
+							drops.add(createDefaultItemStack());
+					}
+					Location location = event.getPlayer().getLocation();
+					location.setY(Math.ceil(location.getY()));
+					event.getPlayer().teleport(location);
+					event.getClickedBlock().getRelative(BlockFace.UP).setType(Material.AIR);
+					event.getClickedBlock().setType(Material.DIRT);
+					for(ItemStack drop : drops) {
+						event.getClickedBlock().getWorld().dropItem(event.getClickedBlock().getLocation().add(0.5D, 1.5D, 0.5D), drop);
+					}
+				}
+			}
+			
+			
+			@EventHandler
+			public void onWaterBreak(BlockFromToEvent event) {
+				if(event.getToBlock().getType() == Material.WHEAT && ((Ageable) event.getToBlock().getBlockData()).getAge() < 4) {
+					List<ItemStack> drops = new ArrayList<>();
+					drops.add(createDefaultItemStack());
+					if(((Ageable) event.getToBlock().getBlockData()).getAge() < 4) {
+						drops.add(CustomItemSetup.LETTUCE.createDefaultItemStack());
+						if(new Random().nextBoolean())
+							drops.add(createDefaultItemStack());
+					}
+					event.getToBlock().setType(Material.AIR);
+					for(ItemStack drop : drops) {
+						event.getBlock().getWorld().dropItem(event.getBlock().getLocation().add(0.5D, 1.5D, 0.5D), drop);
 					}
 				}
 			}
