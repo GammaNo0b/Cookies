@@ -32,6 +32,7 @@ public class HeadTextures {
 	// Redstone
 	public static final String REDSTONE_TRANSMITTER = "bc419a44c5b967f47316d1bed3cc632bded199a5c34211791c70f998fdbd6";
 	public static final String REDSTONE_RECEIVER = "189928b58a87ec184f168691544b78bc62c9af4df7faea21944bb321e5af612";
+	public static final String REDSTONE_LOGIC_GATE = "a8e6f84638516f3fc2648d527336c795362a5f7914bc5db5d41365dd2655e018";
 
 	// Electric Components
 	public static final String COPPER_COIL = "7e3bc4893ba41a3f73ee28174cdf4fef6b145e41fe6c82cb7be8d8e9771a5";

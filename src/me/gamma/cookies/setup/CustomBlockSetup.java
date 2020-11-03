@@ -50,6 +50,9 @@ import me.gamma.cookies.objects.block.skull.PerfectedMachineCasing;
 import me.gamma.cookies.objects.block.skull.PerfectedSmeltery;
 import me.gamma.cookies.objects.block.skull.Quarry;
 import me.gamma.cookies.objects.block.skull.RainbowCube;
+import me.gamma.cookies.objects.block.skull.RedstoneAndGate;
+import me.gamma.cookies.objects.block.skull.RedstoneOrGate;
+import me.gamma.cookies.objects.block.skull.RedstoneXorGate;
 import me.gamma.cookies.objects.block.skull.Smeltery;
 import me.gamma.cookies.objects.block.skull.StorageConnector;
 import me.gamma.cookies.objects.block.skull.StorageMonitor;
@@ -125,6 +128,9 @@ public class CustomBlockSetup {
 	// Redstone
 	public static final WirelessRedstoneTransmitter WIRELESS_REDSTONE_TRANSMITTER = registerCustomBlock(new WirelessRedstoneTransmitter());
 	public static final WirelessRedstoneReceiver WIRELESS_REDSTONE_RECEIVER = registerCustomBlock(new WirelessRedstoneReceiver());
+	public static final RedstoneOrGate REDSTONE_OR_GATE = registerCustomBlock(new RedstoneOrGate());
+	public static final RedstoneAndGate REDSTONE_AND_GATE = registerCustomBlock(new RedstoneAndGate());
+	public static final RedstoneXorGate REDSTONE_XOR_GATE = registerCustomBlock(new RedstoneXorGate());
 
 	public static <T extends AbstractTileStateBlock> T registerCustomBlock(T block) {
 		customBlocks.add(block);

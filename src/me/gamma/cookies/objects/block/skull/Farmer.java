@@ -66,12 +66,6 @@ public class Farmer extends AbstractSkullBlock implements BlockTicker, Switchabl
 
 
 	@Override
-	public boolean isActiveOnRedstone() {
-		return true;
-	}
-
-
-	@Override
 	public boolean shouldTick(TileState block) {
 		return this.isBlockPowered(block) && this.isInstanceOf(block) && block instanceof Skull;
 	}

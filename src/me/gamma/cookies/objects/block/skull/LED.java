@@ -76,10 +76,4 @@ public class LED extends AbstractSkullBlock implements PeriodicTextureChanger, S
 		return recipe;
 	}
 
-
-	@Override
-	public boolean isActiveOnRedstone() {
-		return true;
-	}
-
 }

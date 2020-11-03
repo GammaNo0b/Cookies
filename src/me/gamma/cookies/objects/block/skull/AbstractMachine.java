@@ -47,11 +47,6 @@ public abstract class AbstractMachine extends AbstractGuiProvidingSkullBlock imp
 
 
 	@Override
-	public boolean isActiveOnRedstone() {
-		return true;
-	}
-	
-	@Override
 	public ItemStack createDefaultItemStack() {
 		ItemStack stack = super.createDefaultItemStack();
 		ItemMeta meta = stack.getItemMeta();

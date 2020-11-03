@@ -95,12 +95,6 @@ public class ExperienceAbsorber extends AbstractGuiProvidingSkullBlock implement
 
 
 	@Override
-	public boolean isActiveOnRedstone() {
-		return true;
-	}
-
-
-	@Override
 	public boolean shouldTick(TileState block) {
 		return this.isBlockPowered(block) && block instanceof Skull;
 	}

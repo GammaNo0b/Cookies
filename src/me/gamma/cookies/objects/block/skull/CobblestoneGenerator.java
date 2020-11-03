@@ -72,12 +72,6 @@ public class CobblestoneGenerator extends AbstractSkullBlock implements BlockTic
 
 
 	@Override
-	public boolean isActiveOnRedstone() {
-		return false;
-	}
-	
-	
-	@Override
 	public boolean shouldTick(TileState block) {
 		return this.isBlockPowered(block) && this.isInstanceOf(block) && block instanceof Skull;
 	}

@@ -101,12 +101,6 @@ public class MobGrinder extends AbstractGuiProvidingSkullBlock implements BlockT
 
 
 	@Override
-	public boolean isActiveOnRedstone() {
-		return true;
-	}
-
-
-	@Override
 	public boolean shouldTick(TileState block) {
 		return this.isBlockPowered(block) && this.isInstanceOf(block) && block instanceof Skull;
 	}

@@ -80,12 +80,6 @@ public class WirelessRedstoneTransmitter extends AbstractSkullBlock implements S
 
 
 	@Override
-	public boolean isActiveOnRedstone() {
-		return true;
-	}
-	
-	
-	@Override
 	public boolean shouldTick(TileState block) {
 		return this.isInstanceOf(block) && block instanceof Skull;
 	}

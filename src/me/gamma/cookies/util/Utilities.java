@@ -3,10 +3,14 @@ package me.gamma.cookies.util;
 
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Material;
@@ -138,6 +142,81 @@ public class Utilities {
 			builder.append(main[main.length - 1]);
 		return builder.toString();
 	}
+	
+	
+	public static String toString(Object object) {
+		return toString(object, -1);
+	}
+	
+	public static String toString(Object object, int depth) {
+		final Set<Class<?>> canBeString = new HashSet<>(Arrays.asList(Boolean.class, Character.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class));
+		StringBuilder builder = new StringBuilder();
+		final String fill = fill(' ', depth * 2);
+		builder.append(fill + "{");
+		for(Field field : object.getClass().getDeclaredFields()) {
+			try {
+				field.setAccessible(true);
+				builder.append(fill + field.getName() + "=\"");
+				Object value = field.get(Modifier.isStatic(field.getModifiers()) ? null : object);
+				if(depth == -1 || value == null || canBeString.contains(value.getClass())) {
+					builder.append(value);
+				} else {
+					builder.append(toString(value, depth + 1));
+				}
+				builder.append("\"\n");
+			} catch(IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		builder.append(fill + "}");
+		return builder.toString();
+	}
+	
+	
+	public static String fill(char c, int amount) {
+		StringBuilder builder = new StringBuilder();
+		for(int i = 0; i < amount; i++)
+			builder.append(c);
+		return builder.toString();
+	}
+
+
+	public static BlockFace rotateYCounterClockwise(BlockFace facing) {
+		switch (facing) {
+			case EAST:
+				return BlockFace.NORTH;
+			case NORTH:
+				return BlockFace.WEST;
+			case WEST:
+				return BlockFace.SOUTH;
+			case SOUTH:
+				return BlockFace.EAST;
+			case DOWN:
+			case UP:
+			case SELF:
+			default:
+				return facing;
+		}
+	}
+
+
+	public static BlockFace rotateYClockwise(BlockFace facing) {
+		switch (facing) {
+			case EAST:
+				return BlockFace.SOUTH;
+			case NORTH:
+				return BlockFace.EAST;
+			case WEST:
+				return BlockFace.NORTH;
+			case SOUTH:
+				return BlockFace.WEST;
+			case DOWN:
+			case UP:
+			case SELF:
+			default:
+				return facing;
+		}
+	}
 
 
 	public static Material[] fill(Material material, int amountX) {
@@ -190,8 +269,8 @@ public class Utilities {
 			materials[y] = material;
 		return materials;
 	}
-	
-	
+
+
 	public static GameProfile createGameProfileForTexture(String texture) {
 		texture = HeadTextures.getTexture(texture);
 		GameProfile profile = new GameProfile(UUID.nameUUIDFromBytes(texture.getBytes()), null);
