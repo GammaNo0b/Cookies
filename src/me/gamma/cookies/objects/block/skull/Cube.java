@@ -18,7 +18,7 @@ public class Cube extends AbstractSkullBlock {
 
 
 	@Override
-	public String getIdentifier() {
+	public String getRegistryName() {
 		return "cube";
 	}
 

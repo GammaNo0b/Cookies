@@ -18,6 +18,11 @@ public abstract class Property<T> {
 	}
 
 
+	public String getName() {
+		return name;
+	}
+
+
 	public NamespacedKey getKey() {
 		return new NamespacedKey(Cookies.getPlugin(Cookies.class), name);
 	}
@@ -28,6 +33,11 @@ public abstract class Property<T> {
 
 	public void storeEmpty(PersistentDataHolder holder) {
 		this.store(holder, null);
+	}
+	
+	
+	public void remove(PersistentDataHolder holder) {
+		holder.getPersistentDataContainer().remove(this.getKey());
 	}
 
 

@@ -3,10 +3,6 @@ package me.gamma.cookies.objects.item;
 
 
 import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 
@@ -16,7 +12,7 @@ import me.gamma.cookies.objects.recipe.RecipeType;
 
 
 
-public class Donut extends AbstractSkullItem implements Food {
+public class Donut extends EdibleSkullItem {
 
 	private String identifier;
 	private String name;
@@ -80,30 +76,6 @@ public class Donut extends AbstractSkullItem implements Food {
 	@Override
 	public int getSaturation() {
 		return this.saturation;
-	}
-
-
-	@Override
-	public void onAirRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {
-		this.eat(player, stack);
-		event.setCancelled(true);
-	}
-
-
-	@Override
-	public void onBlockRightClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {
-		this.eat(player, stack);
-		event.setCancelled(true);
-	}
-
-
-	private void eat(Player player, ItemStack stack) {
-		if(player.getFoodLevel() < 20) {
-			stack.setAmount(stack.getAmount() - 1);
-			player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10.0F, 1.0F);
-			player.setFoodLevel(Math.min(20, player.getFoodLevel() + this.hunger));
-			player.setSaturation(Math.min(20F, player.getSaturation() + this.saturation));
-		}
 	}
 
 }

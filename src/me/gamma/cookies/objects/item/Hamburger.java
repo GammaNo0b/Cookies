@@ -7,6 +7,7 @@ import me.gamma.cookies.objects.list.CustomModelDataValues;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
+import me.gamma.cookies.setup.CustomItemSetup;
 
 
 public class Hamburger extends AbstractFood {
@@ -51,7 +52,7 @@ public class Hamburger extends AbstractFood {
 	public Recipe getRecipe() {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.FOOD, RecipeType.KITCHEN);
 		recipe.setShape("BS");
-		recipe.setIngredient('B', Material.BREAD);
+		recipe.setIngredient('B', CustomItemSetup.TOAST.createDefaultItemStack());
 		recipe.setIngredient('S', Material.COOKED_BEEF);
 		return recipe;
 	}

@@ -6,6 +6,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -22,6 +23,17 @@ import me.gamma.cookies.setup.CustomItemSetup;
 
 
 public class CustomItemListener implements Listener {
+	
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event) {
+		ItemStack stack = event.getPlayer().getInventory().getItemInMainHand();
+		if(stack != null) {
+			AbstractCustomItem item = CustomItemSetup.getItemByStack(stack);
+			if(item != null) {
+				item.onBlockBreak(event.getPlayer(), stack, event);
+			}
+		}
+	}
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {

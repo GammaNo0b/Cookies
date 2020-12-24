@@ -14,7 +14,7 @@ import me.gamma.cookies.objects.recipe.RecipeType;
 public class RedstoneOrGate extends Abstract2I1ORedstoneGate {
 
 	@Override
-	public String getIdentifier() {
+	public String getRegistryName() {
 		return "redstone_or_gate";
 	}
 

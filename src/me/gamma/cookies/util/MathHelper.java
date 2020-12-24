@@ -4,11 +4,11 @@ package me.gamma.cookies.util;
 
 public class MathHelper {
 
-	public static int intpow(int b, int e) {
+	public static double intpow(double b, int e) {
 		if(e == 0) {
 			return 1;
 		} else {
-			int a = intpow(b, e / 2);
+			double a = intpow(b, e / 2);
 			a *= a;
 			if(e % 2 == 1)
 				a *= b;

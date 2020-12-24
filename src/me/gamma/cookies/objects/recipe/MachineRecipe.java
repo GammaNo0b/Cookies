@@ -5,6 +5,7 @@ package me.gamma.cookies.objects.recipe;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -19,6 +20,12 @@ public interface MachineRecipe extends CookieRecipe {
 	
 	ItemStack[] getExtraResults();
 	
+	ItemStack createIcon();
+	
+	/**
+	 * Slot
+	 */
+	Inventory display(String title);
 	
 	@Override
 	default RecipeType getType() {

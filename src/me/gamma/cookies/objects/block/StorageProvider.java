@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import me.gamma.cookies.objects.property.BigItemStackProperty;
 import me.gamma.cookies.objects.property.Properties;
 import me.gamma.cookies.util.BigItemStack;
+import me.gamma.cookies.util.ItemBuilder;
 import me.gamma.cookies.util.MathHelper;
 
 
@@ -54,7 +55,7 @@ public interface StorageProvider {
 				int space = Integer.MAX_VALUE - amount;
 				int canstore = Math.min(store, space);
 				store -= canstore;
-				bigstack.add(canstore);
+				bigstack.grow(canstore);
 				property.store(block, bigstack);
 				if(store == 0) {
 					block.update();
@@ -69,26 +70,28 @@ public interface StorageProvider {
 
 
 	static ItemStack requestItem(TileState block, ItemStack stack, int amount) {
+		if(stack == null) {
+			return null;
+		}
 		int found = 0;
 		for(BigItemStackProperty property : createProperties(block)) {
-			if(found >= amount)
-				break;
 			BigItemStack bigstack = property.fetch(block);
 			if(bigstack.isSimilar(stack)) {
 				int stored = bigstack.getAmount();
 				int canfetch = Math.min(stored, amount - found);
-				bigstack.add(-canfetch);
+				bigstack.shrink(canfetch);
 				if(bigstack.getAmount() == 0) {
 					property.storeEmpty(block);
 				} else {
 					property.store(block, bigstack);
 				}
 				found += canfetch;
+				if(found >= amount)
+					break;
 			}
 		}
 		block.update();
-		stack.setAmount(found);
-		return stack;
+		return new ItemBuilder(stack).setAmount(found).build();
 	}
 	
 	
@@ -97,7 +100,7 @@ public interface StorageProvider {
 		BigItemStackProperty property = createProperty(index);
 		BigItemStack stack = property.fetch(block);
 		int amount = MathHelper.min(stack.getStack().getType().getMaxStackSize(), stack.getAmount());
-		stack.add(-amount);
+		stack.shrink(amount);
 		property.store(block, stack);
 		block.update();
 		ItemStack result = stack.getStack().clone();

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -63,6 +64,7 @@ public class CactusShirt extends AbstractCustomItem {
 	public ItemStack createDefaultItemStack() {
 		ItemStack stack = super.createDefaultItemStack();
 		LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
+		meta.addEnchant(Enchantment.THORNS, 5, true);
 		meta.setColor(Color.fromRGB(0, 140, 20));
 		stack.setItemMeta(meta);
 		return stack;

@@ -13,13 +13,13 @@ public abstract class PortableInventoryOpener extends AbstractSkullItem {
 	@Override
 	public void onAirRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {
 		this.openInventory(player);
-		event.setCancelled(true);
+		super.onAirRightClick(player, stack, event);
 	}
 	
 	@Override
 	public void onBlockRightClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {
 		this.openInventory(player);
-		event.setCancelled(true);
+		super.onBlockRightClick(player, stack, block, event);
 	}
 
 }

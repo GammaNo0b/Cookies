@@ -2,8 +2,12 @@
 package me.gamma.cookies.objects.recipe;
 
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.gamma.cookies.managers.RecipeManager;
 import me.gamma.cookies.util.ItemBuilder;
 
 
@@ -56,7 +60,7 @@ public class SimpleMachineRecipe implements MachineRecipe {
 
 	@Override
 	public int getDuration() {
-		return duration;
+		return this.duration;
 	}
 
 
@@ -65,6 +69,24 @@ public class SimpleMachineRecipe implements MachineRecipe {
 		return new ItemStack[] {
 			this.ingredient
 		};
+	}
+	
+	@Override
+	public ItemStack createIcon() {
+		return this.result;
+	}
+	
+	@Override
+	public Inventory display(String title) {
+		Inventory gui = Bukkit.createInventory(null, 3 * 9, title);
+		final ItemStack filler = RecipeManager.filler(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+		for(int i = 0; i < gui.getSize(); i++) {
+			gui.setItem(i, filler);
+		}
+		gui.setItem(12, this.ingredient);
+		gui.setItem(13, new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE).setName("§9-->").build());
+		gui.setItem(14, this.result);
+		return gui;
 	}
 
 }

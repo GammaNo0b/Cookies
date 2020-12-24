@@ -21,16 +21,20 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
+import me.gamma.cookies.objects.IItemSupplier;
+import me.gamma.cookies.objects.property.Properties;
 
 
 
-public abstract class AbstractCustomItem {
-	
+public abstract class AbstractCustomItem implements IItemSupplier {
+
 	public static boolean isCustomItem(ItemStack stack) {
-		return stack != null && stack.hasItemMeta() && stack.getItemMeta().hasLocalizedName();
+		return stack != null && stack.hasItemMeta() && Properties.IDENTIFIER.isPropertyOf(stack.getItemMeta());
 	}
 
+
 	public abstract String getIdentifier();
+
 
 	public abstract String getDisplayName();
 
@@ -42,8 +46,10 @@ public abstract class AbstractCustomItem {
 
 	public abstract Material getMaterial();
 
+
 	public abstract Recipe getRecipe();
-	
+
+
 	public int getCustomModelData() {
 		return -1;
 	}
@@ -53,7 +59,7 @@ public abstract class AbstractCustomItem {
 		ItemStack stack = new ItemStack(this.getMaterial());
 		ItemMeta meta = stack.getItemMeta();
 		meta.setDisplayName(this.getDisplayName());
-		meta.setLocalizedName(this.getIdentifier());
+		Properties.IDENTIFIER.store(meta, this.getIdentifier());
 		int customModelData = this.getCustomModelData();
 		if(customModelData >= 0)
 			meta.setCustomModelData(customModelData);
@@ -68,8 +74,14 @@ public abstract class AbstractCustomItem {
 	}
 
 
+	@Override
+	public ItemStack get() {
+		return this.createDefaultItemStack();
+	}
+
+
 	public boolean isInstanceOf(ItemStack stack) {
-		return stack != null && stack.getItemMeta() != null && stack.getItemMeta().hasLocalizedName() && this.getIdentifier().equals(stack.getItemMeta().getLocalizedName());
+		return stack != null && stack.getItemMeta() != null && this.getIdentifier().equals(Properties.IDENTIFIER.fetch(stack.getItemMeta()));
 	}
 
 
@@ -98,47 +110,36 @@ public abstract class AbstractCustomItem {
 	}
 
 
-	public void onAirRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {
-	}
+	public void onAirRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {}
 
 
-	public void onAirLeftClick(Player player, ItemStack stack, PlayerInteractEvent event) {
-	}
+	public void onAirLeftClick(Player player, ItemStack stack, PlayerInteractEvent event) {}
 
 
-	public void onBlockRightClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {
-	}
+	public void onBlockRightClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {}
 
 
-	public void onBlockLeftClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {
-	}
+	public void onBlockLeftClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {}
 
 
-	public void onEntityRightClick(Player player, ItemStack stack, Entity entity, PlayerInteractEntityEvent event) {
-	}
+	public void onEntityRightClick(Player player, ItemStack stack, Entity entity, PlayerInteractEntityEvent event) {}
 
 
-	public void onBlockBreak(Player player, ItemStack stack, BlockBreakEvent event) {
-	}
+	public void onBlockBreak(Player player, ItemStack stack, BlockBreakEvent event) {}
 
 
-	public void onEntityDamage(Player player, ItemStack stack, Entity damaged, EntityDamageByEntityEvent event) {
-	}
+	public void onEntityDamage(Player player, ItemStack stack, Entity damaged, EntityDamageByEntityEvent event) {}
 
 
-	public void onEntityKill(Player player, Entity killed, EntityDeathEvent event) {
-	}
+	public void onEntityKill(Player player, Entity killed, EntityDeathEvent event) {}
 
 
-	public void onPlayerConsumesItem(Player player, ItemStack stack, PlayerItemConsumeEvent event) {
-	}
+	public void onPlayerConsumesItem(Player player, ItemStack stack, PlayerItemConsumeEvent event) {}
 
 
-	public void onPlayerArmorEquipItem(Player player, ItemStack stack, PlayerArmorEquipEvent event) {
-	}
+	public void onPlayerArmorEquipItem(Player player, ItemStack stack, PlayerArmorEquipEvent event) {}
 
 
-	public void onPlayerArmorUnequipItem(Player player, ItemStack stack, PlayerArmorEquipEvent event) {
-	}
+	public void onPlayerArmorUnequipItem(Player player, ItemStack stack, PlayerArmorEquipEvent event) {}
 
 }

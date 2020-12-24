@@ -79,19 +79,19 @@ public class MeasuringTape extends AbstractSkullItem {
 
 	@Override
 	public void onAirRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {
-		event.setCancelled(true);
 		RayTraceResult result = event.getPlayer().rayTraceBlocks(5.0D);
 		if(result != null) {
 			this.handleClick(player, stack, result.getHitPosition());
 		}
+		super.onAirRightClick(player, stack, event);
 	}
 
 
 	@Override
 	public void onBlockRightClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {
-		event.setCancelled(true);
 		RayTraceResult result = event.getPlayer().rayTraceBlocks(5.0D);
 		this.handleClick(player, stack, result.getHitPosition());
+		super.onBlockRightClick(player, stack, block, event);
 	}
 
 

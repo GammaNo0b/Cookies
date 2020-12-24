@@ -43,29 +43,20 @@ public class CustomRecipe implements CookieRecipe {
 	}
 
 
-	public RecipeCategory getCategory() {
-		return this.category;
+	@Override
+	public RecipeType getType() {
+		return this.type;
 	}
 
 
-	public RecipeType getType() {
-		return this.type;
+	public RecipeCategory getCategory() {
+		return category;
 	}
 
 
 	public CustomRecipe setShape(String... shape) {
 		this.shape = shape;
 		return this;
-	}
-
-
-	public String[] getShape() {
-		return this.shape.clone();
-	}
-
-
-	public Map<Character, ItemStack> getIngredientMap() {
-		return ingredientMap;
 	}
 
 
@@ -83,16 +74,36 @@ public class CustomRecipe implements CookieRecipe {
 	}
 
 
+	public String[] getShape() {
+		return this.shape.clone();
+	}
+
+
+	public Map<Character, ItemStack> getIngredientMap() {
+		return ingredientMap;
+	}
+
+
 	public boolean matches(ItemStack[][] items) {
 		return this.matchShape(items);
 	}
 
 
+	public int getColumns() {
+		return this.type.getWidth();
+	}
+
+
+	public int getRows() {
+		return this.type.getHeight();
+	}
+
+
 	protected boolean matchExactly(ItemStack[][] items) {
-		for(int i = 0; i < 3; i++) {
+		for(int i = 0; i < getRows(); i++) {
 			if(i < this.shape.length) {
 				String row = this.shape[i];
-				for(int j = 0; j < 3; j++) {
+				for(int j = 0; j < getColumns(); j++) {
 					if(j < row.length()) {
 						if(!CookieRecipe.sameIngredient(items[i][j], this.ingredientMap.get(row.charAt(j)))) {
 							return false;
@@ -104,7 +115,7 @@ public class CustomRecipe implements CookieRecipe {
 					}
 				}
 			} else {
-				for(int j = 0; j < 3; j++) {
+				for(int j = 0; j < this.getColumns(); j++) {
 					if(items[i][j] != null) {
 						return false;
 					}
@@ -141,16 +152,18 @@ public class CustomRecipe implements CookieRecipe {
 
 
 	protected boolean matchShape(ItemStack[][] items) {
-		int height = Math.min(this.shape.length, 3);
+		final int rows = this.getRows();
+		final int columns = this.getColumns();
+		int height = Math.min(this.shape.length, rows);
 		if(height == 0) {
 			return false;
 		}
-		int width = Math.min(this.shape[0].length(), 3);
+		int width = Math.min(this.shape[0].length(), columns);
 		for(int i = 1; i < height; i++)
-			if(Math.min(this.shape[i].length(), 3) != width)
+			if(Math.min(this.shape[i].length(), columns) != width)
 				return false;
-		for(int i = 0; i <= 3 - height; i++) {
-			for(int j = 0; j <= 3 - width; j++) {
+		for(int i = 0; i <= rows - height; i++) {
+			for(int j = 0; j <= columns - width; j++) {
 				boolean b = true;
 				for(int x = i; x < i + height; x++) {
 					String row = this.shape[x - i];

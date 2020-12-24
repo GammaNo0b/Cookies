@@ -18,8 +18,8 @@ import com.google.common.collect.Lists;
 import me.gamma.cookies.managers.RecipeManager;
 import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CookieRecipe;
-import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeType;
+import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.util.ItemBuilder;
 import me.gamma.cookies.util.Utilities;
 
@@ -35,7 +35,6 @@ public class CustomCraftingListener implements Listener {
 			for(ItemStack ingredient : event.getInventory().getMatrix()) {
 				if(AbstractCustomItem.isCustomItem(ingredient)) {
 					event.setCancelled(true);
-					return;
 				}
 			}
 		}
@@ -48,13 +47,15 @@ public class CustomCraftingListener implements Listener {
 			RecipeType type = RecipeType.byName(event.getView().getTitle());
 			if(type != null) {
 				if(!(event.getClickedInventory() instanceof PlayerInventory)) {
-					event.setCancelled(!Lists.newArrayList(1, 2, 3, 10, 11, 12, 15, 19, 20, 21).contains(event.getSlot()));
-					if(event.getSlot() == 13 && event.getInventory().getItem(15) == null) {
+					if(!Lists.newArrayList(10, 11, 12, 19, 20, 21, 24, 28, 29, 30).contains(event.getSlot())) {
+						event.setCancelled(true);
+					}
+					if(event.getSlot() == 22 && event.getInventory().getItem(24) == null) {
 						ItemStack[][] ingredients = new ItemStack[3][3];
 						int min = 64;
 						for(int i = 0; i < 3; i++) {
 							for(int j = 0; j < 3; j++) {
-								ItemStack current = event.getClickedInventory().getItem(i * 9 + j + 1);
+								ItemStack current = event.getClickedInventory().getItem((i + type.getStartY()) * 9 + j + type.getStartX());
 								if(current != null) {
 									min = Math.min(min, current.getAmount());
 								}
@@ -63,18 +64,19 @@ public class CustomCraftingListener implements Listener {
 						}
 						for(CookieRecipe recipe : RecipeManager.getRegisteredCustomRecipes(type)) {
 							if(recipe instanceof CustomRecipe) {
-								if(((CustomRecipe) recipe).matches(ingredients)) {
-									min = Math.min(min, recipe.getResult().getType().getMaxStackSize() / recipe.getResult().getAmount());
-									for(int i = 0; i < 3; i++) {
-										for(int j = 0; j < 3; j++) {
-											ItemStack current = event.getClickedInventory().getItem(i * 9 + j + 1);
+								CustomRecipe resizeable = (CustomRecipe) recipe;
+								if(resizeable.matches(ingredients)) {
+									min = Math.min(min, resizeable.getResult().getType().getMaxStackSize() / resizeable.getResult().getAmount());
+									for(int i = 0; i < resizeable.getRows(); i++) {
+										for(int j = 0; j < resizeable.getColumns(); j++) {
+											ItemStack current = event.getClickedInventory().getItem((i + type.getStartY()) * 9 + j + type.getStartX());
 											if(current != null) {
 												current.setAmount(current.getAmount() - min);
 											}
-											event.getClickedInventory().setItem(i * 9 + j + 1, current);
+											event.getClickedInventory().setItem((i + type.getStartY()) * 9 + j + type.getStartX(), current);
 										}
 									}
-									event.getClickedInventory().setItem(15, new ItemBuilder(recipe.getResult()).setAmount(min * recipe.getResult().getAmount()).build());
+									event.getClickedInventory().setItem(24, new ItemBuilder(resizeable.getResult()).setAmount(min * resizeable.getResult().getAmount()).build());
 								}
 							}
 						}
@@ -87,7 +89,8 @@ public class CustomCraftingListener implements Listener {
 
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
-		if(RecipeType.byName(event.getView().getTitle()) != null) {
+		RecipeType type = RecipeType.byName(event.getView().getTitle());
+		if(type != null) {
 			for(int i = 0; i < 3; i++) {
 				for(int j = 0; j < 3; j++) {
 					Utilities.giveItemToPlayer(event.getPlayer(), event.getInventory().getItem((i + 1) * 9 + j + 1));

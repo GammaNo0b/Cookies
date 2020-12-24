@@ -17,7 +17,7 @@ public abstract class AbstractGuiProvidingSkullBlock extends AbstractSkullBlock 
 	public void onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {
 		if(!player.isSneaking()) {
 			event.setCancelled(true);
-			if(this.isOwner(block, player)) {
+			if(this.canAccess(block, player)) {
 				this.openGui(player, block);
 			} else {
 				player.sendMessage("§4You don't own this " + this.getDisplayName() + "§4!");

@@ -36,9 +36,12 @@ import me.gamma.cookies.objects.item.Drink;
 import me.gamma.cookies.objects.item.Dust;
 import me.gamma.cookies.objects.item.EnderCrystal;
 import me.gamma.cookies.objects.item.FarmerBoots;
+import me.gamma.cookies.objects.item.Flour;
+import me.gamma.cookies.objects.item.Fruit;
 import me.gamma.cookies.objects.item.GildedPaper;
 import me.gamma.cookies.objects.item.GlowHat;
 import me.gamma.cookies.objects.item.GoldCoin;
+import me.gamma.cookies.objects.item.GreenApple;
 import me.gamma.cookies.objects.item.Hamburger;
 import me.gamma.cookies.objects.item.InexhaustibleGoldBag;
 import me.gamma.cookies.objects.item.Ingot;
@@ -53,6 +56,7 @@ import me.gamma.cookies.objects.item.LumberAxe;
 import me.gamma.cookies.objects.item.MeasuringTape;
 import me.gamma.cookies.objects.item.MilkBottle;
 import me.gamma.cookies.objects.item.MilkShake;
+import me.gamma.cookies.objects.item.MobGrinderUpgrade;
 import me.gamma.cookies.objects.item.NoobSword;
 import me.gamma.cookies.objects.item.PlayerTracker;
 import me.gamma.cookies.objects.item.PortableCraftingTable;
@@ -68,6 +72,7 @@ import me.gamma.cookies.objects.item.ScubaHelmet;
 import me.gamma.cookies.objects.item.SilverCoin;
 import me.gamma.cookies.objects.item.SlimeBoots;
 import me.gamma.cookies.objects.item.SlimeSling;
+import me.gamma.cookies.objects.item.Toast;
 import me.gamma.cookies.objects.item.TurtleShell;
 import me.gamma.cookies.objects.item.VanillaRecipeBook;
 import me.gamma.cookies.objects.item.VeinMinerPickaxe;
@@ -142,7 +147,7 @@ public class CustomItemSetup {
 	public static final GoldCoin GOLD_COIN = registerCustomItem(new GoldCoin());
 	public static final RainbowDust RAINBOW_DUST = registerCustomItem(new RainbowDust());
 	public static final EnderCrystal ENDER_CRYSTAL = registerCustomItem(new EnderCrystal());
-	
+
 	// Miscellaneous
 	public static final VanillaRecipeBook VANILLA_RECIPE_BOOK = registerCustomItem(new VanillaRecipeBook());
 	public static final CookieCookBook COOKIE_COOK_BOOK = registerCustomItem(new CookieCookBook());
@@ -155,19 +160,42 @@ public class CustomItemSetup {
 
 	// Redstone
 	public static final RedstoneFrequencyGadget REDSTONE_FREQUENCY_GADGET = registerCustomItem(new RedstoneFrequencyGadget());
-	
+
+	// Technical Components
+	public static final MobGrinderUpgrade SHARPNESS_MOBGRINDER_UPGRADE = registerCustomItem(new MobGrinderUpgrade("§cSharpness", CustomModelDataValues.SHARPNESS_MOBGRINDER_UPGRADE, new ItemStack(Material.IRON_SWORD), new ItemStack(Material.DIAMOND_SWORD)));
+	public static final MobGrinderUpgrade LOOTING_MOBGRINDER_UPGRADE = registerCustomItem(new MobGrinderUpgrade("§9Looting", CustomModelDataValues.LOOTING_MOBGRINDER_UPGRADE, new ItemStack(Material.LAPIS_BLOCK)));
+	public static final MobGrinderUpgrade FIREASPECT_MOBGRINDER_UPGRADE = registerCustomItem(new MobGrinderUpgrade("§6Fireaspect", CustomModelDataValues.FIREASPECT_MOBGRINDER_UPGRADE, new ItemStack(Material.FLINT_AND_STEEL)));
+	public static final MobGrinderUpgrade BEHEADING_MOBGRINDER_UPGRADE = registerCustomItem(new MobGrinderUpgrade("§8Beheading", CustomModelDataValues.BEHEADING_MOBGRINDER_UPGRADE, new ItemStack(Material.ZOMBIE_HEAD), new ItemStack(Material.SKELETON_SKULL), new ItemStack(Material.WITHER_SKELETON_SKULL), new ItemStack(Material.CREEPER_HEAD)));
+	public static final MobGrinderUpgrade RANGE_MOBGRINDER_UPGRADE = registerCustomItem(new MobGrinderUpgrade("§eRange", CustomModelDataValues.RANGE_MOBGRINDER_UPGRADE, new ItemStack(Material.BLAZE_ROD)));
+
 	// Magic
 	public static final InexhaustibleGoldBag INEXHAUSTIBLE_GOLD_BAG = registerCustomItem(new InexhaustibleGoldBag());
-	
+
 	// Plants
 	public static final Lettuce LETTUCE = registerCustomItem(new Lettuce());
-	
+	public static final GreenApple GREEN_APPLE = registerCustomItem(new GreenApple());
+	public static final Fruit ORANGE = registerCustomItem(new Fruit("orange", "§6Orange", HeadTextures.ORANGE, Material.JUNGLE_LEAVES, 120));
+	public static final Fruit LEMON = registerCustomItem(new Fruit("lemon", "§eLemon", HeadTextures.LEMON, Material.JUNGLE_LEAVES, 160));
+	public static final Fruit KIWI = registerCustomItem(new Fruit("kiwi", "§aKiwi", HeadTextures.KIWI, Material.JUNGLE_LEAVES, 200));
+	public static final Fruit PEACH = registerCustomItem(new Fruit("peach", "§6Peach", HeadTextures.PEACH, Material.OAK_LEAVES, 40));
+	public static final Fruit PLUM = registerCustomItem(new Fruit("plum", "§5Plum", HeadTextures.PLUM, Material.OAK_LEAVES, 160));
+	public static final Fruit BANANA = registerCustomItem(new Fruit("banana", "§eBanana", HeadTextures.BANANA, Material.JUNGLE_LEAVES, 160));
+	public static final Fruit APRICOT = registerCustomItem(new Fruit("apricot", "§6Apricot", HeadTextures.APRICOT, Material.ACACIA_LEAVES, 160));
+	public static final Fruit PAPAYA = registerCustomItem(new Fruit("papaya", "§6Papaya", HeadTextures.PAPAYA, Material.ACACIA_LEAVES, 200));
+	public static final Fruit POMEGRANATE = registerCustomItem(new Fruit("pomegranate", "§4Pomegranate", HeadTextures.POMEGRANATE, Material.DARK_OAK_LEAVES, 160));
+	public static final Fruit COCONUT = registerCustomItem(new Fruit("coconut", "§6Coconut", HeadTextures.COCONUT, Material.JUNGLE_LEAVES, 120));
+	public static final Fruit PEAR = registerCustomItem(new Fruit("pear", "§aPear", HeadTextures.PEAR, Material.BIRCH_LEAVES, 120));
+	public static final Fruit CHERRY = registerCustomItem(new Fruit("cherry", "§4Cherry", HeadTextures.CHERRY, Material.DARK_OAK_LEAVES, 120));
+	public static final Fruit MANGO = registerCustomItem(new Fruit("mango", "§aMango", HeadTextures.MANGO, Material.ACACIA_LEAVES, 200));
+
 	// Kitchen Ingredients
 	public static final Salt SALT = registerCustomItem(new Salt());
+	public static final Flour FLOUR = registerCustomItem(new Flour());
 	public static final Dough DOUGH = registerCustomItem(new Dough());
 	public static final Cheese CHEESE = registerCustomItem(new Cheese());
 
 	// Food
+	public static final Toast TOAST = registerCustomItem(new Toast());
 	public static final Cookie COOKIE = registerCustomItem(new Cookie());
 	public static final Donut CHOCOLATE_DONUT = registerCustomItem(new Donut("chocolate_donut", "§6Chocolate Donut", 6, 5, DOUGH.createDefaultItemStack(), new ItemStack(Material.COCOA_BEANS), HeadTextures.CHOCOLATE_DONUT));
 	public static final Donut GLAZED_DONUT = registerCustomItem(new Donut("glazed_donut", "§7Glazed Donut", 6, 5, DOUGH.createDefaultItemStack(), new ItemStack(Material.SUGAR), HeadTextures.GLAZED_DONUT));
@@ -177,7 +205,7 @@ public class CustomItemSetup {
 	public static final Hamburger HAMBURGER = registerCustomItem(new Hamburger());
 	public static final Cheeseburger CHEESEBURGER = registerCustomItem(new Cheeseburger());
 	public static final DeluxeCheeseburger DELUXE_CHEESEBURGER = registerCustomItem(new DeluxeCheeseburger());
-	
+
 	// Drinks
 	public static final Drink APPLE_JUICE = registerCustomItem(new Drink("§cApple Juice", "apple_juice", 4, 6, new ItemStack(Material.APPLE), Color.RED));
 	public static final Drink GOLDEN_APPLE_JUICE = registerCustomItem(new Drink("§6Golden Apple Juice", "golden_apple_juice", 8, 12, new ItemStack(Material.GOLDEN_APPLE), Color.fromRGB(250, 200, 0)));
@@ -187,6 +215,19 @@ public class CustomItemSetup {
 	public static final Drink CARROT_JUICE = registerCustomItem(new Drink("§6Carrot Juice", "carrot_juice", 4, 6, new ItemStack(Material.CARROT), Color.ORANGE));
 	public static final Drink MELON_JUICE = registerCustomItem(new Drink("§cMelon Juice", "melon_juice", 4, 6, new ItemStack(Material.MELON_SLICE), Color.fromRGB(255, 75, 20)));
 	public static final Drink PUMPKIN_JUICE = registerCustomItem(new Drink("§cPumpkin Juice", "pumpkin_juice", 4, 6, new ItemStack(Material.PUMPKIN), Color.fromRGB(255, 120, 0)));
+	public static final Drink ORANGE_JUICE = registerCustomItem(ORANGE.createDrink(Color.fromRGB(255, 170, 0)));
+	public static final Drink LEMON_JUICE = registerCustomItem(LEMON.createDrink(Color.fromRGB(255, 251, 133)));
+	public static final Drink KIWI_JUICE = registerCustomItem(KIWI.createDrink(Color.fromRGB(141, 181, 103)));
+	public static final Drink PEACH_JUICE = registerCustomItem(PEACH.createDrink(Color.fromRGB(255, 162, 23)));
+	public static final Drink PLUM_JUICE = registerCustomItem(PLUM.createDrink(Color.fromRGB(80, 0, 191)));
+	public static final Drink BANANA_JUICE = registerCustomItem(BANANA.createDrink(Color.fromRGB(251, 255, 171)));
+	public static final Drink APRICOT_JUICE = registerCustomItem(APRICOT.createDrink(Color.fromRGB(255, 153, 0)));
+	public static final Drink PAPAYA_JUICE = registerCustomItem(PAPAYA.createDrink(Color.fromRGB(252, 73, 3)));
+	public static final Drink POMEGRANATE_JUICE = registerCustomItem(POMEGRANATE.createDrink(Color.fromRGB(163, 0, 0)));
+	public static final Drink COCONUT_MILK = registerCustomItem(new Drink("§fCoconut Milk", "coconut_milk", 6, 8, COCONUT.createDefaultItemStack(), Color.fromRGB(242, 242, 242)));
+	public static final Drink PEAR_JUICE = registerCustomItem(PEAR.createDrink(Color.fromRGB(183, 255, 66)));
+	public static final Drink CHERRY_JUICE = registerCustomItem(CHERRY.createDrink(Color.fromRGB(140, 0, 21)));
+	public static final Drink MANGO_JUICE = registerCustomItem(MANGO.createDrink(Color.fromRGB(255, 187, 0)));
 	public static final Drink CHOCOLATE = registerCustomItem(new Drink("§6Chocolate", "chocolate", 6, 10, new ItemStack(Material.COCOA_BEANS), Color.fromRGB(140, 90, 10)));
 	public static final Drink MILK_BOTTLE = registerCustomItem(new MilkBottle());
 	public static final MilkShake SWEET_BERRY_MILK_SHAKE = registerCustomItem(new MilkShake("§cSweet Berry Milk Shake", "sweet_berry_milk_shake", 6, 8, new ItemStack(Material.SWEET_BERRIES), Color.RED));
@@ -194,7 +235,8 @@ public class CustomItemSetup {
 
 	// Other
 	public static final LettuceSeeds LETTUCE_SEEDS = registerCustomItem(new LettuceSeeds());
-	
+
+
 	public static <S extends AbstractCustomItem> S registerCustomItem(S item) {
 		customItems.add(item);
 		if(item instanceof ItemTicker) {

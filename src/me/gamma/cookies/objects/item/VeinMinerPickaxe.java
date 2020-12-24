@@ -85,7 +85,7 @@ public class VeinMinerPickaxe extends AbstractCustomItem {
 				ItemMeta meta = stack.getItemMeta();
 				if(meta instanceof Damageable) {
 					Damageable damageable = (Damageable) meta;
-					damageable.setDamage(Math.max(stack.getType().getMaxDurability(), damageable.getDamage() + (int) (((double) blocksBroken) / (meta.getEnchantLevel(Enchantment.DURABILITY) + 1.0D))));
+					damageable.setDamage(Math.min(stack.getType().getMaxDurability(), damageable.getDamage() + (int) (((double) blocksBroken) / (meta.getEnchantLevel(Enchantment.DURABILITY) + 1.0D))));
 					stack.setItemMeta((ItemMeta) damageable);
 				}
 				event.setCancelled(true);

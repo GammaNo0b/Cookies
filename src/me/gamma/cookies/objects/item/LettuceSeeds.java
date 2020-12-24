@@ -111,6 +111,10 @@ public class LettuceSeeds extends AbstractCustomItem {
 								event.getBlock().getWorld().dropItem(event.getBlock().getLocation().add(0.5D, 0.5D, 0.5D), drop);
 							}
 						}
+					} else if(event.getBlock().getType() == Material.GRASS) {
+						if(new Random().nextDouble() < 0.05) {
+							event.getBlock().getWorld().dropItem(event.getBlock().getLocation().add(0.5D, 0.5D, 0.5D), createDefaultItemStack());
+						}
 					}
 				}
 			}

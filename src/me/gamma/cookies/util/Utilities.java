@@ -7,17 +7,16 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
-import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -28,12 +27,12 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import me.gamma.cookies.objects.block.StorageProvider;
-import me.gamma.cookies.objects.block.skull.AbstractStorageSkullBlock;
-import me.gamma.cookies.objects.block.skull.StorageMonitor;
+import me.gamma.cookies.objects.block.skull.storage.StorageSkullBlock;
+import me.gamma.cookies.objects.block.skull.storage.StorageMonitor;
 import me.gamma.cookies.objects.list.HeadTextures;
-import net.minecraft.server.v1_16_R2.GameProfileSerializer;
-import net.minecraft.server.v1_16_R2.MojangsonParser;
-import net.minecraft.server.v1_16_R2.NBTTagCompound;
+import net.minecraft.server.v1_16_R3.GameProfileSerializer;
+import net.minecraft.server.v1_16_R3.MojangsonParser;
+import net.minecraft.server.v1_16_R3.NBTTagCompound;
 
 
 
@@ -142,12 +141,13 @@ public class Utilities {
 			builder.append(main[main.length - 1]);
 		return builder.toString();
 	}
-	
-	
+
+
 	public static String toString(Object object) {
 		return toString(object, -1);
 	}
-	
+
+
 	public static String toString(Object object, int depth) {
 		final Set<Class<?>> canBeString = new HashSet<>(Arrays.asList(Boolean.class, Character.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class));
 		StringBuilder builder = new StringBuilder();
@@ -171,8 +171,8 @@ public class Utilities {
 		builder.append(fill + "}");
 		return builder.toString();
 	}
-	
-	
+
+
 	public static String fill(char c, int amount) {
 		StringBuilder builder = new StringBuilder();
 		for(int i = 0; i < amount; i++)
@@ -322,7 +322,7 @@ public class Utilities {
 					Skull skull = (Skull) relative.getState();
 					if(StorageMonitor.isStorageMonitor(skull)) {
 						stack = StorageMonitor.addItemStack(skull, stack);
-					} else if(AbstractStorageSkullBlock.isStorageBlock(skull)) {
+					} else if(StorageSkullBlock.isStorageBlock(skull)) {
 						ItemStack rest = StorageProvider.storeItem(skull, stack);
 						if(rest == null) {
 							return null;
@@ -352,15 +352,18 @@ public class Utilities {
 		if(item != null) {
 			Map<Integer, ItemStack> rest = player.getInventory().addItem(item);
 			if(!rest.isEmpty()) {
-				Iterator<Entry<Integer, ItemStack>> iterator = rest.entrySet().iterator();
-				if(iterator.hasNext()) {
-					ItemStack next = iterator.next().getValue();
-					if(next != null) {
-						player.getWorld().dropItem(player.getLocation(), next);
+				for(ItemStack stack : rest.values()) {
+					if(stack != null) {
+						dropItem(stack, player.getLocation());
 					}
 				}
 			}
 		}
+	}
+
+
+	public static void dropItem(ItemStack stack, Location location) {
+		location.getWorld().dropItem(location, stack);
 	}
 
 
@@ -384,7 +387,7 @@ public class Utilities {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setString("id", item.getStack().getType().toString().toLowerCase());
 		nbt.setInt("Count", item.getAmount());
-		net.minecraft.server.v1_16_R2.ItemStack nmsitem = CraftItemStack.asNMSCopy(item.getStack());
+		net.minecraft.server.v1_16_R3.ItemStack nmsitem = CraftItemStack.asNMSCopy(item.getStack());
 		if(nmsitem.hasTag()) {
 			nbt.set("tag", nmsitem.getTag());
 		}
@@ -397,7 +400,7 @@ public class Utilities {
 			Material material = Material.valueOf(nbt.getString("id").toUpperCase());
 			int amount = nbt.getInt("Count");
 			ItemStack item = new ItemStack(material, 1);
-			net.minecraft.server.v1_16_R2.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
+			net.minecraft.server.v1_16_R3.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
 			nmsitem.setTag(nbt.getCompound("tag"));
 			item = CraftItemStack.asBukkitCopy(nmsitem);
 
@@ -415,7 +418,7 @@ public class Utilities {
 		}
 		nbt.setString("id", item.getType().toString().toLowerCase());
 		nbt.setInt("Count", item.getAmount());
-		net.minecraft.server.v1_16_R2.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
+		net.minecraft.server.v1_16_R3.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
 		if(nmsitem.hasTag()) {
 			nbt.set("tag", nmsitem.getTag());
 		}
@@ -429,7 +432,7 @@ public class Utilities {
 			Material material = Material.valueOf(nbt.getString("id").toUpperCase());
 			int amount = nbt.getInt("Count");
 			item = new ItemStack(material, amount);
-			net.minecraft.server.v1_16_R2.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
+			net.minecraft.server.v1_16_R3.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
 			nmsitem.setTag(nbt.getCompound("tag"));
 			item = CraftItemStack.asBukkitCopy(nmsitem);
 			return item;

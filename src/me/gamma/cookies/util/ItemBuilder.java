@@ -24,7 +24,7 @@ public class ItemBuilder {
 	public ItemBuilder(ItemStack itemStack) {
 		this.item = itemStack.clone();
 		this.meta = this.item.getItemMeta();
-		this.lore = this.item.getItemMeta().getLore() == null ? new ArrayList<>() : itemStack.getItemMeta().getLore();
+		this.lore = this.item.getItemMeta() == null || this.item.getItemMeta().getLore() == null ? new ArrayList<>() : itemStack.getItemMeta().getLore();
 	}
 	
 	public ItemBuilder setAmount(int amount) {

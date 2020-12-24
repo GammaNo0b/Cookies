@@ -36,6 +36,11 @@ public class WirelessRedstoneTransmitter extends AbstractSkullBlock implements S
 	private static final BooleanProperty LAST_POWERED = BooleanProperty.create("lastpowered");
 
 	private static final Set<Location> locations = new HashSet<>();
+	
+	
+	public WirelessRedstoneTransmitter() {
+		register();
+	}
 
 	@Override
 	public String getBlockTexture() {
@@ -44,7 +49,7 @@ public class WirelessRedstoneTransmitter extends AbstractSkullBlock implements S
 
 
 	@Override
-	public String getIdentifier() {
+	public String getRegistryName() {
 		return "wireless_redstone_transmitter";
 	}
 

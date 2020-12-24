@@ -10,3 +10,4 @@ item-absorber-range: 8
 quarry-range: 16
 quarry-delay: 2
 max-storage-connectors: 8
+toaster-ticks: 200

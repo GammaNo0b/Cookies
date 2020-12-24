@@ -5,6 +5,8 @@ package me.gamma.cookies.util;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import me.gamma.cookies.objects.recipe.CookieRecipe;
+
 
 
 public class BigItemStack {
@@ -41,8 +43,13 @@ public class BigItemStack {
 	}
 
 
-	public void add(int amount) {
+	public void grow(int amount) {
 		this.amount += amount;
+	}
+	
+	
+	public void shrink(int amount) {
+		this.grow(-amount);
 	}
 
 
@@ -52,12 +59,12 @@ public class BigItemStack {
 	
 	
 	public boolean isSimilar(BigItemStack other) {
-		return this.stack.isSimilar(other.stack);
+		return this.isSimilar(other.stack);
 	}
 	
 	
 	public boolean isSimilar(ItemStack stack) {
-		return this.stack.isSimilar(stack);
+		return CookieRecipe.sameIngredient(this.stack, stack);
 	}
 	
 	
@@ -68,6 +75,12 @@ public class BigItemStack {
 
 	public int getAmount() {
 		return amount;
+	}
+	
+	
+	@Override
+	public String toString() {
+		return this.stack == null ? "null" : this.amount + " X " + this.stack.toString();
 	}
 
 }

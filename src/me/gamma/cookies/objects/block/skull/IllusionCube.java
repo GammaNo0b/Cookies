@@ -19,7 +19,7 @@ public class IllusionCube extends AbstractSkullBlock {
 
 
 	@Override
-	public String getIdentifier() {
+	public String getRegistryName() {
 		return "illusion_cube";
 	}
 

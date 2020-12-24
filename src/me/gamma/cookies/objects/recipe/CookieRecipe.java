@@ -17,12 +17,29 @@ public interface CookieRecipe extends Recipe {
 	RecipeType getType();
 
 
-	public static boolean sameIngredient(ItemStack item1, ItemStack item2) {
-		if(item1 == null ^ item2 == null) {
-			return false;
-		}
-		if(item1 == null && item2 == null) {
+	public static boolean sameIngredients(ItemStack... items) {
+		if(items.length < 2) {
 			return true;
+		}
+		ItemStack stack = items[0];
+		for(int i = 1; i < items.length; i++) {
+			ItemStack other = items[i];
+			if(sameIngredient(stack, other)) {
+				stack = other;
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	public static boolean sameIngredient(ItemStack item1, ItemStack item2) {
+		if(item1 == null) {
+			return item2 == null;
+		}
+		if(item2 == null) {
+			return false;
 		}
 
 		if(item1.getType() != item2.getType()) {
@@ -31,6 +48,13 @@ public interface CookieRecipe extends Recipe {
 
 		ItemMeta meta1 = item1.getItemMeta();
 		ItemMeta meta2 = item2.getItemMeta();
+		
+		if(meta1 == null) {
+			return meta2 == null;
+		}
+		if(meta2 == null) {
+			return false;
+		}
 
 		if(!meta1.getDisplayName().equals(meta2.getDisplayName())) {
 			return false;
@@ -52,11 +76,11 @@ public interface CookieRecipe extends Recipe {
 		if(!meta1.getLocalizedName().equals(meta2.getLocalizedName())) {
 			return false;
 		}
-		if(meta1.getPersistentDataContainer().has(new NamespacedKey(Cookies.getPlugin(Cookies.class), "skullBlockIdentifier"), PersistentDataType.STRING) != meta2.getPersistentDataContainer().has(new NamespacedKey(Cookies.getPlugin(Cookies.class), "skullBlockIdentifier"), PersistentDataType.STRING)) {
+		if(meta1.getPersistentDataContainer().has(new NamespacedKey(Cookies.INSTANCE, "skullBlockIdentifier"), PersistentDataType.STRING) != meta2.getPersistentDataContainer().has(new NamespacedKey(Cookies.INSTANCE, "skullBlockIdentifier"), PersistentDataType.STRING)) {
 			return false;
 		}
-		if(meta1.getPersistentDataContainer().has(new NamespacedKey(Cookies.getPlugin(Cookies.class), "skullBlockIdentifier"), PersistentDataType.STRING)) {
-			return meta1.getPersistentDataContainer().get(new NamespacedKey(Cookies.getPlugin(Cookies.class), "skullBlockIdentifier"), PersistentDataType.STRING).equals(meta2.getPersistentDataContainer().get(new NamespacedKey(Cookies.getPlugin(Cookies.class), "skullBlockIdentifier"), PersistentDataType.STRING));
+		if(meta1.getPersistentDataContainer().has(new NamespacedKey(Cookies.INSTANCE, "skullBlockIdentifier"), PersistentDataType.STRING)) {
+			return meta1.getPersistentDataContainer().get(new NamespacedKey(Cookies.INSTANCE, "skullBlockIdentifier"), PersistentDataType.STRING).equals(meta2.getPersistentDataContainer().get(new NamespacedKey(Cookies.INSTANCE, "skullBlockIdentifier"), PersistentDataType.STRING));
 		} else {
 			return true;
 		}

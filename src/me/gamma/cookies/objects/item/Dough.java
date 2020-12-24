@@ -3,16 +3,13 @@ package me.gamma.cookies.objects.item;
 
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 
 import me.gamma.cookies.objects.list.HeadTextures;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
+import me.gamma.cookies.setup.CustomItemSetup;
 
 
 
@@ -45,16 +42,10 @@ public class Dough extends AbstractSkullItem {
 	@Override
 	public Recipe getRecipe() {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.KITCHEN_INGREDIENTS, RecipeType.KITCHEN);
-		recipe.setShape("WS");
-		recipe.setIngredient('W', Material.WHEAT);
+		recipe.setShape("FFS");
+		recipe.setIngredient('F', CustomItemSetup.FLOUR.createDefaultItemStack());
 		recipe.setIngredient('S', Material.SUGAR);
 		return recipe;
-	}
-
-
-	@Override
-	public void onBlockRightClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {
-		event.setCancelled(true);
 	}
 
 }

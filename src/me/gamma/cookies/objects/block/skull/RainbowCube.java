@@ -21,7 +21,7 @@ public class RainbowCube extends AbstractSkullBlock {
 
 
 	@Override
-	public String getIdentifier() {
+	public String getRegistryName() {
 		return "rainbow_cube";
 	}
 

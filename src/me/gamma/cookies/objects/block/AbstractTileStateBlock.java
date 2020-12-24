@@ -17,18 +17,19 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataHolder;
 
+import me.gamma.cookies.objects.IItemSupplier;
 import me.gamma.cookies.objects.property.Properties;
 import me.gamma.cookies.objects.property.StringProperty;
 import me.gamma.cookies.objects.property.UUIDProperty;
 
 
 
-public abstract class AbstractTileStateBlock {
+public abstract class AbstractTileStateBlock implements IItemSupplier {
 
 	protected static final StringProperty IDENTIFIER = Properties.IDENTIFIER;
 	protected static final UUIDProperty OWNER = Properties.OWNER;
 
-	public abstract String getIdentifier();
+	public abstract String getRegistryName();
 
 	public abstract String getDisplayName();
 
@@ -44,11 +45,12 @@ public abstract class AbstractTileStateBlock {
 
 
 	public boolean isInstanceOf(PersistentDataHolder holder) {
-		return this.getIdentifier().equals(IDENTIFIER.fetch(holder));
+		return this.getRegistryName().equals(IDENTIFIER.fetch(holder));
 	}
 	
+	
 	public boolean isInstanceOf(TileState block) {
-		return this.isInstanceOf((PersistentDataHolder) block);
+		return isInstanceOf((PersistentDataHolder) block);
 	}
 
 
@@ -56,22 +58,34 @@ public abstract class AbstractTileStateBlock {
 		ItemStack stack = new ItemStack(this.getMaterial());
 		ItemMeta meta = stack.getItemMeta();
 		meta.setDisplayName(this.getDisplayName());
-		List<String> lore = meta.getLore() != null ? meta.getLore() : new ArrayList<>();
-		if(!this.getDescription().isEmpty()) {
+		List<String> lore = new ArrayList<>();
+		if(this instanceof Machine) {
+			lore.addAll(((Machine) this).getMachineDescription());
 			lore.add("");
+		}
+		if(!this.getDescription().isEmpty()) {
 			lore.addAll(this.getDescription());
+			lore.add("");
+		}
+		if(meta.getLore() != null && !meta.getLore().isEmpty()) {
+			lore.addAll(meta.getLore());
 		}
 		meta.setLore(lore);
-		IDENTIFIER.store(meta, getIdentifier());
+		IDENTIFIER.store(meta, getRegistryName());
 		stack.setItemMeta(meta);
 		return stack;
+	}
+	
+	@Override
+	public ItemStack get() {
+		return this.createDefaultItemStack();
 	}
 
 
 	public void onBlockPlace(Player player, ItemStack usedItem, TileState block, BlockPlaceEvent event) {
 		IDENTIFIER.transfer(usedItem.getItemMeta(), block);
 		if(this instanceof Ownable)
-			((Ownable) this).setOwner(block, player);
+			((Ownable) this).setOwner(block, player.getUniqueId());
 		if(this instanceof BlockRegister)
 			((BlockRegister) this).getLocations().add(block.getLocation());
 		block.update();

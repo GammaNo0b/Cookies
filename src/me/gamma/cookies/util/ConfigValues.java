@@ -19,6 +19,7 @@ public class ConfigValues {
 	public static int QUARRY_DELAY;
 	public static int QUARRY_RANGE;
 	public static int MAX_STORAGE_CONNECTORS;
+	public static int TOASTER_TICKS;
 	public static String MINECRAFTY_TEXTURE_FILE_PATH;
 	
 	public static void init(JavaPlugin plugin) {

@@ -12,21 +12,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
-import me.gamma.cookies.objects.property.Properties;
 import me.gamma.cookies.util.ItemBuilder;
 
 
 
 public interface GuiProvider {
 
-	public static boolean isStorageBlock(TileState block) {
-		return "storage_block_tier_".startsWith(Properties.IDENTIFIER.fetch(block));
-	}
-
-
 	String getDisplayName();
 
+
 	int getRows();
+
 
 	Sound getSound();
 

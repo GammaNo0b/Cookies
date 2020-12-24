@@ -17,7 +17,7 @@ public class RedstoneXorGate extends Abstract2I1ORedstoneGate {
 
 
 	@Override
-	public String getIdentifier() {
+	public String getRegistryName() {
 		return "redstone_xor_gate";
 	}
 

@@ -34,6 +34,11 @@ public class WirelessRedstoneReceiver extends AbstractSkullBlock implements Bloc
 	private static final ByteProperty FREQUENCY = Properties.REDSTONE_FREQUENCY;
 	
 	private static final Set<Location> locations = new HashSet<>();
+	
+	
+	public WirelessRedstoneReceiver() {
+		register();
+	}
 
 	@Override
 	public String getBlockTexture() {
@@ -42,7 +47,7 @@ public class WirelessRedstoneReceiver extends AbstractSkullBlock implements Bloc
 
 
 	@Override
-	public String getIdentifier() {
+	public String getRegistryName() {
 		return "wireless_redstone_receiver";
 	}
 

@@ -2,6 +2,8 @@
 package me.gamma.cookies.objects.recipe;
 
 
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -61,6 +63,18 @@ public class AdvancedMachineRecipe implements MachineRecipe {
 	@Override
 	public ItemStack[] getExtraResults() {
 		return this.extra;
+	}
+	
+	@Override
+	public ItemStack createIcon() {
+		return this.result;
+	}
+	
+	@Override
+	public Inventory display(String title) {
+		Inventory gui = Bukkit.createInventory(null, 6 * 9, title);
+		
+		return gui;
 	}
 
 }

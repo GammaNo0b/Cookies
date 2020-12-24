@@ -21,8 +21,6 @@ import org.bukkit.inventory.PlayerInventory;
 
 import me.gamma.cookies.objects.block.AbstractTileStateBlock;
 import me.gamma.cookies.objects.block.GuiProvider;
-import me.gamma.cookies.objects.block.skull.ClownfishChest;
-import me.gamma.cookies.objects.block.skull.StorageMonitor;
 import me.gamma.cookies.setup.CustomBlockSetup;
 
 
@@ -39,13 +37,9 @@ public class CustomBlockListener implements Listener {
 		ItemStack item = event.getItemInHand();
 		if(event.getBlockPlaced().getState() instanceof TileState) {
 			TileState state = (TileState) event.getBlockPlaced().getState();
-			// iterate over all registered Skull Blocks
-			for(AbstractTileStateBlock block : CustomBlockSetup.customBlocks) {
-				// check if item has same ID as current Skull Block
-				if(block.isInstanceOf(item.getItemMeta())) {
-					// fire Block Place Event for Skull Block
-					block.onBlockPlace(event.getPlayer(), item, state, event);
-				}
+			AbstractTileStateBlock block = CustomBlockSetup.getCustomBlockFromStack(item);
+			if(block != null) {
+				block.onBlockPlace(event.getPlayer(), item, state, event);
 			}
 		}
 	}
@@ -61,20 +55,16 @@ public class CustomBlockListener implements Listener {
 		// check if placed block is a skull
 		if(event.getBlock().getState() instanceof TileState) {
 			TileState state = (TileState) event.getBlock().getState();
-			// iterate over all registered Skull Blocks
-			for(AbstractTileStateBlock block : CustomBlockSetup.customBlocks) {
-				// check if skull has same ID as current Skull Block
-				if(block.isInstanceOf(state)) {
-					// fire Block Break Event for Skull Block and receive the loot
+			AbstractTileStateBlock block = CustomBlockSetup.getCustomBlockFromTileState(state);
+			if(block != null) {
 				// fire Block Break Event for Skull Block and receive the loot
-					ItemStack drop = block.onBlockBreak(event.getPlayer(), state, event);
-					// give Drop to Player if he is in Survival
-					if(event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-						event.getBlock().getWorld().dropItem(event.getBlock().getLocation().add(0.5D, 0.5D, 0.5D), drop);
-					}
-					event.getBlock().setType(Material.AIR);
-					event.setCancelled(true);
+				ItemStack drop = block.onBlockBreak(event.getPlayer(), state, event);
+				// give Drop to Player if he is in Survival
+				if(event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
+					event.getBlock().getWorld().dropItem(event.getBlock().getLocation().add(0.5D, 0.5D, 0.5D), drop);
 				}
+				event.getBlock().setType(Material.AIR);
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -87,43 +77,36 @@ public class CustomBlockListener implements Listener {
 	 */
 	@EventHandler
 	private void onBlockInteractEvent(PlayerInteractEvent event) {
-		// iterate over all registered Skull Blocks
-		for(AbstractTileStateBlock block : CustomBlockSetup.customBlocks) {
-			if(event.getClickedBlock() != null) {
-				// block is not null
-				// check if placed block is a skull
-				if(event.getClickedBlock().getState() instanceof TileState) {
-					TileState skull = (TileState) event.getClickedBlock().getState();
-					// check if skull has same ID as current Skull Block
-					if(block.isInstanceOf(skull)) {
-						if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-							// fire Right Click Block Event
-							block.onBlockRightClick(event.getPlayer(), skull, event);
-						} else if(event.getAction() == Action.LEFT_CLICK_BLOCK) {
-							// fire Left Click Block Event
-							block.onBlockLeftClick(event.getPlayer(), skull, event);
-						}
+		// block is not null
+		if(event.getClickedBlock() != null) {
+			if(event.getClickedBlock().getState() instanceof TileState) {
+				TileState state = (TileState) event.getClickedBlock().getState();
+				AbstractTileStateBlock block = CustomBlockSetup.getCustomBlockFromTileState(state);
+				if(block != null) {
+					if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+						// fire Right Click Block Event
+						block.onBlockRightClick(event.getPlayer(), state, event);
+					} else if(event.getAction() == Action.LEFT_CLICK_BLOCK) {
+						// fire Left Click Block Event
+						block.onBlockLeftClick(event.getPlayer(), state, event);
 					}
 				}
 			}
-			ItemStack stack = event.getItem();
-			if(stack != null) {
-				// check if item has same ID as current Skull Block
-				if(block.isInstanceOf(stack.getItemMeta())) {
-					if(event.getAction() == Action.RIGHT_CLICK_AIR) {
-						// fire Right Click Air Event
-						block.onAirRightClick(event.getPlayer(), event.getItem(), event);
-					} else if(event.getAction() == Action.LEFT_CLICK_AIR) {
-						// fire Left Click Air Event
-						block.onAirLeftClick(event.getPlayer(), event.getItem(), event);
-					} else if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-						// fire Right Click Block Event
-						block.onBlockRightClick(event.getPlayer(), event.getItem(), event);
-					} else if(event.getAction() == Action.LEFT_CLICK_BLOCK) {
-						// fire Left Click Block Event
-						block.onBlockLeftClick(event.getPlayer(), event.getItem(), event);
-					}
-				}
+		}
+		AbstractTileStateBlock block = CustomBlockSetup.getCustomBlockFromStack(event.getItem());
+		if(block != null) {
+			if(event.getAction() == Action.RIGHT_CLICK_AIR) {
+				// fire Right Click Air Event
+				block.onAirRightClick(event.getPlayer(), event.getItem(), event);
+			} else if(event.getAction() == Action.LEFT_CLICK_AIR) {
+				// fire Left Click Air Event
+				block.onAirLeftClick(event.getPlayer(), event.getItem(), event);
+			} else if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				// fire Right Click Block Event
+				block.onBlockRightClick(event.getPlayer(), event.getItem(), event);
+			} else if(event.getAction() == Action.LEFT_CLICK_BLOCK) {
+				// fire Left Click Block Event
+				block.onBlockLeftClick(event.getPlayer(), event.getItem(), event);
 			}
 		}
 	}
@@ -197,36 +180,6 @@ public class CustomBlockListener implements Listener {
 
 
 	/**
-	 * fires whenever the player interacts with an inventory
-	 * 
-	 * @param event {@link InventoryClickEvent}
-	 */
-	@EventHandler
-	public void onSpecificInventoryClickEvent(InventoryClickEvent event) {
-		// check if clicker is player (should be always the case)
-		if(event.getWhoClicked() instanceof Player) {
-			// switch between the title of the inventory
-			switch (event.getView().getTitle()) {
-				case StorageMonitor.STATS_TITLE:
-					// Storage Monitor Statistics Inventory
-					event.setCancelled(true);
-					break;
-				case ClownfishChest.BACKPACK_TITLE:
-					// Clownfish Backpack Inventory
-					if(event.getClickedInventory() instanceof PlayerInventory) {
-						event.setCancelled(CustomBlockSetup.CLOWNFISH_CHEST.onBackpackPlayerInventoryInteract((Player) event.getWhoClicked(), event.getCurrentItem(), event.getClickedInventory(), event));
-					} else {
-						event.setCancelled(CustomBlockSetup.CLOWNFISH_CHEST.onBackpackGuiInteract((Player) event.getWhoClicked(), event.getCurrentItem(), event.getClickedInventory(), event));
-					}
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
-
-	/**
 	 * fires whenever an inventory get's closed
 	 * 
 	 * @param event {@link InventoryCloseEvent}
@@ -263,27 +216,6 @@ public class CustomBlockListener implements Listener {
 						guiBlock.onInventoryClose(player, state, event.getInventory(), event);
 					}
 				}
-			}
-		}
-	}
-
-
-	/**
-	 * fires whenever an inventory get's closed
-	 * 
-	 * @param event {@link InventoryCloseEvent}
-	 */
-	@EventHandler
-	public void onSpecificInventoryCloseEvent(InventoryCloseEvent event) {
-		// check if clicker is player (should be always the case)
-		if(event.getPlayer() instanceof Player) {
-			Player player = (Player) event.getPlayer();
-			// switch between the title of the inventory
-			switch (event.getView().getTitle()) {
-				case ClownfishChest.BACKPACK_TITLE:
-					// Clownfish Backpack Inventory
-					CustomBlockSetup.CLOWNFISH_CHEST.onBackpackClose(player, event.getPlayer().getInventory().getItemInMainHand(), event.getInventory(), event);
-					break;
 			}
 		}
 	}

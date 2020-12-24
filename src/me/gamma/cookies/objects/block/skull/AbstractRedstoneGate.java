@@ -29,6 +29,11 @@ public abstract class AbstractRedstoneGate extends AbstractSkullBlock implements
 	private static final BooleanProperty INVERTED = BooleanProperty.create("inverted");
 
 	private Set<Location> locations = new HashSet<>();
+	
+	
+	public AbstractRedstoneGate() {
+		register();
+	}
 
 	@Override
 	public Set<Location> getLocations() {

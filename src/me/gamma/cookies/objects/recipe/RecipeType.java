@@ -11,21 +11,29 @@ import me.gamma.cookies.setup.CustomBlockSetup;
 
 public enum RecipeType {
 
-	CUSTOM("§2Custom §aCrafting", new ItemStack(Material.CRAFTING_TABLE), Material.ORANGE_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE),
-	ENGINEER("§4Engineering", new ItemStack(Material.SMITHING_TABLE), Material.PURPLE_STAINED_GLASS_PANE, Material.RED_STAINED_GLASS_PANE),
-	KITCHEN("§cKitchen", new ItemStack(Material.SMOKER), Material.GREEN_STAINED_GLASS_PANE, Material.ORANGE_STAINED_GLASS_PANE),
-	MACHINE("§8Machine", CustomBlockSetup.MOTOR.createDefaultItemStack(), null, null);
+	CUSTOM("§2Custom §aCrafting", new ItemStack(Material.CRAFTING_TABLE), Material.ORANGE_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE, 1, 1, 3, 3),
+	ENGINEER("§4Engineering", new ItemStack(Material.SMITHING_TABLE), Material.PURPLE_STAINED_GLASS_PANE, Material.RED_STAINED_GLASS_PANE, 1, 1, 3, 3),
+	KITCHEN("§cKitchen", new ItemStack(Material.SMOKER), Material.GREEN_STAINED_GLASS_PANE, Material.ORANGE_STAINED_GLASS_PANE, 1, 1, 3, 3),
+	MACHINE("§8Machine", CustomBlockSetup.MOTOR.createDefaultItemStack(), null, null, -1, -1, 0, 0);
 
 	private String name;
 	private ItemStack icon;
 	private Material border;
 	private Material background;
+	private int startX;
+	private int startY;
+	private int width;
+	private int height;
 
-	private RecipeType(String name, ItemStack icon, Material border, Material background) {
+	private RecipeType(String name, ItemStack icon, Material border, Material background, int startX, int startY, int width, int height) {
 		this.name = name;
 		this.icon = icon;
 		this.border = border;
 		this.background = background;
+		this.startX = startX;
+		this.startY = startY;
+		this.width = width;
+		this.height = height;
 	}
 
 
@@ -46,6 +54,26 @@ public enum RecipeType {
 
 	public Material getBackground() {
 		return this.background;
+	}
+
+
+	public int getStartX() {
+		return startX;
+	}
+
+
+	public int getStartY() {
+		return startY;
+	}
+
+
+	public int getWidth() {
+		return width;
+	}
+
+
+	public int getHeight() {
+		return height;
 	}
 
 
