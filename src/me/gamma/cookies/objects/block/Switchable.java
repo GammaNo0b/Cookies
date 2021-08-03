@@ -9,7 +9,11 @@ import me.gamma.cookies.util.Utilities;
 public interface Switchable {
 	
 	default boolean isBlockPowered(TileState block) {
-		return block.getBlock().getBlockPower() > 0;
+		return this.isBlockPowered(block.getBlock());
+	}
+	
+	default boolean isBlockPowered(Block block) {
+		return block.getBlockPower() > 0;
 	}
 	
 	default boolean isNeighborPowered(Block block) {

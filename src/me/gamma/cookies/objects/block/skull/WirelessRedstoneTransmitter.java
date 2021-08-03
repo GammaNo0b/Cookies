@@ -23,7 +23,6 @@ import me.gamma.cookies.objects.block.Switchable;
 import me.gamma.cookies.objects.list.HeadTextures;
 import me.gamma.cookies.objects.property.BooleanProperty;
 import me.gamma.cookies.objects.property.ByteProperty;
-import me.gamma.cookies.objects.property.Properties;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
@@ -32,15 +31,15 @@ import me.gamma.cookies.objects.recipe.RecipeType;
 
 public class WirelessRedstoneTransmitter extends AbstractSkullBlock implements Switchable, BlockTicker {
 
-	private static final ByteProperty FREQUENCY = Properties.REDSTONE_FREQUENCY;
-	private static final BooleanProperty LAST_POWERED = BooleanProperty.create("lastpowered");
+	private static final ByteProperty FREQUENCY = new ByteProperty("frequency");
+	private static final BooleanProperty LAST_POWERED = new BooleanProperty("lastpowered");
 
 	private static final Set<Location> locations = new HashSet<>();
-	
-	
+
 	public WirelessRedstoneTransmitter() {
 		register();
 	}
+
 
 	@Override
 	public String getBlockTexture() {

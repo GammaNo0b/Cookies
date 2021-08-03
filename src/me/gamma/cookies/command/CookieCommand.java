@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import me.gamma.cookies.managers.RecipeManager;
+import me.gamma.cookies.managers.InventoryManager;
 import me.gamma.cookies.objects.block.AbstractTileStateBlock;
 import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.setup.CustomBlockSetup;
@@ -35,7 +35,7 @@ public class CookieCommand implements CommandExecutor, TabCompleter {
 		Player player = (Player) sender;
 
 		if(parameters.length == 0) {
-			RecipeManager.openRecipeCategoryList(player, 1, false);
+			InventoryManager.openRecipeCategoryList(player, 1, false);
 			return true;
 		}
 
@@ -51,7 +51,7 @@ public class CookieCommand implements CommandExecutor, TabCompleter {
 				return false;
 			}
 
-			RecipeManager.openRecipeCategoryList(player, 1, true);
+			InventoryManager.openRecipeCategoryList(player, 1, true);
 			return true;
 		} else if(parameters[0].equals("give")) {
 			if(!player.hasPermission("cookies.cheat")) {
@@ -72,7 +72,7 @@ public class CookieCommand implements CommandExecutor, TabCompleter {
 				}
 			}
 			for(AbstractCustomItem item : CustomItemSetup.customItems) {
-				if(item.getIdentifier().equals(name)) {
+				if(item.getRegistryName().equals(name)) {
 					Utilities.giveItemToPlayer(player, item.createDefaultItemStack());
 					return true;
 				}
@@ -80,7 +80,7 @@ public class CookieCommand implements CommandExecutor, TabCompleter {
 			return false;
 		} else if(parameters[0].equals("team")) {
 			if(parameters.length < 2) {
-				player.sendMessage("§cSyntax: §e/cookies §6[ add | accept | create | delete | deny | leave | list | members | remove ]");
+				player.sendMessage("§cSyntax: §e/cookies team §6[add | accept | create | delete | deny | leave | list | members | remove]");
 				return false;
 			}
 			String subcmd = parameters[1];
@@ -138,7 +138,7 @@ public class CookieCommand implements CommandExecutor, TabCompleter {
 					player.sendMessage("§cSyntax: §e/cookies §6team remove <player>");
 					return false;
 				}
-				return Team.remove(player, Bukkit.getOfflinePlayer(parameters[2]).getUniqueId());
+				Team.remove(player, Bukkit.getOfflinePlayer(parameters[2]).getUniqueId());
 			}
 		}
 
@@ -155,7 +155,7 @@ public class CookieCommand implements CommandExecutor, TabCompleter {
 		} else if(parameters.length == 2) {
 			if(parameters[0].equals("give")) {
 				CustomBlockSetup.customBlocks.stream().map(AbstractTileStateBlock::getRegistryName).filter(id -> id.contains(parameters[1])).forEach(values::add);
-				CustomItemSetup.customItems.stream().map(AbstractCustomItem::getIdentifier).filter(id -> id.contains(parameters[1])).forEach(values::add);
+				CustomItemSetup.customItems.stream().map(AbstractCustomItem::getRegistryName).filter(id -> id.contains(parameters[1])).forEach(values::add);
 				values.sort(String::compareTo);
 			} else if(parameters[0].equals("team")) {
 				Arrays.asList("accept", "add", "create", "delete", "deny", "leave", "list", "members", "remove").stream().filter(val -> val.contains(parameters[1])).forEach(values::add);

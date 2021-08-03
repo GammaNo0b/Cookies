@@ -96,6 +96,7 @@ public class CustomCraftingListener implements Listener {
 					Utilities.giveItemToPlayer(event.getPlayer(), event.getInventory().getItem((i + 1) * 9 + j + 1));
 				}
 			}
+			Utilities.giveItemToPlayer(event.getPlayer(), event.getInventory().getItem(24));
 		}
 	}
 

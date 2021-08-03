@@ -18,12 +18,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.gamma.cookies.objects.block.ItemProvider;
 import me.gamma.cookies.objects.block.StorageProvider;
 import me.gamma.cookies.objects.block.skull.AbstractGuiProvidingSkullBlock;
 import me.gamma.cookies.objects.property.BigItemStackProperty;
 import me.gamma.cookies.objects.property.ByteProperty;
 import me.gamma.cookies.objects.property.IntegerProperty;
-import me.gamma.cookies.objects.property.Properties;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
@@ -36,8 +36,8 @@ import me.gamma.cookies.util.Utilities;
 
 public class StorageSkullBlock extends AbstractGuiProvidingSkullBlock implements StorageProvider, StorageComponent {
 
-	public static final ByteProperty STORAGE_TIER = Properties.STORAGE_TIER;
-	public static final IntegerProperty STORAGE_CAPACITY = Properties.STORAGE_CAPACITY;
+	public static final ByteProperty STORAGE_TIER = new ByteProperty("storagetier");
+	public static final IntegerProperty STORAGE_CAPACITY = new IntegerProperty("storagecapacity");
 
 	public static boolean isStorageBlock(TileState block) {
 		return STORAGE_CAPACITY.isPropertyOf(block);
@@ -165,7 +165,11 @@ public class StorageSkullBlock extends AbstractGuiProvidingSkullBlock implements
 		STORAGE_TIER.transfer(block, meta);
 		STORAGE_CAPACITY.transfer(block, meta);
 		for(BigItemStackProperty property : this.createProperties()) {
-			property.transfer(block, meta);
+			BigItemStack stack = property.fetch(block);
+			if(stack.isEmpty())
+				property.storeEmpty(meta);
+			else
+				property.store(meta, stack);
 		}
 		item.setItemMeta(meta);
 		return item;
@@ -254,6 +258,18 @@ public class StorageSkullBlock extends AbstractGuiProvidingSkullBlock implements
 		}
 		pages.add(new ArrayList<>(page));
 		return pages;
+	}
+
+
+	public static List<ItemProvider> createItemProviders(TileState block) {
+		if(!isStorageBlock(block))
+			return null;
+		BigItemStackProperty[] properties = StorageProvider.createProperties(block);
+		List<ItemProvider> providers = new ArrayList<>(properties.length);
+		for(int i = 0; i < properties.length; i++) {
+			providers.add(ItemProvider.fromBigItemStack(properties[i].fetch(block)));
+		}
+		return providers;
 	}
 
 

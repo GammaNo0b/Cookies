@@ -2,7 +2,7 @@
 package me.gamma.cookies.objects.property;
 
 
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 
 import me.gamma.cookies.util.BigItemStack;
@@ -10,35 +10,46 @@ import me.gamma.cookies.util.Utilities;
 
 
 
-public class BigItemStackProperty extends Property<BigItemStack> {
+public class BigItemStackProperty extends Property<String, BigItemStack> {
 
-	protected BigItemStackProperty(String name) {
+	public BigItemStackProperty(String name) {
 		super(name);
 	}
 
 
 	@Override
-	public void store(PersistentDataHolder holder, BigItemStack value) {
-		if(value == null)
-			value = BigItemStack.EMPTY;
-		holder.getPersistentDataContainer().set(this.getKey(), PersistentDataType.STRING, Utilities.BigItemStackToNBT(value).toString());
+	public PersistentDataType<String, BigItemStack> getPersistentDataType() {
+		return new PersistentDataType<String, BigItemStack>() {
+
+			@Override
+			public String toPrimitive(BigItemStack stack, PersistentDataAdapterContext context) {
+				return Utilities.BigItemStackToNBT(stack).asString();
+			}
+
+
+			@Override
+			public Class<String> getPrimitiveType() {
+				return String.class;
+			}
+
+
+			@Override
+			public Class<BigItemStack> getComplexType() {
+				return BigItemStack.class;
+			}
+
+
+			@Override
+			public BigItemStack fromPrimitive(String value, PersistentDataAdapterContext context) {
+				return Utilities.NBTtoBigItemStack(Utilities.StringToNBT(value));
+			}
+		};
 	}
-
-
+	
+	
 	@Override
-	public BigItemStack fetch(PersistentDataHolder holder) {
-		return Utilities.NBTtoBigItemStack(Utilities.StringToNBT(holder.getPersistentDataContainer().get(this.getKey(), PersistentDataType.STRING)));
-	}
-
-
-	@Override
-	public boolean isPropertyOf(PersistentDataHolder holder) {
-		return holder.getPersistentDataContainer().has(this.getKey(), PersistentDataType.STRING);
-	}
-
-
-	public static BigItemStackProperty create(String name) {
-		return new BigItemStackProperty(name);
+	public BigItemStack emptyValue() {
+		return BigItemStack.EMPTY;
 	}
 
 }

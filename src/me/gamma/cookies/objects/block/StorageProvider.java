@@ -8,10 +8,10 @@ import java.util.List;
 import org.bukkit.block.TileState;
 import org.bukkit.inventory.ItemStack;
 
+import me.gamma.cookies.objects.ItemFilter;
+import me.gamma.cookies.objects.block.skull.storage.StorageSkullBlock;
 import me.gamma.cookies.objects.property.BigItemStackProperty;
-import me.gamma.cookies.objects.property.Properties;
 import me.gamma.cookies.util.BigItemStack;
-import me.gamma.cookies.util.ItemBuilder;
 import me.gamma.cookies.util.MathHelper;
 
 
@@ -19,18 +19,18 @@ import me.gamma.cookies.util.MathHelper;
 public interface StorageProvider {
 
 	int getCapacity();
-	
-	
+
+
 	default BigItemStackProperty[] createProperties() {
 		BigItemStackProperty[] properties = new BigItemStackProperty[this.getCapacity()];
 		for(int i = 0; i < properties.length; i++)
-			properties[i] = BigItemStackProperty.create("Item" + i);
+			properties[i] = new BigItemStackProperty("Item" + i);
 		return properties;
 	}
-	
-	
+
+
 	static BigItemStackProperty createProperty(int index) {
-		return BigItemStackProperty.create("Item" + index);
+		return new BigItemStackProperty("Item" + index);
 	}
 
 
@@ -43,6 +43,9 @@ public interface StorageProvider {
 
 
 	static ItemStack storeItem(TileState block, ItemStack stack) {
+		if(stack == null) {
+			return null;
+		}
 		for(BigItemStackProperty property : createProperties(block)) {
 			BigItemStack bigstack = property.fetch(block);
 			if(bigstack.isEmpty()) {
@@ -69,32 +72,33 @@ public interface StorageProvider {
 	}
 
 
-	static ItemStack requestItem(TileState block, ItemStack stack, int amount) {
-		if(stack == null) {
-			return null;
-		}
-		int found = 0;
+	static ItemStack requestItem(TileState block, ItemFilter filter) {
+		ItemStack type = null;
+		int amount = 0;
 		for(BigItemStackProperty property : createProperties(block)) {
 			BigItemStack bigstack = property.fetch(block);
-			if(bigstack.isSimilar(stack)) {
+			if(filter.matches(bigstack) && (type == null || bigstack.isSimilar(type))) {
+				type = bigstack.getStack().clone();
 				int stored = bigstack.getAmount();
-				int canfetch = Math.min(stored, amount - found);
+				int canfetch = Math.min(stored, type.getMaxStackSize() - amount);
 				bigstack.shrink(canfetch);
 				if(bigstack.getAmount() == 0) {
 					property.storeEmpty(block);
 				} else {
 					property.store(block, bigstack);
 				}
-				found += canfetch;
-				if(found >= amount)
+				amount += canfetch;
+				if(amount >= type.getMaxStackSize())
 					break;
 			}
 		}
 		block.update();
-		return new ItemBuilder(stack).setAmount(found).build();
+		if(type != null)
+			type.setAmount(amount);
+		return type;
 	}
-	
-	
+
+
 	static ItemStack requestItem(TileState block, int index) {
 		index %= getCapacity(block);
 		BigItemStackProperty property = createProperty(index);
@@ -123,7 +127,7 @@ public interface StorageProvider {
 
 
 	static int getCapacity(TileState block) {
-		return Properties.STORAGE_CAPACITY.fetch(block);
+		return StorageSkullBlock.STORAGE_CAPACITY.fetch(block);
 	}
 
 }

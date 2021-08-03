@@ -16,9 +16,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataHolder;
 
-import me.gamma.cookies.objects.block.Machine;
+import me.gamma.cookies.objects.block.machine.Machine;
+import me.gamma.cookies.objects.block.machine.MachineTier;
 import me.gamma.cookies.objects.block.skull.AbstractGuiProvidingSkullBlock;
 import me.gamma.cookies.objects.recipe.MachineRecipe;
 
@@ -26,13 +26,23 @@ import me.gamma.cookies.objects.recipe.MachineRecipe;
 
 public abstract class AbstractSkullMachine extends AbstractGuiProvidingSkullBlock implements Machine {
 
-	private Set<Location> locations = new HashSet<>();
-	private Map<Location, Inventory> machineMap = new HashMap<>();
-	private Map<String, MachineRecipe> recipeMap = new HashMap<>();
-	
-	protected AbstractSkullMachine() {
+	protected final MachineTier tier;
+	private final Set<Location> locations = new HashSet<>();
+	private final Map<Location, Inventory> machineMap = new HashMap<>();
+	private final Map<String, MachineRecipe> recipeMap = new HashMap<>();
+
+	protected AbstractSkullMachine(MachineTier tier) {
+		this.tier = tier;
+
 		register();
 	}
+
+
+	@Override
+	public MachineTier getTier() {
+		return this.tier;
+	}
+
 
 	@Override
 	public Map<Location, Inventory> getMachineMap() {
@@ -48,9 +58,10 @@ public abstract class AbstractSkullMachine extends AbstractGuiProvidingSkullBloc
 
 	@Override
 	public Set<Location> getLocations() {
-		return locations;
+		return this.locations;
 	}
-	
+
+
 	@Override
 	public String getRegistryName() {
 		return Machine.super.getRegistryName();
@@ -63,53 +74,83 @@ public abstract class AbstractSkullMachine extends AbstractGuiProvidingSkullBloc
 		ItemMeta meta = stack.getItemMeta();
 		MACHINE_IDENTIFIER.storeEmpty(meta);
 		stack.setItemMeta(meta);
+		Machine.super.createDefaultItemStack(stack);
 		return stack;
 	}
 
 
 	@Override
+	public ItemStack createIcon() {
+		return this.createDefaultItemStack();
+	}
+
+
+	@Override
 	public void onBlockPlace(Player player, ItemStack usedItem, TileState block, BlockPlaceEvent event) {
-		this.onBlockPlace(block);
+		Machine.super.onBlockPlace(block, usedItem);
 		super.onBlockPlace(player, usedItem, block, event);
 	}
 
 
 	@Override
 	public ItemStack onBlockBreak(Player player, TileState block, BlockBreakEvent event) {
-		this.onBlockBreak(block);
-		return super.onBlockBreak(player, block, event);
+		ItemStack stack = super.onBlockBreak(player, block, event);
+		this.onBlockBreak(block, stack);
+		return stack;
 	}
-	
-	
+
+
 	@Override
 	public List<Integer> getInputSlots() {
 		return this.getTier().getDefaultInputSlots();
 	}
-	
+
+
 	@Override
 	public List<Integer> getOutputSlots() {
 		return this.getTier().getDefaultOutputSlots();
 	}
-	
+
+
 	@Override
 	public int getProgressSlot() {
 		return this.getTier().getDefaultProgressSlot();
 	}
-	
+
+
+	@Override
+	public int getRecipeBookSlot() {
+		return this.getTier().getDefaultRecipeBookSlot();
+	}
+
+
+	@Override
+	public int getRedstoneModeSlot() {
+		return this.getTier().getDefaultRedstoneModeSlot();
+	}
+
+
+	@Override
+	public int getMachineUpgradesSlot() {
+		return this.getTier().getDefaultMachineUpgradesSlot();
+	}
+
+
+	@Override
+	public int getUpgradeSlots() {
+		return this.getTier().getUpgradeSlots();
+	}
+
+
 	@Override
 	public int getRows() {
 		return this.getTier().getDefaultRowCount();
 	}
-	
-	
+
+
 	@Override
 	public int getSpeed() {
 		return this.getTier().getDefaultSpeed();
-	}
-
-
-	public static boolean isMachine(PersistentDataHolder holder) {
-		return MACHINE_IDENTIFIER.isPropertyOf(holder);
 	}
 
 }

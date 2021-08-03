@@ -14,13 +14,16 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.gamma.cookies.managers.RecipeManager;
+import me.gamma.cookies.managers.InventoryManager;
 import me.gamma.cookies.util.ItemBuilder;
 import me.gamma.cookies.util.Utilities;
 
 
 
 public class RandomOutputRecipe implements MachineRecipe {
+
+	private static final DecimalFormat CHANCE = new DecimalFormat("0.00%");
+	private static final DecimalFormat DURATION = new DecimalFormat("0.0s");
 
 	private Random r;
 	private int maxChance;
@@ -103,7 +106,7 @@ public class RandomOutputRecipe implements MachineRecipe {
 
 	@Override
 	public ItemStack createIcon() {
-		return ingredient;
+		return new ItemBuilder(ingredient).setName((ingredient.hasItemMeta() && ingredient.getItemMeta().hasDisplayName() ? ingredient.getItemMeta().getDisplayName() : "§9" + Utilities.toCapitalWords(ingredient.getType().name().replace('_', ' '))) + "§9 - §3" + DURATION.format(this.duration / 20.0D)).build();
 	}
 
 
@@ -111,8 +114,8 @@ public class RandomOutputRecipe implements MachineRecipe {
 	public Inventory display(String title) {
 		int rows = Math.min(4, (outputs.size() + 6) / 7) + 2;
 		Inventory gui = Bukkit.createInventory(null, rows * 9, title);
-		final ItemStack filler = RecipeManager.filler(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
-		final ItemStack border = RecipeManager.filler(Material.BLUE_STAINED_GLASS_PANE);
+		final ItemStack filler = InventoryManager.filler(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+		final ItemStack border = InventoryManager.filler(Material.BLUE_STAINED_GLASS_PANE);
 		for(int i = 0; i < 9; i++) {
 			gui.setItem(i, border);
 			gui.setItem(gui.getSize() - i - 1, border);
@@ -121,16 +124,15 @@ public class RandomOutputRecipe implements MachineRecipe {
 			gui.setItem(i * 9, border);
 			gui.setItem(i * 9 + 8, border);
 		}
-		gui.setItem(gui.getSize() - 5, createIcon());
+		gui.setItem(gui.getSize() - 5, this.createIcon());
 		List<ItemStack> results = outputs.keySet().stream().sorted((item1, item2) -> outputs.getOrDefault(item2, 0).compareTo(outputs.getOrDefault(item1, 0))).collect(Collectors.toList());
-		final DecimalFormat format = new DecimalFormat("0.0%");
 		for(int i = 0; i < (rows - 2) * 7; i++) {
 			int row = i / 7 + 1;
 			int column = i % 7 + 1;
 			int index = row * 9 + column;
 			if(i < results.size()) {
 				ItemStack result = results.get(i);
-				String chance = " §2: " + format.format(Math.round(outputs.getOrDefault(result, 0) * 1000.0D / maxChance) / 1000.0D);
+				String chance = " §2: " + CHANCE.format(Math.round(outputs.getOrDefault(result, 0) * 1000.0D / maxChance) / 1000.0D);
 				if(result == null || result.getType() == Material.AIR) {
 					gui.setItem(index, new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).setName("§7Air" + chance).build());
 				} else {

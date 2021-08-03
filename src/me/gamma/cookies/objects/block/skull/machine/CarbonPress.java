@@ -10,7 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 
-import me.gamma.cookies.objects.block.MachineTier;
+import me.gamma.cookies.objects.block.machine.MachineTier;
 import me.gamma.cookies.objects.list.HeadTextures;
 import me.gamma.cookies.objects.list.TieredMaterials;
 import me.gamma.cookies.objects.recipe.CompressionRecipe;
@@ -19,22 +19,13 @@ import me.gamma.cookies.objects.recipe.MachineRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
 import me.gamma.cookies.setup.CustomBlockSetup;
-import me.gamma.cookies.setup.CustomItemSetup;
 
 
 
 public class CarbonPress extends AbstractSkullMachine {
 
-	private MachineTier tier;
-
 	public CarbonPress(MachineTier tier) {
-		this.tier = tier;
-	}
-
-
-	@Override
-	public MachineTier getTier() {
-		return tier;
+		super(tier);
 	}
 
 
@@ -42,18 +33,17 @@ public class CarbonPress extends AbstractSkullMachine {
 	public List<MachineRecipe> getMachineRecipes() {
 		List<MachineRecipe> recipes = new ArrayList<>();
 		if(tier.getTier() > 0) {
-			recipes.add(new CompressionRecipe("coal_to_carbon", CustomItemSetup.CARBON.createDefaultItemStack(), new ItemStack(Material.COAL, 4), 120));
-			recipes.add(new CompressionRecipe("carbon_to_compressed_carbon", CustomItemSetup.COMPRESSED_CARBON.createDefaultItemStack(), CustomItemSetup.CARBON.createDefaultItemStack(), 8, 200));
+			recipes.add(new CompressionRecipe("coal_to_carbon", CustomBlockSetup.CARBON.createDefaultItemStack(), new ItemStack(Material.COAL, 4), 120));
+			recipes.add(new CompressionRecipe("carbon_to_compressed_carbon", CustomBlockSetup.COMPRESSED_CARBON.createDefaultItemStack(), CustomBlockSetup.CARBON.createDefaultItemStack(), 8, 200));
 
 			if(tier.getTier() > 1) {
-				recipes.add(new CompressionRecipe("compressed_carbon_to_carbon_chunk", CustomItemSetup.CARBON_CHUNK.createDefaultItemStack(), CustomItemSetup.COMPRESSED_CARBON.createDefaultItemStack(), 8, 320));
+				recipes.add(new CompressionRecipe("compressed_carbon_to_carbon_chunk", CustomBlockSetup.CARBON_CHUNK.createDefaultItemStack(), CustomBlockSetup.COMPRESSED_CARBON.createDefaultItemStack(), 8, 320));
 
 				if(tier.getTier() > 2) {
-					recipes.add(new CompressionRecipe("carbon_chunk_to_carbonado", CustomItemSetup.CARBONADO.createDefaultItemStack(), CustomItemSetup.CARBON_CHUNK.createDefaultItemStack(), 4, 480));
+					recipes.add(new CompressionRecipe("carbon_chunk_to_carbonado", CustomBlockSetup.CARBONADO.createDefaultItemStack(), CustomBlockSetup.CARBON_CHUNK.createDefaultItemStack(), 4, 480));
 
 					if(tier.getTier() > 3) {
-						recipes.add(new CompressionRecipe("carbonado_to_diamond", new ItemStack(Material.DIAMOND), CustomItemSetup.CARBONADO.createDefaultItemStack(), 640));
-
+						recipes.add(new CompressionRecipe("carbonado_to_diamond", new ItemStack(Material.DIAMOND), CustomBlockSetup.CARBONADO.createDefaultItemStack(), 640));
 					}
 				}
 			}
@@ -82,7 +72,7 @@ public class CarbonPress extends AbstractSkullMachine {
 
 	@Override
 	public String getDisplayName() {
-		return "§8Carbon Press";
+		return tier.getName() + " §8Carbon Press ";
 	}
 
 
@@ -101,19 +91,19 @@ public class CarbonPress extends AbstractSkullMachine {
 		switch (this.tier) {
 			case BASIC:
 				center = new ItemStack(Material.IRON_TRAPDOOR);
-				carbon = CustomItemSetup.CARBON.createDefaultItemStack();
+				carbon = new ItemStack(Material.COAL);
 				break;
 			case ADVANCED:
 				center = CustomBlockSetup.CARBON_PRESS.createDefaultItemStack();
-				carbon = CustomItemSetup.COMPRESSED_CARBON.createDefaultItemStack();
+				carbon = CustomBlockSetup.COMPRESSED_CARBON.createDefaultItemStack();
 				break;
 			case IMPROVED:
 				center = CustomBlockSetup.ADVANCED_CARBON_PRESS.createDefaultItemStack();
-				carbon = CustomItemSetup.CARBON_CHUNK.createDefaultItemStack();
+				carbon = CustomBlockSetup.CARBON_CHUNK.createDefaultItemStack();
 				break;
 			case PERFECTED:
 				center = CustomBlockSetup.IMPROVED_CARBON_PRESS.createDefaultItemStack();
-				carbon = CustomItemSetup.CARBONADO.createDefaultItemStack();
+				carbon = CustomBlockSetup.CARBONADO.createDefaultItemStack();
 				break;
 			default:
 				break;

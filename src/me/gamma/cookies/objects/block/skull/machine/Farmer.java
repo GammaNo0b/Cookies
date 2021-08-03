@@ -100,8 +100,8 @@ public class Farmer extends AbstractSkullBlock implements BlockTicker, Switchabl
 		recipe.setIngredient('I', Material.IRON_INGOT);
 		recipe.setIngredient('G', Material.GOLD_INGOT);
 		recipe.setIngredient('H', Material.DIAMOND_HOE);
-		recipe.setIngredient('C', CustomBlockSetup.STORAGE_CONNECTOR.createDefaultItemStack());
-		recipe.setIngredient('A', CustomBlockSetup.ITEM_ABSORBER.createDefaultItemStack());
+		recipe.setIngredient('C', CustomBlockSetup.ADVANCED_MACHINE_CASING.createDefaultItemStack());
+		recipe.setIngredient('A', CustomBlockSetup.ELECTRICAL_CIRCUIT.createDefaultItemStack());
 		return recipe;
 	}
 

@@ -28,7 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
 import me.gamma.cookies.event.PlayerArmorEquipEvent.EquipMethod;
-import me.gamma.cookies.objects.item.ArmorType;
+import me.gamma.cookies.objects.item.armor.ArmorType;
 
 
 

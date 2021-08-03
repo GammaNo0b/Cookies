@@ -1,4 +1,6 @@
+
 package me.gamma.cookies.objects.block.skull;
+
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,23 +24,23 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.gamma.cookies.objects.block.BlockRegister;
 import me.gamma.cookies.objects.list.HeadTextures;
 import me.gamma.cookies.objects.property.ByteProperty;
-import me.gamma.cookies.objects.property.Properties;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
 import me.gamma.cookies.util.Utilities;
 
 
+
 public class WirelessRedstoneReceiver extends AbstractSkullBlock implements BlockRegister {
-	
-	private static final ByteProperty FREQUENCY = Properties.REDSTONE_FREQUENCY;
-	
+
+	private static final ByteProperty REDSTONE_FREQUENCY = new ByteProperty("frequency");
+
 	private static final Set<Location> locations = new HashSet<>();
-	
-	
+
 	public WirelessRedstoneReceiver() {
 		register();
 	}
+
 
 	@Override
 	public String getBlockTexture() {
@@ -56,8 +58,8 @@ public class WirelessRedstoneReceiver extends AbstractSkullBlock implements Bloc
 	public String getDisplayName() {
 		return "§cWireless Redstone Receiver";
 	}
-	
-	
+
+
 	@Override
 	public List<String> getDescription() {
 		return Arrays.asList("§7Receivers Redstone Signals sent from Transmitter with the same Frequency", "§7and toggles powerable blocks like levers or pressure plates.");
@@ -74,13 +76,13 @@ public class WirelessRedstoneReceiver extends AbstractSkullBlock implements Bloc
 		recipe.setIngredient('S', Material.STONE);
 		return recipe;
 	}
-	
-	
+
+
 	@Override
 	public ItemStack createDefaultItemStack() {
 		ItemStack stack = super.createDefaultItemStack();
 		ItemMeta meta = stack.getItemMeta();
-		FREQUENCY.storeEmpty(meta);
+		REDSTONE_FREQUENCY.storeEmpty(meta);
 		stack.setItemMeta(meta);
 		return stack;
 	}
@@ -90,32 +92,32 @@ public class WirelessRedstoneReceiver extends AbstractSkullBlock implements Bloc
 	public Set<Location> getLocations() {
 		return locations;
 	}
-	
-	
+
+
 	@Override
 	public void onBlockPlace(Player player, ItemStack usedItem, TileState skullBlock, BlockPlaceEvent event) {
-		FREQUENCY.transfer(usedItem.getItemMeta(), skullBlock);
+		REDSTONE_FREQUENCY.transfer(usedItem.getItemMeta(), skullBlock);
 		super.onBlockPlace(player, usedItem, skullBlock, event);
 	}
-	
-	
+
+
 	@Override
 	public ItemStack onBlockBreak(Player player, TileState skullBlock, BlockBreakEvent event) {
 		ItemStack stack = super.onBlockBreak(player, skullBlock, event).clone();
 		ItemMeta meta = stack.getItemMeta();
-		FREQUENCY.transfer(skullBlock, meta);
+		REDSTONE_FREQUENCY.transfer(skullBlock, meta);
 		stack.setItemMeta(meta);
 		return stack;
 	}
-	
-	
+
+
 	public static void setBlockPower(int frequency, boolean powered) {
 		for(Location location : locations) {
 			Block block = location.getBlock();
 			if(block.getState() instanceof Skull) {
 				Skull skull = (Skull) block.getState();
-				if(Properties.IDENTIFIER.fetch(skull).equals("wireless_redstone_receiver")) {
-					if((FREQUENCY.fetch(skull) & 0xFF) == frequency) {
+				if(IDENTIFIER.fetch(skull).equals("wireless_redstone_receiver")) {
+					if((REDSTONE_FREQUENCY.fetch(skull) & 0xFF) == frequency) {
 						for(BlockFace face : Utilities.faces) {
 							Block relative = block.getRelative(face);
 							if(relative.getBlockData() instanceof Powerable) {

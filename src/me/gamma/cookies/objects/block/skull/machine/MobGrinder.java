@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -56,13 +57,12 @@ public class MobGrinder extends AbstractGuiProvidingSkullBlock implements BlockT
 
 	public static Set<Location> locations = new HashSet<>();
 
-	private static final ByteProperty TICK_COUNT = ByteProperty.create("ticks");
-	private static final ByteProperty RANGE = ByteProperty.create("range");
-	private static final ByteProperty SHARPNESS = ByteProperty.create("sharpness");
-	private static final ByteProperty LOOTING = ByteProperty.create("looting");
-	private static final ByteProperty FIREASPECT = ByteProperty.create("fireaspect");
-	private static final ByteProperty BEHEADING = ByteProperty.create("beheading");
-
+	private static final ByteProperty TICK_COUNT = new ByteProperty("tick_count");
+	private static final ByteProperty RANGE = new ByteProperty("range");
+	private static final ByteProperty SHARPNESS = new ByteProperty("sharpness");
+	private static final ByteProperty LOOTING = new ByteProperty("looting");
+	private static final ByteProperty FIREASPECT = new ByteProperty("fireaspect");
+	private static final ByteProperty BEHEADING = new ByteProperty("beheading");
 
 	public MobGrinder() {
 		register();
@@ -96,13 +96,13 @@ public class MobGrinder extends AbstractGuiProvidingSkullBlock implements BlockT
 	@Override
 	public Recipe getRecipe() {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.MACHINES, RecipeType.ENGINEER);
-		recipe.setShape("DSD", "GMG", "ISI");
+		recipe.setShape("DSD", "GMG", "ICI");
 		recipe.setIngredient('D', Material.DIAMOND);
-		recipe.setIngredient('P', Material.DIAMOND_SWORD);
+		recipe.setIngredient('S', Material.DIAMOND_SWORD);
 		recipe.setIngredient('G', Material.GOLD_INGOT);
-		recipe.setIngredient('M', CustomBlockSetup.MACHINE_CASING.createDefaultItemStack());
+		recipe.setIngredient('M', CustomBlockSetup.ADVANCED_MACHINE_CASING.createDefaultItemStack());
 		recipe.setIngredient('I', Material.IRON_INGOT);
-		recipe.setIngredient('S', Material.IRON_SWORD);
+		recipe.setIngredient('C', CustomBlockSetup.ELECTRICAL_CIRCUIT.createDefaultItemStack());
 		return recipe;
 	}
 
@@ -187,6 +187,7 @@ public class MobGrinder extends AbstractGuiProvidingSkullBlock implements BlockT
 			properties[i].store(block, (byte) (stack != null && stack.getType() != Material.AIR && stack.getType() != Material.BARRIER ? stack.getAmount() : 0));
 		}
 		block.update();
+		super.onInventoryClose(player, block, gui, event);
 	}
 
 
@@ -309,11 +310,11 @@ public class MobGrinder extends AbstractGuiProvidingSkullBlock implements BlockT
 			@EventHandler
 			public void onEntityKill(EntityDeathEvent event) {
 				LivingEntity entity = event.getEntity();
-				Byte looting = LOOTING.fetch(entity);
+				Byte b = LOOTING.fetch(entity);
+				int looting = new Random().nextInt(b == null ? 1 : b + 1);
 				List<ItemStack> drops = new ArrayList<ItemStack>(event.getDrops());
-				if(looting != null)
-					for(int i = 0; i < looting; i++)
-						event.getDrops().addAll(drops);
+				for(int i = 0; i < looting; i++)
+					event.getDrops().addAll(drops);
 				Byte beheading = BEHEADING.fetch(entity);
 				if(beheading != null && Cookies.isInstalled("HeadDrops")) {
 					ItemStack head = EntityHeads.getEntityHeadFromEntity(entity, (double) beheading / (double) MAX_UPGRADES);
@@ -336,7 +337,7 @@ public class MobGrinder extends AbstractGuiProvidingSkullBlock implements BlockT
 
 	private static IItemSupplier[] getUpgrades() {
 		return new IItemSupplier[] {
-			CustomItemSetup.SHARPNESS_MOBGRINDER_UPGRADE, CustomItemSetup.LOOTING_MOBGRINDER_UPGRADE, CustomItemSetup.FIREASPECT_MOBGRINDER_UPGRADE, CustomItemSetup.BEHEADING_MOBGRINDER_UPGRADE, CustomItemSetup.RANGE_MOBGRINDER_UPGRADE
+			CustomItemSetup.UPGRADE_SHARPNESS, CustomItemSetup.UPGRADE_FORTUNE, CustomItemSetup.UPGRADE_FIREASPECT, CustomItemSetup.UPGRADE_BEHEADING, CustomItemSetup.UPGRADE_RANGE
 		};
 	}
 

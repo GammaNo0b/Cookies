@@ -2,41 +2,55 @@
 package me.gamma.cookies.objects.property;
 
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 
 import me.gamma.cookies.util.Utilities;
 
 
 
-public class ItemStackProperty extends Property<ItemStack> {
+public class ItemStackProperty extends Property<String, ItemStack> {
 
-	protected ItemStackProperty(String name) {
+	public ItemStackProperty(String name) {
 		super(name);
 	}
 
 
 	@Override
-	public void store(PersistentDataHolder holder, ItemStack value) {
-		holder.getPersistentDataContainer().set(this.getKey(), PersistentDataType.STRING, Utilities.ItemStackToNBT(value).asString());
+	public PersistentDataType<String, ItemStack> getPersistentDataType() {
+		return new PersistentDataType<String, ItemStack>() {
+
+			@Override
+			public String toPrimitive(ItemStack stack, PersistentDataAdapterContext context) {
+				return Utilities.ItemStackToNBT(stack).asString();
+			}
+
+
+			@Override
+			public Class<String> getPrimitiveType() {
+				return String.class;
+			}
+
+
+			@Override
+			public Class<ItemStack> getComplexType() {
+				return ItemStack.class;
+			}
+
+
+			@Override
+			public ItemStack fromPrimitive(String value, PersistentDataAdapterContext context) {
+				return Utilities.NBTtoItemStack(Utilities.StringToNBT(value));
+			}
+		};
 	}
-
-
+	
+	
 	@Override
-	public ItemStack fetch(PersistentDataHolder holder) {
-		return Utilities.NBTtoItemStack(Utilities.StringToNBT(holder.getPersistentDataContainer().get(this.getKey(), PersistentDataType.STRING)));
-	}
-
-
-	@Override
-	public boolean isPropertyOf(PersistentDataHolder holder) {
-		return holder.getPersistentDataContainer().has(this.getKey(), PersistentDataType.STRING);
-	}
-
-
-	public static ItemStackProperty create(String name) {
-		return new ItemStackProperty(name);
+	public ItemStack emptyValue() {
+		return new ItemStack(Material.AIR, 0);
 	}
 
 }

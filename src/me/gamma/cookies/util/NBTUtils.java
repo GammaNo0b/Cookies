@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import net.minecraft.server.v1_16_R3.NBTCompressedStreamTools;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import net.minecraft.nbt.NBTCompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
 
 
 
@@ -21,7 +21,8 @@ public class NBTUtils {
 			return new NBTTagCompound();
 		}
 	}
-	
+
+
 	public static boolean writeNBT(OutputStream stream, NBTTagCompound compound) {
 		try {
 			NBTCompressedStreamTools.a(compound, stream);

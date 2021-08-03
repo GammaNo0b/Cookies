@@ -3,6 +3,7 @@ package me.gamma.cookies.objects.block;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -18,16 +19,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.objects.IItemSupplier;
-import me.gamma.cookies.objects.property.Properties;
+import me.gamma.cookies.objects.block.machine.Machine;
+import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.property.StringProperty;
-import me.gamma.cookies.objects.property.UUIDProperty;
 
 
 
 public abstract class AbstractTileStateBlock implements IItemSupplier {
 
-	protected static final StringProperty IDENTIFIER = Properties.IDENTIFIER;
-	protected static final UUIDProperty OWNER = Properties.OWNER;
+	protected static final StringProperty IDENTIFIER = AbstractCustomItem.IDENTIFIER;
 
 	public abstract String getRegistryName();
 
@@ -44,11 +44,16 @@ public abstract class AbstractTileStateBlock implements IItemSupplier {
 	public abstract Recipe getRecipe();
 
 
+	public List<Recipe> getRecipes() {
+		return Arrays.asList(this.getRecipe());
+	}
+
+
 	public boolean isInstanceOf(PersistentDataHolder holder) {
 		return this.getRegistryName().equals(IDENTIFIER.fetch(holder));
 	}
-	
-	
+
+
 	public boolean isInstanceOf(TileState block) {
 		return isInstanceOf((PersistentDataHolder) block);
 	}
@@ -75,7 +80,8 @@ public abstract class AbstractTileStateBlock implements IItemSupplier {
 		stack.setItemMeta(meta);
 		return stack;
 	}
-	
+
+
 	@Override
 	public ItemStack get() {
 		return this.createDefaultItemStack();
@@ -99,22 +105,39 @@ public abstract class AbstractTileStateBlock implements IItemSupplier {
 	}
 
 
-	public void onAirRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {}
+	public boolean onAirRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {
+		return false;
+	}
 
 
-	public void onAirLeftClick(Player player, ItemStack stack, PlayerInteractEvent event) {}
+	public boolean onAirLeftClick(Player player, ItemStack stack, PlayerInteractEvent event) {
+		return false;
+	}
 
 
-	public void onBlockRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {}
+	public boolean onBlockRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {
+		return false;
+	}
 
 
-	public void onBlockLeftClick(Player player, ItemStack stack, PlayerInteractEvent event) {}
+	public boolean onBlockLeftClick(Player player, ItemStack stack, PlayerInteractEvent event) {
+		return false;
+	}
 
 
-	public void onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {}
+	public boolean onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {
+		return false;
+	}
 
 
-	public void onBlockLeftClick(Player player, TileState block, PlayerInteractEvent event) {}
+	public boolean onBlockLeftClick(Player player, TileState block, PlayerInteractEvent event) {
+		return false;
+	}
+
+
+	public boolean hasCustomListener() {
+		return this.getCustomListener() != null;
+	}
 
 
 	public Listener getCustomListener() {

@@ -15,6 +15,10 @@ public class HeadTextures {
 	public static final String SMITHING_TABLE = "272d1be488d267ecbecf7fbc314390636e942b6460628b02104a838184b7e737";
 	public static final String FLETCHING_TABLE = "2760776074c23ae411ed46ef324a7a07282fbfbbbc5a99fcb3f5a8c9d6b02a53";
 	public static final String MEASURING_TAPE = "180d5c43a6cf5bb7769fd0c8240e1e70d2ae38ef9d78a1db401aca6a2cb36f65";
+	public static final String NETHER_PORTAL = "197520e7b531e8b561ea8e86dfdd91a72bf9832bbad94e92051147fe5e77bfe";
+	public static final String END_PORTAL_OPEN = "8b8a99cbe98f09c87417abd4ec12f779a52d83314fc474be507d420573366ba7";
+	public static final String END_PORTAL_CLOSED = "d9fae8fa0c219e491a5e4c1e1a9a42542bc77f7e2cef79dd5b6d12ca2bb12846";
+	public static final String ANGEL_BLOCK = "76f33b297a981b527bec393168401d8a2ecadeb9f1603ba5e276f42d64475116";
 
 	// Color
 	public static final String COLOR_FFFFFF = "366a5c98928fa5d4b5d5b8efb490155b4dda3956bcaa9371177814532cfc";
@@ -32,10 +36,22 @@ public class HeadTextures {
 	public static final String GRANITE_PEBBLE = "63b88c789ab0bc3901f4de38dd72d32553bb08828b73b84fa8d73146e0e58b0c";
 	public static final String DIORITE_PEBBLE = "a14c6e41a762d37863a9fff6888c738905b92cc6c3898892a38dfdfe2ac4bf";
 	public static final String ANDESITE_PEBBLE = "adb7bf059a62d27b1e1e2f34394f3f38ed8cda45471f6f4d5b47c3912d181135";
+	public static final String COMPRESSED_COBBLESTONE = "57f99971601ee77666c05923f341a89ceba1357532279e3926aea79f55d263a0";
+	public static final String DOUBLE_COMPRESSED_COBBLESTONE = "8c96220dc7b85b909a575acfaffb06c8c878a2d515dbec28bf2680346acf173f";
+	public static final String TRIPLE_COMPRESSED_COBBLESTONE = "9e2b0924aa2b424e0ff6616a93c8ef487057745af1aa5cd223c541ebd3a688a3";
+	public static final String QUADRUPLE_COMPRESSED_COBBLESTONE = "37fba6ba0e17007ae17cb1b48f49c26a0256a7d2e8884c3cf07aaede025ebb72";
+	public static final String QUINTUPLE_COMPRESSED_COBBLESTONE = "b5a86541ed9cd29fcac0a801cece9c27a00549ecf41c46ded300bb012da59390";
+	public static final String SEXTUPLE_COMPRESSED_COBBLESTONE = "9ec69a73450820bb97b51509b334eb0d9f6c1f8a9d515fad57f3b7619aa3af9a";
+	public static final String SEPTUPLE_COMPRESSED_COBBLESTONE = "b6ebc30aa2edfa1991a5ba77e2f2cb9d7398d375be99b1c1eff7aef2dddf7399";
+	public static final String OCTUPLE_COMPRESSED_COBBLESTONE = "811b19b06813d0388eae03bb2c97621c48a78b34f735a925787934a6c304199a";
 	public static final String CARBON = "8b3a095b6b81e6b9853a19324eedf0bb9349417258dd173b8eff87a087aa";
 	public static final String COMPRESSED_CARBON = "321d495165748d3116f99d6b5bd5d42eb8ba592bcdfad37fd95f9b6c04a3b";
 	public static final String CARBON_CHUNK = "12f4b1577f5160c6893172571c4a71d8b321cdceaa032c6e0e3b60e0b328fa";
 	public static final String CARBONADO = "eb49e6ec10771e899225aea73cd8cf03684f411d1415c7323c93cb9476230";
+	public static final String CRUSHED_NETHERRACK = "4bfd7e09dcad4c61247447c77d246d220ea91d98caabed5169dc5b8137fec9";
+	public static final String CRUSHED_END_STONE = "42813cf8c4fd013baf5bf55a8c93121c482da1cf6e1054c180ff3e81727b65dd";
+	public static final String CRUSHED_OBSIDIAN = "3445e472ac0554e71e20a53d616a6c022f54a748cc8713f3713f3926c725fd2a";
+	public static final String CRUSHED_CRYING_OBSIDIAN = "d1c87454f1ee585b90fdb3a3e40952a5c2f80c0a49dfec62870fdff183967a84";
 
 	// Redstone
 	public static final String REDSTONE_TRANSMITTER = "bc419a44c5b967f47316d1bed3cc632bded199a5c34211791c70f998fdbd6";
@@ -48,7 +64,12 @@ public class HeadTextures {
 	public static final String MOTOR = "8cbca012f67e54de9aee72ff424e056c2ae58de5eacc949ab2bcd9683cec";
 	public static final String ACCUMULATOR = "1ead4e8ae8eb454dbd985bb59c4c1375945aafd28a4eccf71e8d57fc978ef5";
 	public static final String LED_OFF = "6df14e5017b279b03dac97d429b4a5fa6c398ad568ea43e7c40683c7398c1627";
-	public static final String LED_ON = "8e2c18ab35949bf9f9e7d6a69b885ccd8cc2efb9475946d7d3fb5c3fef61";
+	public static final String LED_BLUE = "52ec80d2484a6210466f0bd96e5c4b83305c38b9fddf05bd74d7683099823d76";
+	public static final String LED_GREEN = "f561b179b6bc06956d04f46692b7533b87171374c75273085ab2a6fedb97cbb4";
+	public static final String LED_ORANGE = "48300c3a2b3a4df44a6a59c7566b9a2f1a7d5ae9719a0ed3da50ff5f8d5bca8f";
+	public static final String LED_RED = "8e2c18ab35949bf9f9e7d6a69b885ccd8cc2efb9475946d7d3fb5c3fef61";
+	public static final String ELECTRICAL_CIRCUIT = "b0c9c1a022f40b73f14b4cba37c718c6a533f3a2864b6536d5f456934cc1f";
+	public static final String ANDROID_CORE = "1b9ac59f8a52d1931282007f76e2b05cd684e058685e49545788d4172d129ee0";
 
 	// Machines
 	public static final String MACHINE_CASING = "6ddd4a12da1cc2c9f9d6cd49fc778e3a11f3757de6dd312d70a0d47885189c0";
@@ -56,6 +77,8 @@ public class HeadTextures {
 	public static final String IMPROVED_MACHINE_CASING = "56a7d2195ff7674bbb12e2f7578a2a63c54a980e64744450ac6656e05a790499";
 	public static final String PERFECTED_MACHINE_CASING = "5175bdf47aea1a4bf1d349be6b7fa4ab37f479672f4c43aca57511b427ab4";
 	public static final String COBBLESTONE_GENERATOR = "b5c9762729d48d0a16fe89573bdd2faf50196fea15d49b5a6bfea489be71";
+	public static final String LAVA_GENERATOR = "cd4a7fce6f888e8042d634c7973b3cbc7e9320f1744608e6c5cdd5f4ef9ca393";
+	public static final String OBSIDIAN_GENERATOR = "51af4b784f11465996fcd43d088381cd381fd4ce8ae4f29f368a271b98f03822";
 	public static final String ITEM_ABSORBER = "749dbfab86af399cab8c85320396dacf8569e92f89574b63626787a344c17e4f";
 	public static final String EXPERIENCE_ABSORBER = "356bbc077ede6b277bfb21154552bac571f581c17e71136555a234ef8267631a";
 	public static final String MOB_GRINDER = "172771fc11737063c81eb75973e9b82590951e3674f31acce8cddd1aad1b";
@@ -63,13 +86,21 @@ public class HeadTextures {
 	public static final String QUARRY = "e82086d1545ae888aa766f8ed9c66e4755b42ed3a7be4e0cfa068d7f676d6df";
 	public static final String FARMER = "682e275d67f3832bbda33aa834179f56666ca86d1f2bd316edae6eced0d98064";
 	public static final String DYE_FABRICATOR = "8e38749b27def54f4cc300d0b1d23aa17ea0ff7d8e5759062c1f5229ed8c7f09";
+	public static final String ENCHANTMENT_TABLE = "b2f79016cad84d1ae21609c4813782598e387961be13c15682752f126dce7a";
+	public static final String DISENCHANTMENT_TABLE = "42c8e76fcdde9a15ae3929b84bf6ffa4c1777b1e26b7d6d8938f0ef04e84874c";
+	public static final String ENCHANTMENT_COMBINER = "abb84e348ab58be0435f61e027fa6dfe557bee8893f1c10c3c2bebd2025da";
 	public static final String TOASTER = "84486da2c932a79fd920f36bfcb554f601f2f1065befaa68bdf7fcd361397704";
+	public static final String MONSTER_SPAWNER = "4eb07eea380af58dc91eeee15d95d8790a0781c695ec0a8fd8fe31d4839ca562";
 	public static final String CHUNK_LOADER = "5b78e55e3ea6b3682bd7cead43eb1c91b2527a81aa2894f095801f6ee47a3";
+	public static final String CONSOLE_SCREEN = "a78295e8ec10f9fba3f0c7b114d334992b03f4e23f8064766ee434ddcda127f1";
+	public static final String ANDROID = "e03b544b49988ea70d7266e420231f049123ca7bf660eb09559805656614dce5";
 	public static final String MINERAL_EXTRACTOR = "e423af9f753d2444e087dd17c632531dd2de717743faa353fff629da252be";
 	public static final String CRUSHER = "0d61ab0136c69d7caddd566d2e9bcb35fdc5f9e3ca351e27362abf1374c4e58";
 	public static final String SMELTERY = "8eb81ef8902379650ba79f45723d6b9c888388a00fc4e192f3454fe193882ee1";
 	public static final String ____ = "82a319cf66a4de12e3330e8bc4c82c985ccc3cb2230868c336a88fc4a22082a";
 	public static final String COMPRESSOR = "e48337f7ede15c3b2f8dc6a63bd92874cdf74ec862b4118c7e35559ce8b4d";
+	public static final String FREEZER = "f4bb171a16f9e5fc05e7d4136e4931571126756620bd795951906a31a2ecaa29";
+	public static final String COMPACT_LAVA_GENERATOR = "233ba5f2ed14d1fc64c29845a0713a7a11929c5915f6c942a3e3a6da3e9025";
 	public static final String CARBON_PRESS = "efc05af0e88c6fb10b4c8c8b81b7aa658e64649724cb73bb9bb0f25f28bd";
 
 	// Storage
@@ -81,10 +112,17 @@ public class HeadTextures {
 	public static final String CLOWNFISH_CHEST = "99f795f21f47f4c2310cc5f4c6e3b04ceb07bd5b0352c228f343cab2157f4cbe";
 	public static final String STORAGE_CONNECTOR = "9ac52419b99025828c89fa825945e6948e45bb5a22e4425a59e9096e4c1ac38";
 	public static final String STORAGE_MONITOR = "3b925d3a52759fde8c0258871fefd9141e5c97fdf453af3df21104cc8c488";
-	public static final String STORAGE_IMPORTER = "db8736ff42bc68c11ede8d874b1512d29f2e8c5f6febe8f58dfcd9a0a51d6dee";
-	public static final String STORAGE_EXPORTER = "d78f2b7e5e75639ea7fb796c35d364c4df28b4243e66b76277aadcd6261337";
+	public static final String ENDER_ACCESSOR = "87cf21ccb21e2d29c81cc15fe8d3b3ef971d182d3224a212964dddb36cf4";
+	public static final String GREEN_STORAGE_PART = "9eb88a36e1b10b51f6d7fc8bc9d3b21471d64d6e75affb8024cf158642fcb9d";
+	public static final String YELLOW_STORAGE_PART = "de010766e5ded22961c2e626809e4ff28aa6814e9ec57275a718bbd5df1cbf4c";
+	public static final String ORANGE_STORAGE_PART = "d78f2b7e5e75639ea7fb796c35d364c4df28b4243e66b76277aadcd6261337";
+	public static final String RED_STORAGE_PART = "e1dc50f72161d4d1f2f63dbef810f2b35fbd65958836407b2aac910be0adfb5b";
+	public static final String MAGENTA_STORAGE_PART = "5989802f5d94a0c74e0489220eca8d3eee0a9d09719e920e545a96d51c0e980d";
+	public static final String BLUE_STORAGE_PART = "db8736ff42bc68c11ede8d874b1512d29f2e8c5f6febe8f58dfcd9a0a51d6dee";
+	public static final String LIGHT_BLUE_STORAGE_PART = "cb8b647e172d65058512fa81a1e5504826c78be46a0af4babbb28b821345821d";
 
 	// Plants
+	public static final String PINECONE = "94e28890e865c7d950b15131a43d76c94de38995d609fefb4f297362fed1218";
 	public static final String ORANGE = "9fd0e330a688d8bb9519befe1bfc34337b371ac75150216fdd03959eb7b44";
 	public static final String LEMON = "4378b582d19ccc55b023eb82eda271bac4744fa2006cf5e190246e2b4d5d";
 	public static final String KIWI = "b0155d41e6865773f2ad2e9fe4cf82f2f880e54afe71a13bbe2390d4aa81f4f4";

@@ -10,15 +10,15 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
-import net.minecraft.server.v1_16_R3.NBTTagList;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 
 
@@ -43,6 +43,11 @@ public class Team {
 
 	public String getName() {
 		return name;
+	}
+
+
+	public boolean isEmpty() {
+		return this.members.isEmpty();
 	}
 
 
@@ -276,7 +281,10 @@ public class Team {
 			executor.sendMessage("§cYou don't own any Team!");
 			return false;
 		}
-		return team.removeMember(executor, player);
+		boolean b = team.removeMember(executor, player);
+		if(b && team.isEmpty())
+			TEAM_REGISTRY.unregister(executor, team.getName());
+		return b;
 	}
 
 

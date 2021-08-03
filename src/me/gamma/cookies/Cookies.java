@@ -3,16 +3,21 @@ package me.gamma.cookies;
 
 
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.gamma.cookies.command.CookieCommand;
+import me.gamma.cookies.feature.CookieFeature;
+import me.gamma.cookies.feature.DispenserBlockPlacerFeature;
+import me.gamma.cookies.feature.EditSignFeature;
 import me.gamma.cookies.listeners.CustomBlockListener;
 import me.gamma.cookies.listeners.CustomCraftingListener;
 import me.gamma.cookies.listeners.CustomItemListener;
 import me.gamma.cookies.listeners.MultiBlockListener;
 import me.gamma.cookies.listeners.PlayerArmorEquipEventListener;
 import me.gamma.cookies.listeners.TeamQueueListener;
+import me.gamma.cookies.managers.InventoryManager;
 import me.gamma.cookies.managers.RecipeManager;
 import me.gamma.cookies.objects.block.BlockTicker;
 import me.gamma.cookies.objects.item.PlayerRegister;
@@ -29,7 +34,7 @@ public class Cookies extends JavaPlugin {
 
 	public static Cookies INSTANCE;
 
-	public TeamQueueListener teamQueueListener;
+	private PluginManager pluginManager;
 
 	@Override
 	public void onEnable() {
@@ -46,6 +51,7 @@ public class Cookies extends JavaPlugin {
 		BlockTicker.startTicking();
 
 		this.registerEvents();
+		this.registerFeatures();
 
 		CustomItemSetup.getCustomTasks().forEach((task, delay) -> Bukkit.getScheduler().scheduleSyncRepeatingTask(this, task, delay, delay));
 
@@ -60,19 +66,39 @@ public class Cookies extends JavaPlugin {
 	}
 
 
-	private void registerEvents() {
-		PluginManager pmanager = Bukkit.getPluginManager();
-		pmanager.registerEvents(new PlayerArmorEquipEventListener(), this);
-		pmanager.registerEvents(new CustomCraftingListener(), this);
-		pmanager.registerEvents(new CustomItemListener(), this);
-		pmanager.registerEvents(new CustomBlockListener(), this);
-		pmanager.registerEvents(new MultiBlockListener(), this);
-		pmanager.registerEvents(teamQueueListener = new TeamQueueListener(), this);
-		pmanager.registerEvents(RecipeManager.getRecipeBookListener(), this);
-		CustomItemSetup.getCustomListeners().forEach(listener -> pmanager.registerEvents(listener, this));
-		CustomBlockSetup.getCustomListeners().forEach(listener -> pmanager.registerEvents(listener, this));
+	public void registerEvent(Listener listener) {
+		this.pluginManager.registerEvents(listener, this);
 	}
-	
+
+
+	private void registerEvents() {
+		this.pluginManager = Bukkit.getPluginManager();
+
+		this.registerEvent(new PlayerArmorEquipEventListener());
+		this.registerEvent(new CustomCraftingListener());
+		this.registerEvent(new CustomItemListener());
+		this.registerEvent(new CustomBlockListener());
+		this.registerEvent(new MultiBlockListener());
+		this.registerEvent(new TeamQueueListener());
+
+		this.registerEvent(InventoryManager.getInventoryListener());
+
+		CustomItemSetup.getCustomListeners().forEach(this::registerEvent);
+		CustomBlockSetup.getCustomListeners().forEach(this::registerEvent);
+	}
+
+
+	public void registerFeature(CookieFeature feature) {
+		feature.register(this);
+	}
+
+
+	private void registerFeatures() {
+		this.registerFeature(new DispenserBlockPlacerFeature());
+		this.registerFeature(new EditSignFeature());
+	}
+
+
 	public static boolean isInstalled(String name) {
 		return Bukkit.getPluginManager().getPlugin(name) != null;
 	}

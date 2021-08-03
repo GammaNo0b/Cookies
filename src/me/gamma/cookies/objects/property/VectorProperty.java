@@ -2,47 +2,54 @@
 package me.gamma.cookies.objects.property;
 
 
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
 
 
-public class VectorProperty extends Property<Vector> {
+public class VectorProperty extends Property<long[], Vector> {
 
-	protected VectorProperty(String name) {
+	public VectorProperty(String name) {
 		super(name);
 	}
 
 
 	@Override
-	public void store(PersistentDataHolder holder, Vector value) {
-		if(value == null) {
-			holder.getPersistentDataContainer().set(this.getKey(), PersistentDataType.LONG_ARRAY, new long[0]);
-			return;
-		}
-		holder.getPersistentDataContainer().set(this.getKey(), PersistentDataType.LONG_ARRAY, new long[] {Double.doubleToLongBits(value.getX()), Double.doubleToLongBits(value.getY()), Double.doubleToLongBits(value.getZ())});
+	public PersistentDataType<long[], Vector> getPersistentDataType() {
+		return new PersistentDataType<long[], Vector>() {
+
+			@Override
+			public long[] toPrimitive(Vector vector, PersistentDataAdapterContext context) {
+				return new long[] {
+					Double.doubleToLongBits(vector.getX()), Double.doubleToLongBits(vector.getY()), Double.doubleToLongBits(vector.getZ())
+				};
+			}
+
+
+			@Override
+			public Class<long[]> getPrimitiveType() {
+				return long[].class;
+			}
+
+
+			@Override
+			public Class<Vector> getComplexType() {
+				return Vector.class;
+			}
+
+
+			@Override
+			public Vector fromPrimitive(long[] value, PersistentDataAdapterContext context) {
+				return new Vector(Double.longBitsToDouble(value[0]), Double.longBitsToDouble(value[1]), Double.longBitsToDouble(value[2]));
+			}
+		};
 	}
 
 
 	@Override
-	public Vector fetch(PersistentDataHolder holder) {
-		long[] l = holder.getPersistentDataContainer().get(this.getKey(), PersistentDataType.LONG_ARRAY);
-		if(l.length < 3) {
-			return null;
-		}
-		return new Vector(Double.longBitsToDouble(l[0]), Double.longBitsToDouble(l[1]), Double.longBitsToDouble(l[2]));
-	}
-
-
-	@Override
-	public boolean isPropertyOf(PersistentDataHolder holder) {
-		return holder.getPersistentDataContainer().has(this.getKey(), PersistentDataType.LONG_ARRAY);
-	}
-	
-	
-	public static VectorProperty create(String name) {
-		return new VectorProperty(name);
+	public Vector emptyValue() {
+		return new Vector(0.0D, 0.0D, 0.0D);
 	}
 
 }

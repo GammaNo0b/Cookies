@@ -5,6 +5,7 @@ package me.gamma.cookies.objects.block.skull.storage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,8 +23,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,13 +39,15 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.Cookies;
-import me.gamma.cookies.managers.RecipeManager;
+import me.gamma.cookies.managers.InventoryManager;
+import me.gamma.cookies.objects.ItemFilter;
+import me.gamma.cookies.objects.block.ItemProvider;
 import me.gamma.cookies.objects.block.StorageProvider;
 import me.gamma.cookies.objects.block.skull.AbstractGuiProvidingSkullBlock;
 import me.gamma.cookies.objects.list.HeadTextures;
-import me.gamma.cookies.objects.property.ByteProperty;
+import me.gamma.cookies.objects.property.BooleanProperty;
+import me.gamma.cookies.objects.property.EnumProperty;
 import me.gamma.cookies.objects.property.IntegerProperty;
-import me.gamma.cookies.objects.property.Properties;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
@@ -54,30 +57,30 @@ import me.gamma.cookies.util.ComplexInteger;
 import me.gamma.cookies.util.ConfigValues;
 import me.gamma.cookies.util.ItemBuilder;
 import me.gamma.cookies.util.Utilities;
-import net.minecraft.server.v1_16_R3.BlockPosition;
-import net.minecraft.server.v1_16_R3.NBTBase;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
-import net.minecraft.server.v1_16_R3.NBTTagList;
-import net.minecraft.server.v1_16_R3.TileEntity;
+import net.minecraft.core.BlockPosition;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.level.block.entity.TileEntity;
 
 
 
 public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements StorageComponent {
 
-	private static final ByteProperty SORT_TYPE = ByteProperty.create("SortType");
-	private static final IntegerProperty TOTAL_STORED_ITEMS = IntegerProperty.create("totalstoreditems");
-	private static final IntegerProperty CONNECTED_INVENTORIES = IntegerProperty.create("ConnectedInventories");
-	private static final IntegerProperty CONNECTED_STORAGE_BLOCKS = IntegerProperty.create("ConnectedStorageBlocks");
-	private static final IntegerProperty COMPONENTS = IntegerProperty.create("ConnectedComponents");
+	private static final EnumProperty<StorageMonitor.SortType> SORT_TYPE = new EnumProperty<>("sorttype", StorageMonitor.SortType.class);
+	private static final BooleanProperty SORT_INVERTED = new BooleanProperty("sortinverted");
+	private static final IntegerProperty TOTAL_STORED_ITEMS = new IntegerProperty("storeditems");
+	private static final IntegerProperty CONNECTED_INVENTORIES = new IntegerProperty("connectedinventories");
+	private static final IntegerProperty CONNECTED_STORAGE_BLOCKS = new IntegerProperty("connectedstorageblocks");
+	private static final IntegerProperty COMPONENTS = new IntegerProperty("components");
 
 	private final Integer[] border = new Integer[] {
 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53
 	};
 	public static final String STATS_TITLE = "§9Storage §sSystem §bStatistics";
 
-
 	public static boolean isStorageMonitor(TileState block) {
-		return "storage_monitor".equals(Properties.IDENTIFIER.fetch(block));
+		return "storage_monitor".equals(IDENTIFIER.fetch(block));
 	}
 
 
@@ -134,6 +137,7 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 	public void onBlockPlace(Player player, ItemStack usedItem, TileState block, BlockPlaceEvent event) {
 		super.onBlockPlace(player, usedItem, block, event);
 		SORT_TYPE.storeEmpty(block);
+		SORT_INVERTED.storeEmpty(block);
 		block.update();
 	}
 
@@ -150,8 +154,9 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 
 
 	@Override
-	public void onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {
+	public boolean onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {
 		if(!player.isSneaking()) {
+			event.setCancelled(true);
 			if(this.canAccess(block, player)) {
 				player.playSound(player.getLocation(), this.getSound(), 0.2F, 1);
 				Inventory gui = this.createMainGui(player, block);
@@ -160,6 +165,7 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 				player.sendMessage("§cYou are not owning this Storage Monitor!");
 			}
 		}
+		return false;
 	}
 
 
@@ -170,9 +176,7 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 			if(gui.getItem(i) == null) {
 				gui.setItem(i, new ItemBuilder(Material.ORANGE_STAINED_GLASS_PANE).setName(" ").build());
 			}
-
 		}
-
 		return gui;
 	}
 
@@ -186,8 +190,10 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 			if(slot == 18) {
 				clicker.openInventory(this.createStats(block));
 			} else if(slot == 26) {
-				SortType type = SortType.byIDorDefault(SORT_TYPE.fetch(block), SortType.ID).loop();
-				SORT_TYPE.store(block, (byte) type.ordinal());
+				SORT_TYPE.cycle(block);
+				clicker.openInventory(this.constructPage(clicker, block, this.createMainGui(clicker, block), page));
+			} else if(slot == 35) {
+				SORT_INVERTED.toggle(block);
 				clicker.openInventory(this.constructPage(clicker, block, this.createMainGui(clicker, block), page));
 			} else if(slot == 48) {
 				if(page == 0) {
@@ -219,32 +225,18 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 				return true;
 			}
 
+			List<Inventory> inventories = new ArrayList<>();
+			locatedInventories.values().forEach(inventories::add);
+
+			List<Location> storageBlocks = new ArrayList<>();
+			storageBlockContents.keySet().forEach(storageBlocks::add);
+
 			ItemStack calculated = this.calculateItemStack(event.getCurrentItem());
-			for(Location storageBlockLocation : storageBlockContents.keySet()) {
-				Block current = storageBlockLocation.getBlock();
-				if(current.getState() instanceof TileState) {
-					if(StorageSkullBlock.isStorageBlock((TileState) current.getState())) {
-						if(calculated == null) {
-							break;
-						}
-						ItemStack request = StorageProvider.requestItem((TileState) current.getState(), calculated, calculated.getAmount());
-						if(request != null && request.getAmount() > 0) {
-							Utilities.giveItemToPlayer(clicker, request);
-							calculated = null;
-							break;
-						}
-					}
-				}
+			ItemStack stack = removeItemStack(inventories, storageBlocks, new ItemFilter(Arrays.asList(calculated), true, false));
+			if(stack != null) {
+				Utilities.giveItemToPlayer(clicker, stack);
+				clicker.openInventory(constructPage(clicker, block, this.createMainGui(clicker, block), page));
 			}
-
-			if(calculated != null) {
-				List<Inventory> inventories = new ArrayList<>();
-				locatedInventories.values().forEach(inventories::add);
-				ItemStack rest = this.removeItemStack(inventories, calculated);
-				Utilities.giveItemToPlayer(clicker, Utilities.subtractItemStack(calculated, rest));
-			}
-
-			clicker.openInventory(constructPage(clicker, block, this.createMainGui(clicker, block), page));
 		}
 		return true;
 	}
@@ -317,17 +309,17 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26
 		};
 		for(int i : border) {
-			gui.setItem(i, RecipeManager.filler(Material.YELLOW_STAINED_GLASS_PANE));
+			gui.setItem(i, InventoryManager.filler(Material.YELLOW_STAINED_GLASS_PANE));
 		}
 		int totalStoredItems = TOTAL_STORED_ITEMS.fetch(block);
 		int inventories = CONNECTED_INVENTORIES.fetch(block);
 		int storageBlocks = CONNECTED_STORAGE_BLOCKS.fetch(block);
 		int connectors = COMPONENTS.fetch(block);
 		gui.setItem(10, new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName("§cTotal Stored Items§8: §4" + totalStoredItems).build());
-		gui.setItem(11, RecipeManager.filler(Material.LIGHT_GRAY_STAINED_GLASS_PANE));
+		gui.setItem(11, InventoryManager.filler(Material.LIGHT_GRAY_STAINED_GLASS_PANE));
 		gui.setItem(12, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName("§aConnected Inventories§8: §2" + inventories).build());
 		gui.setItem(14, new ItemBuilder(Material.MAGENTA_STAINED_GLASS_PANE).setName("§dStorage Blocks§8: §5" + storageBlocks).build());
-		gui.setItem(15, RecipeManager.filler(Material.LIGHT_GRAY_STAINED_GLASS_PANE));
+		gui.setItem(15, InventoryManager.filler(Material.LIGHT_GRAY_STAINED_GLASS_PANE));
 		gui.setItem(16, new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName("§bComponents§8: §3" + connectors).build());
 		return gui;
 	}
@@ -343,7 +335,8 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 	 * @return An filled Inventory with all Items from the given Page.
 	 */
 	private Inventory constructPage(@Nullable Player player, TileState block, Inventory gui, int page) {
-		SortType sorttype = SortType.byIDorDefault(SORT_TYPE.fetch(block), SortType.ID);
+		SortType sorttype = SORT_TYPE.fetch(block);
+		boolean inverted = SORT_INVERTED.fetch(block);
 		ComplexInteger totalAmount = new ComplexInteger();
 		Map<Location, Inventory> inventories = new HashMap<>();
 		Map<Location, List<BigItemStack>> storageBlockContents = new HashMap<>();
@@ -351,10 +344,11 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 		components.add(block.getLocation());
 		getConnectedInventories(block.getBlock(), inventories, storageBlockContents, components, false);
 		Map<ItemStack, Integer> allItems = this.getAllItems(inventories, storageBlockContents, totalAmount);
-		List<BigItemStack> sorted = this.sortItems(allItems, sorttype);
+		List<BigItemStack> sorted = this.sortItems(allItems, sorttype, inverted);
 		List<List<BigItemStack>> pages = this.getItemPages(sorted);
 		gui.setItem(18, new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE).setName("§eStorage System Statistics").build());
 		gui.setItem(26, new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE).setName("§9Sort Type:").addLore("§r§3" + sorttype.getName()).build());
+		gui.setItem(35, new ItemBuilder(inverted ? Material.RED_STAINED_GLASS_PANE : Material.GREEN_STAINED_GLASS_PANE).setName(inverted ? "§cDescending" : "§aAscending").build());
 		gui.setItem(48, new ItemBuilder(Material.PAPER).setName("§8<- §7Previous Page").build());
 		gui.setItem(49, new ItemBuilder(Material.PAPER).setName("§7Current Page§8: §6[§e" + (page + 1) + "§6] §8/ §6[§e" + pages.size() + "§6]").build());
 		gui.setItem(50, new ItemBuilder(Material.PAPER).setName("§7Next Page §8->").build());
@@ -396,21 +390,22 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 
 
 	public static ItemStack addItemStack(TileState block, ItemStack item) {
-		if(!isStorageMonitor(block)) {
+		if(!isStorageMonitor(block))
 			return item;
-		}
 
 		Map<Location, Inventory> locatedInventories = new HashMap<>();
 		Map<Location, List<BigItemStack>> storageBlockContents = new HashMap<>();
 		List<Location> components = new ArrayList<>();
 		components.add(block.getLocation());
-		getConnectedInventories(block.getBlock(), locatedInventories, storageBlockContents, components, true);
+		if(!getConnectedInventories(block.getBlock(), locatedInventories, storageBlockContents, components, true)) {
+			return item;
+		}
 
 		List<Location> storageBlocks = new ArrayList<>();
-		storageBlockContents.forEach((key, value) -> { storageBlocks.add(key); });
+		storageBlockContents.keySet().forEach(storageBlocks::add);
 
 		List<Inventory> inventories = new ArrayList<>();
-		locatedInventories.forEach((key, value) -> { inventories.add(value); });
+		locatedInventories.values().forEach(inventories::add);
 
 		return addItemStack(inventories, storageBlocks, item);
 	}
@@ -453,7 +448,52 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 	}
 
 
-	private List<BigItemStack> sortItems(Map<ItemStack, Integer> items, SortType type) {
+	public static ItemStack removeItemStack(TileState block, ItemFilter filter) {
+		if(!isStorageMonitor(block))
+			return null;
+
+		Map<Location, Inventory> locatedInventories = new HashMap<>();
+		Map<Location, List<BigItemStack>> storageBlockContents = new HashMap<>();
+		List<Location> components = new ArrayList<>();
+		components.add(block.getLocation());
+		if(!getConnectedInventories(block.getBlock(), locatedInventories, storageBlockContents, components, false))
+			return null;
+
+		List<Inventory> inventories = new ArrayList<>(locatedInventories.values());
+		List<Location> storageBlocks = new ArrayList<>(storageBlockContents.keySet());
+		return removeItemStack(inventories, storageBlocks, filter);
+	}
+
+
+	public static ItemStack removeItemStack(List<Inventory> inventories, List<Location> storageBlocks, ItemFilter filter) {
+		for(Location storageBlockLocation : storageBlocks) {
+			Block current = storageBlockLocation.getBlock();
+			if(current.getState() instanceof TileState) {
+				if(StorageSkullBlock.isStorageBlock((TileState) current.getState())) {
+					ItemStack request = StorageProvider.requestItem((TileState) current.getState(), filter);
+					if(request != null && request.getAmount() > 0) {
+						return request;
+					}
+				}
+			}
+		}
+
+		for(Inventory inventory : inventories) {
+			for(ItemStack stack : inventory) {
+				ItemStack matching;
+				if((matching = filter.getMatchingStack(stack)) != null) {
+					matching = matching.clone();
+					inventory.remove(matching);
+					return matching;
+				}
+			}
+		}
+
+		return null;
+	}
+
+
+	private List<BigItemStack> sortItems(Map<ItemStack, Integer> items, SortType type, boolean inverted) {
 		List<BigItemStack> stacks = new ArrayList<>();
 		for(ItemStack key : items.keySet()) {
 			BigItemStack stack = new BigItemStack(key);
@@ -461,46 +501,9 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 			stacks.add(stack);
 		}
 		stacks.sort(type.getComparator());
+		if(inverted)
+			Collections.reverse(stacks);
 		return stacks;
-	}
-
-
-	/**
-	 * Tries to remove the given ItemStack from one of the given Inventories and returns what it couldn't remove.
-	 * 
-	 * @param inventories Inventories to get searched for fitting ItemStacks.
-	 * @param item        The ItemStack to get removed.
-	 * @return An ItemStack from that what it couldn't remove.
-	 */
-	private ItemStack removeItemStack(List<Inventory> inventories, ItemStack item) {
-		int amountLeft = item.getAmount();
-		if(amountLeft <= 0) {
-			return item;
-		}
-		for(Inventory inventory : inventories) {
-			if(amountLeft <= 0) {
-				break;
-			}
-			for(int i = 0; i < inventory.getSize(); i++) {
-				if(amountLeft <= 0) {
-					break;
-				}
-				ItemStack current = inventory.getItem(i);
-				if(current != null) {
-					if(current.isSimilar(item)) {
-						int amount = current.getAmount();
-						if(amount <= amountLeft) {
-							inventory.setItem(i, null);
-							amountLeft -= amount;
-						} else {
-							current.setAmount(amount - amountLeft);
-							amountLeft -= amount;
-						}
-					}
-				}
-			}
-		}
-		return new ItemBuilder(item).setAmount(amountLeft).build();
 	}
 
 
@@ -624,7 +627,7 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 									Inventory inventory = Bukkit.createInventory(null, (list.size() + 8) / 9 * 9);
 									for(NBTBase nbt : list) {
 										if(nbt instanceof NBTTagCompound) {
-											net.minecraft.server.v1_16_R3.ItemStack nmsstack = net.minecraft.server.v1_16_R3.ItemStack.a((NBTTagCompound) nbt);
+											net.minecraft.world.item.ItemStack nmsstack = net.minecraft.world.item.ItemStack.a((NBTTagCompound) nbt);
 											ItemStack bukkitstack = CraftItemStack.asBukkitCopy(nmsstack);
 											inventory.addItem(bukkitstack);
 										}
@@ -641,9 +644,38 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 		return true;
 	}
 
-	private static enum SortType {
 
-		COUNT((stack1, stack2) -> stack2.getAmount() - stack1.getAmount()), NAME((stack1, stack2) -> {
+	public List<ItemProvider> createItemProviders(Block block, List<Location> connectors, List<Location> components) {
+		List<ItemProvider> providers = new ArrayList<>();
+		for(BlockFace face : Utilities.faces) {
+			Block relative = block.getRelative(face);
+			if(relative.getState() instanceof TileState) {
+				TileState state = (TileState) relative.getState();
+				if(StorageConnector.isConnector(state)) {
+					if(!connectors.contains(state.getLocation())) {
+						connectors.add(state.getLocation());
+						if(connectors.size() > ConfigValues.MAX_STORAGE_CONNECTORS)
+							return null;
+						List<ItemProvider> list = createItemProviders(relative, connectors, components);
+						if(list == null)
+							return null;
+						providers.addAll(list);
+					}
+				} else if(StorageSkullBlock.isStorageBlock(state)) {
+					providers.addAll(StorageSkullBlock.createItemProviders(state));
+				}
+			}
+			if(relative.getState() instanceof BlockInventoryHolder) {
+				BlockInventoryHolder holder = (BlockInventoryHolder) relative.getState();
+				providers.addAll(ItemProvider.createItemProviders(holder.getInventory()));
+			}
+		}
+		return providers;
+	}
+
+	public static enum SortType {
+
+		COUNT((stack1, stack2) -> stack1.getAmount() - stack2.getAmount()), NAME((stack1, stack2) -> {
 			ItemMeta meta1 = stack1.getStack().getItemMeta();
 			String str1 = meta1 != null && meta1.hasDisplayName() ? meta1.getDisplayName().replaceAll("§[0-9a-f]", "") : stack1.getStack().getType().name().toLowerCase();
 			ItemMeta meta2 = stack2.getStack().getItemMeta();
@@ -653,7 +685,6 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 
 		private Comparator<BigItemStack> comparator;
 		private String name;
-
 
 		private SortType(Comparator<BigItemStack> comparator) {
 			this.comparator = comparator;
@@ -668,27 +699,6 @@ public class StorageMonitor extends AbstractGuiProvidingSkullBlock implements St
 
 		public String getName() {
 			return name;
-		}
-
-
-		public SortType loop() {
-			return values()[(this.ordinal() + 1) % values().length];
-		}
-
-
-		public static SortType byID(byte id) {
-			for(SortType type : values()) {
-				if(type.ordinal() == id) {
-					return type;
-				}
-			}
-			return null;
-		}
-
-
-		public static SortType byIDorDefault(byte id, SortType type) {
-			SortType t = byID(id);
-			return t == null ? type : t;
 		}
 
 	}

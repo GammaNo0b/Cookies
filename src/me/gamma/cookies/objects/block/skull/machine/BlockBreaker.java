@@ -32,14 +32,14 @@ import me.gamma.cookies.util.Utilities;
 
 public class BlockBreaker extends AbstractSkullBlock implements BlockTicker, Switchable {
 
-	public static final List<Material> bannedBreakBlocks = Arrays.asList(Material.BEDROCK, Material.BARRIER, Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.WATER, Material.LAVA, Material.AIR, Material.SPAWNER);
+	public static final Set<Material> bannedBreakBlocks = new HashSet<>(Arrays.asList(Material.BEDROCK, Material.BARRIER, Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.WATER, Material.LAVA, Material.AIR, Material.SPAWNER, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
 
 	public static Set<Location> locations = new HashSet<>();
-	
-	
+
 	public BlockBreaker() {
 		register();
 	}
+
 
 	@Override
 	public String getBlockTexture() {
@@ -72,8 +72,8 @@ public class BlockBreaker extends AbstractSkullBlock implements BlockTicker, Swi
 		recipe.setIngredient('I', Material.IRON_INGOT);
 		recipe.setIngredient('G', Material.GOLD_INGOT);
 		recipe.setIngredient('H', Material.DIAMOND_PICKAXE);
-		recipe.setIngredient('C', CustomBlockSetup.STORAGE_CONNECTOR.createDefaultItemStack());
-		recipe.setIngredient('A', CustomBlockSetup.ITEM_ABSORBER.createDefaultItemStack());
+		recipe.setIngredient('C', CustomBlockSetup.IMPROVED_MACHINE_CASING.createDefaultItemStack());
+		recipe.setIngredient('A', CustomBlockSetup.ELECTRICAL_CIRCUIT.createDefaultItemStack());
 		return recipe;
 	}
 

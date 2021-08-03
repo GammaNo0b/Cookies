@@ -22,9 +22,6 @@ public interface MachineRecipe extends CookieRecipe {
 	
 	ItemStack createIcon();
 	
-	/**
-	 * Slot
-	 */
 	Inventory display(String title);
 	
 	@Override

@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 
-import me.gamma.cookies.objects.block.MachineTier;
+import me.gamma.cookies.objects.block.machine.MachineTier;
 import me.gamma.cookies.objects.block.skull.AbstractSkullBlock;
 import me.gamma.cookies.objects.list.HeadTextures;
 import me.gamma.cookies.objects.list.TieredMaterials;
@@ -53,7 +53,7 @@ public class MachineCasing extends AbstractSkullBlock {
 
 	@Override
 	public String getDisplayName() {
-		return "§9Machine §3Casing";
+		return this.tier.getName() + " §9Machine §3Casing";
 	}
 
 

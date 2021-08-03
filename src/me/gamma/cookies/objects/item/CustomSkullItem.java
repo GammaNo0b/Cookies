@@ -33,7 +33,7 @@ public class CustomSkullItem extends AbstractSkullItem {
 
 
 	@Override
-	public String getIdentifier() {
+	public String getRegistryName() {
 		return this.identifier;
 	}
 

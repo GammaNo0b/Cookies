@@ -34,10 +34,10 @@ import me.gamma.cookies.util.ItemBuilder;
 
 public class DyeFabricator extends AbstractGuiProvidingSkullBlock {
 
-	public static final IntegerProperty RED = IntegerProperty.create("red");
-	public static final IntegerProperty GREEN = IntegerProperty.create("green");
-	public static final IntegerProperty BLUE = IntegerProperty.create("blue");
-	public static final ColorProperty COLOR = ColorProperty.create("color");
+	public static final IntegerProperty RED = new IntegerProperty("red");
+	public static final IntegerProperty GREEN = new IntegerProperty("green");
+	public static final IntegerProperty BLUE = new IntegerProperty("blue");
+	public static final ColorProperty COLOR = new ColorProperty("color");
 
 	@Override
 	public String getBlockTexture() {

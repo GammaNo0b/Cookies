@@ -139,9 +139,10 @@ public class ClownfishChest extends AbstractGuiProvidingSkullBlock {
 
 
 	@Override
-	public void onAirRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {
+	public boolean onAirRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {
 		player.playSound(player.getLocation(), Sound.BLOCK_WOOL_HIT, 0.2F, 1);
 		player.openInventory(this.createBackpackGUI(player, stack));
+		return false;
 	}
 
 
@@ -159,6 +160,7 @@ public class ClownfishChest extends AbstractGuiProvidingSkullBlock {
 			}
 		}
 		block.update();
+		super.onInventoryClose(player, block, gui, event);
 	}
 
 
@@ -228,7 +230,7 @@ public class ClownfishChest extends AbstractGuiProvidingSkullBlock {
 
 
 	private static ItemStackProperty createSlotProperty(int slot) {
-		return ItemStackProperty.create("item" + slot);
+		return new ItemStackProperty("item" + slot);
 	}
 
 }

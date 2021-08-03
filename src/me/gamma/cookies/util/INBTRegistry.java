@@ -5,13 +5,14 @@ package me.gamma.cookies.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import me.gamma.cookies.Cookies;
-import net.minecraft.server.v1_16_R3.NBTBase;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 
 
 
@@ -70,6 +71,9 @@ public interface INBTRegistry<N extends NBTBase> {
 				parent.mkdirs();
 			}
 			file.createNewFile();
+			FileWriter writer = new FileWriter(file);
+			writer.write("{}");
+			writer.close();
 		}
 		return file;
 	}

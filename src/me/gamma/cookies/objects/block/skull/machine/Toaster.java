@@ -27,16 +27,16 @@ import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
 import me.gamma.cookies.setup.CustomItemSetup;
 import me.gamma.cookies.util.ConfigValues;
+import me.gamma.cookies.util.Utilities;
 
 
 
 public class Toaster extends AbstractSkullBlock implements BlockTicker {
 
-	private static final IntegerProperty TOAST1_TICKS = IntegerProperty.create("toast1ticks");
-	private static final IntegerProperty TOAST2_TICKS = IntegerProperty.create("toast2ticks");
+	private static final IntegerProperty TOAST1_TICKS = new IntegerProperty("toast1ticks");
+	private static final IntegerProperty TOAST2_TICKS = new IntegerProperty("toast2ticks");
 
 	private final Set<Location> locations = new HashSet<>();
-
 
 	public Toaster() {
 		register();
@@ -99,7 +99,7 @@ public class Toaster extends AbstractSkullBlock implements BlockTicker {
 
 
 	@Override
-	public void onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {
+	public boolean onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {
 		ItemStack stack = event.getItem();
 		if(stack != null && stack.getType() == Material.BREAD && !AbstractCustomItem.isCustomItem(stack)) {
 			if(!this.hasToast(block, true)) {
@@ -110,6 +110,7 @@ public class Toaster extends AbstractSkullBlock implements BlockTicker {
 				this.setToast(block, false);
 			}
 		}
+		return false;
 	}
 
 
@@ -144,7 +145,11 @@ public class Toaster extends AbstractSkullBlock implements BlockTicker {
 	private void tickToast(TileState block, IntegerProperty property) {
 		int ticks = property.fetch(block);
 		if(--ticks <= 0) {
-			block.getWorld().dropItemNaturally(block.getLocation().add(0.5D, 0.5D, 0.5D), CustomItemSetup.TOAST.createDefaultItemStack());
+			ItemStack stack = CustomItemSetup.TOAST.createDefaultItemStack();
+			stack = Utilities.transferItem(stack, block.getBlock());
+			if(!Utilities.isEmpty(stack)) {
+				block.getWorld().dropItem(block.getLocation().add(0.5D, 0.5D, 0.5D), CustomItemSetup.TOAST.createDefaultItemStack());
+			}
 		}
 		property.store(block, ticks);
 	}

@@ -1,36 +1,53 @@
+
 package me.gamma.cookies.objects.property;
 
+
 import org.bukkit.Color;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 
-public class ColorProperty extends Property<Color> {
 
-	protected ColorProperty(String name) {
+
+public class ColorProperty extends Property<Integer, Color> {
+
+	public ColorProperty(String name) {
 		super(name);
 	}
 
-	@Override
-	public void store(PersistentDataHolder holder, Color value) {
-		if(value == null) {
-			value = Color.BLACK;
-		}
-		holder.getPersistentDataContainer().set(this.getKey(), PersistentDataType.INTEGER, value.asRGB());
-	}
 
 	@Override
-	public Color fetch(PersistentDataHolder holder) {
-		return Color.fromRGB(holder.getPersistentDataContainer().get(this.getKey(), PersistentDataType.INTEGER));
+	public PersistentDataType<Integer, Color> getPersistentDataType() {
+		return new PersistentDataType<Integer, Color>() {
+
+			@Override
+			public Integer toPrimitive(Color color, PersistentDataAdapterContext context) {
+				return color.asRGB();
+			}
+
+
+			@Override
+			public Class<Integer> getPrimitiveType() {
+				return Integer.class;
+			}
+
+
+			@Override
+			public Class<Color> getComplexType() {
+				return Color.class;
+			}
+
+
+			@Override
+			public Color fromPrimitive(Integer value, PersistentDataAdapterContext context) {
+				return Color.fromRGB(value);
+			}
+		};
 	}
 
+
 	@Override
-	public boolean isPropertyOf(PersistentDataHolder holder) {
-		return holder.getPersistentDataContainer().has(this.getKey(), PersistentDataType.INTEGER);
-	}
-	
-	
-	public static ColorProperty create(String name) {
-		return new ColorProperty(name);
+	public Color emptyValue() {
+		return Color.BLACK;
 	}
 
 }

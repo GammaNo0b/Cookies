@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.gamma.cookies.objects.item.ArmorType;
+import me.gamma.cookies.objects.item.armor.ArmorType;
 
 
 

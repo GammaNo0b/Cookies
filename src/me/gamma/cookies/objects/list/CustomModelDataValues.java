@@ -20,10 +20,16 @@ public class CustomModelDataValues {
 	public static final int DELUXE_CHEESEBURGER = 3;
 	public static final int TOAST = 4;
 
-	// Brick
-	public static final int COPPER_INGOT = 1;
+	// Bucket
+	public static final int SLIME_IN_A_BUCKET = 1;
 
 	// C
+
+	// Cactus
+	public static final int CACTUS_SEEDS = 1;
+
+	// Carrot
+	public static final int CARROT_SEEDS = 1;
 
 	// D
 
@@ -49,6 +55,8 @@ public class CustomModelDataValues {
 	public static final int STEEL_DUST = 2;
 	public static final int COAL_DUST = 3;
 	public static final int LEAD_DUST = 4;
+	public static final int NICKEL_DUST = 5;
+	public static final int SOUL_DUST = 6;
 
 	// H
 
@@ -59,6 +67,7 @@ public class CustomModelDataValues {
 	public static final int SILVER_INGOT = 2;
 	public static final int STEEL_INGOT = 3;
 	public static final int LEAD_INGOT = 4;
+	public static final int NICKEL_INGOT = 5;
 
 	// Iron Nugget
 	public static final int BRONZE_COIN = 1;
@@ -82,17 +91,26 @@ public class CustomModelDataValues {
 	// P
 
 	// Paper
-	public static final int SHARPNESS_MOBGRINDER_UPGRADE = 1;
-	public static final int LOOTING_MOBGRINDER_UPGRADE = 2;
-	public static final int FIREASPECT_MOBGRINDER_UPGRADE = 3;
-	public static final int BEHEADING_MOBGRINDER_UPGRADE = 4;
-	public static final int RANGE_MOBGRINDER_UPGRADE = 5;
+	public static final int UPGRADE_BASE = 1;
+	public static final int UPGRADE_SHARPNESS = 2;
+	public static final int UPGRADE_FORTUNE = 3;
+	public static final int UPGRADE_FIREASPECT = 4;
+	public static final int UPGRADE_BEHEADING = 5;
+	public static final int UPGRADE_RANGE = 6;
+	public static final int UPGRADE_SPEED = 7;
+	public static final int UPGRADE_EFFICIENCY = 8;
+
+	// Potato
+	public static final int POTATO_SEEDS = 1;
 
 	// Q
 
 	// R
 
 	// S
+
+	// Sugar Cane
+	public static final int SUGAR_CANE_SEEDS = 1;
 
 	// String
 	public static final int COPPER_WIRE = 1;

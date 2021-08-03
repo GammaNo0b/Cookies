@@ -44,12 +44,12 @@ public class ExperienceAbsorber extends AbstractGuiProvidingSkullBlock implement
 
 	public static Set<Location> locations = new HashSet<>();
 
-	public static IntegerProperty STORED_XP = IntegerProperty.create("storedxp");
-	
-	
+	public static final IntegerProperty STORED_XP = new IntegerProperty("xp");
+
 	public ExperienceAbsorber() {
 		register();
 	}
+
 
 	@Override
 	public String getBlockTexture() {
@@ -78,12 +78,13 @@ public class ExperienceAbsorber extends AbstractGuiProvidingSkullBlock implement
 	@Override
 	public Recipe getRecipe() {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.MACHINES, RecipeType.ENGINEER);
-		recipe.setShape("IGI", "XME", "III");
-		recipe.setIngredient('I', Material.IRON_INGOT);
+		recipe.setShape("IGI", "XME", "ICI");
+		recipe.setIngredient('I', Material.COPPER_INGOT);
 		recipe.setIngredient('G', Material.GLASS);
 		recipe.setIngredient('X', Material.EXPERIENCE_BOTTLE);
 		recipe.setIngredient('E', CustomItemSetup.ENDER_CRYSTAL.createDefaultItemStack());
 		recipe.setIngredient('M', CustomBlockSetup.ADVANCED_MACHINE_CASING.createDefaultItemStack());
+		recipe.setIngredient('C', CustomBlockSetup.ELECTRICAL_CIRCUIT.createDefaultItemStack());
 		return recipe;
 	}
 
@@ -140,7 +141,7 @@ public class ExperienceAbsorber extends AbstractGuiProvidingSkullBlock implement
 	@Override
 	public Inventory createMainGui(Player player, TileState block) {
 		Inventory gui = super.createMainGui(player, block);
-		setGuiXpInfo(player, block, gui);
+		this.setGuiXpInfo(player, block, gui);
 		gui.setItem(1, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName("§aStore 1 Point").build());
 		gui.setItem(2, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName("§aStore 10 Points").build());
 		gui.setItem(6, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName("§aStore 100 Points").build());
@@ -183,7 +184,7 @@ public class ExperienceAbsorber extends AbstractGuiProvidingSkullBlock implement
 
 
 	@Override
-	public void onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {
+	public boolean onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {
 		if(!player.isSneaking()) {
 			if(canAccess(block, player)) {
 				super.onBlockRightClick(player, block, event);
@@ -191,6 +192,7 @@ public class ExperienceAbsorber extends AbstractGuiProvidingSkullBlock implement
 				player.sendMessage("§cYou are not owning this Storage Monitor!");
 			}
 		}
+		return false;
 	}
 
 

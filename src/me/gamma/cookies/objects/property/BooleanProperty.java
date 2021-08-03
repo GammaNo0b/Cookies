@@ -2,49 +2,59 @@
 package me.gamma.cookies.objects.property;
 
 
+import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 
 
 
-public class BooleanProperty extends Property<Boolean> {
+public class BooleanProperty extends Property<Byte, Boolean> {
 
-	private BooleanProperty(String name) {
+	public BooleanProperty(String name) {
 		super(name);
 	}
 
 
 	@Override
-	public void store(PersistentDataHolder holder, Boolean value) {
-		holder.getPersistentDataContainer().set(this.getKey(), PersistentDataType.BYTE, (byte) (value == null ? -1 : !value ? 0 : 1));
+	public PersistentDataType<Byte, Boolean> getPersistentDataType() {
+		return new PersistentDataType<Byte, Boolean>() {
+
+			@Override
+			public Byte toPrimitive(Boolean bool, PersistentDataAdapterContext context) {
+				return (byte) (bool ? 1 : 0);
+			}
+
+
+			@Override
+			public Class<Byte> getPrimitiveType() {
+				return Byte.class;
+			}
+
+
+			@Override
+			public Class<Boolean> getComplexType() {
+				return Boolean.class;
+			}
+
+
+			@Override
+			public Boolean fromPrimitive(Byte value, PersistentDataAdapterContext context) {
+				return value == 1;
+			}
+		};
 	}
 
 
 	@Override
-	public Boolean fetch(PersistentDataHolder holder) {
-		byte b = holder.getPersistentDataContainer().get(this.getKey(), PersistentDataType.BYTE);
-		if(b < 0)
-			return null;
-		else
-			return b == 0 ? false : true;
+	public Boolean emptyValue() {
+		return false;
 	}
-	
-	
+
+
 	public boolean toggle(PersistentDataHolder holder) {
 		boolean b = !this.fetch(holder);
 		this.store(holder, b);
 		return b;
-	}
-
-
-	@Override
-	public boolean isPropertyOf(PersistentDataHolder container) {
-		return container.getPersistentDataContainer().has(this.getKey(), PersistentDataType.BYTE);
-	}
-
-
-	public static BooleanProperty create(String name) {
-		return new BooleanProperty(name);
 	}
 
 }

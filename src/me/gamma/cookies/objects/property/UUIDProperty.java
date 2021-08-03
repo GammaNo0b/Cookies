@@ -4,45 +4,53 @@ package me.gamma.cookies.objects.property;
 
 import java.util.UUID;
 
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 
 
 
-public class UUIDProperty extends Property<UUID> {
+public class UUIDProperty extends Property<long[], UUID> {
 
-	private UUIDProperty(String name) {
+	public UUIDProperty(String name) {
 		super(name);
 	}
 
 
 	@Override
-	public void store(PersistentDataHolder holder, UUID value) {
-		long[] bits = new long[] { value.getMostSignificantBits(), value.getLeastSignificantBits() };
-		holder.getPersistentDataContainer().set(this.getKey(), PersistentDataType.LONG_ARRAY, bits);
+	public PersistentDataType<long[], UUID> getPersistentDataType() {
+		return new PersistentDataType<long[], UUID>() {
+
+			@Override
+			public long[] toPrimitive(UUID uuid, PersistentDataAdapterContext context) {
+				return new long[] {
+					uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()
+				};
+			}
+
+
+			@Override
+			public Class<long[]> getPrimitiveType() {
+				return long[].class;
+			}
+
+
+			@Override
+			public Class<UUID> getComplexType() {
+				return UUID.class;
+			}
+
+
+			@Override
+			public UUID fromPrimitive(long[] value, PersistentDataAdapterContext context) {
+				return new UUID(value[0], value[1]);
+			}
+		};
 	}
-	
+
+
 	@Override
-	public void storeEmpty(PersistentDataHolder holder) {
-		this.store(holder, UUID.fromString("000000000000-0000-0000-0000-00000000"));
-	}
-
-
-	@Override
-	public UUID fetch(PersistentDataHolder holder) {
-		long[] bits = holder.getPersistentDataContainer().get(this.getKey(), PersistentDataType.LONG_ARRAY);
-		return new UUID(bits[0], bits[1]);
-	}
-
-
-	@Override
-	public boolean isPropertyOf(PersistentDataHolder holder) {
-		return holder.getPersistentDataContainer().has(this.getKey(), PersistentDataType.LONG_ARRAY);
-	}
-
-
-	public static UUIDProperty create(String name) {
-		return new UUIDProperty(name);
+	public UUID emptyValue() {
+		return new UUID(0, 0);
 	}
 
 }

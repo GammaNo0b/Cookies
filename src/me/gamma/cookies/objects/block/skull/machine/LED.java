@@ -25,8 +25,17 @@ public class LED extends AbstractSkullBlock implements PeriodicTextureChanger, S
 
 	private Set<Location> locations = new HashSet<>();
 
-	public LED() {
+	private final String texturePowered;
+	private final String registryName;
+	private final String name;
+	private final Material glass;
+
+	public LED(String texturePowered, String registryName, String name, Material glass) {
 		register();
+		this.texturePowered = texturePowered;
+		this.registryName = registryName;
+		this.name = name;
+		this.glass = glass;
 	}
 
 
@@ -50,7 +59,7 @@ public class LED extends AbstractSkullBlock implements PeriodicTextureChanger, S
 
 	@Override
 	public String getBlockTexture(TileState block) {
-		return this.isBlockPowered(block) ? HeadTextures.LED_ON : HeadTextures.LED_OFF;
+		return this.isBlockPowered(block) ? this.texturePowered : HeadTextures.LED_OFF;
 	}
 
 
@@ -62,13 +71,13 @@ public class LED extends AbstractSkullBlock implements PeriodicTextureChanger, S
 
 	@Override
 	public String getRegistryName() {
-		return "led";
+		return this.registryName;
 	}
 
 
 	@Override
 	public String getDisplayName() {
-		return "§cLED";
+		return this.name;
 	}
 
 
@@ -76,7 +85,7 @@ public class LED extends AbstractSkullBlock implements PeriodicTextureChanger, S
 	public Recipe getRecipe() {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.ELECTRIC_COMPONENTS, RecipeType.ENGINEER);
 		recipe.setShape(" R ", "RWR", "AIA");
-		recipe.setIngredient('R', Material.RED_STAINED_GLASS_PANE);
+		recipe.setIngredient('R', this.glass);
 		recipe.setIngredient('W', CustomItemSetup.COPPER_WIRE.createDefaultItemStack());
 		recipe.setIngredient('A', CustomItemSetup.ALUMINUM_INGOT.createDefaultItemStack());
 		recipe.setIngredient('I', Material.IRON_INGOT);

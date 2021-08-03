@@ -1,20 +1,24 @@
+
 package me.gamma.cookies.objects.list;
+
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import me.gamma.cookies.objects.block.MachineTier;
+import me.gamma.cookies.objects.block.machine.MachineTier;
 import me.gamma.cookies.objects.block.skull.machine.MachineCasing;
 import me.gamma.cookies.setup.CustomItemSetup;
 
+
+
 public class TieredMaterials {
-	
+
 	public static ItemStack getIngot(MachineTier tier) {
-		switch(tier) {
+		switch (tier) {
 			case BASIC:
 				return new ItemStack(Material.IRON_INGOT);
 			case ADVANCED:
-				return CustomItemSetup.COPPER_INGOT.createDefaultItemStack();
+				return new ItemStack(Material.COPPER_INGOT);
 			case IMPROVED:
 				return CustomItemSetup.STEEL_INGOT.createDefaultItemStack();
 			case PERFECTED:
@@ -23,9 +27,10 @@ public class TieredMaterials {
 				return null;
 		}
 	}
-	
+
+
 	public static ItemStack getGem(MachineTier tier) {
-		switch(tier) {
+		switch (tier) {
 			case BASIC:
 				return new ItemStack(Material.REDSTONE);
 			case ADVANCED:
@@ -38,7 +43,8 @@ public class TieredMaterials {
 				return null;
 		}
 	}
-	
+
+
 	public static ItemStack getCore(MachineTier tier) {
 		return MachineCasing.getByTier(tier).createDefaultItemStack();
 	}

@@ -16,9 +16,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.BlockInventoryHolder;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -26,13 +28,15 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import me.gamma.cookies.objects.Fluid;
 import me.gamma.cookies.objects.block.StorageProvider;
-import me.gamma.cookies.objects.block.skull.storage.StorageSkullBlock;
 import me.gamma.cookies.objects.block.skull.storage.StorageMonitor;
+import me.gamma.cookies.objects.block.skull.storage.StorageSkullBlock;
 import me.gamma.cookies.objects.list.HeadTextures;
-import net.minecraft.server.v1_16_R3.GameProfileSerializer;
-import net.minecraft.server.v1_16_R3.MojangsonParser;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import net.minecraft.nbt.GameProfileSerializer;
+import net.minecraft.nbt.MojangsonParser;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.level.block.entity.TileEntityFurnace;
 
 
 
@@ -86,6 +90,21 @@ public class Utilities {
 	}
 
 
+	public static boolean isEmpty(ItemStack stack) {
+		return stack == null || stack.getType() == Material.AIR || stack.getAmount() == 0;
+	}
+
+
+	public static boolean isEmpty(Fluid fluid) {
+		return fluid == null || fluid.isEmpty();
+	}
+
+
+	public static int getFuel(Material material) {
+		return TileEntityFurnace.f().getOrDefault(CraftMagicNumbers.getItem(material), 0);
+	}
+
+
 	public static ItemStack subtractItemStack(ItemStack minuend, ItemStack subtrahend) {
 		if(subtrahend == null || !minuend.isSimilar(subtrahend)) {
 			return minuend;
@@ -124,22 +143,30 @@ public class Utilities {
 			int j = n % 10;
 			n /= 10;
 			if(j % 5 == 4) {
-				builder.append(main[i]);
-				builder.append(j == 4 ? help[i] : main[i]);
+				builder.insert(0, main[i]);
+				builder.insert(0, j == 4 ? help[i] : main[i]);
 				continue;
 			}
 			if(j >= 5)
-				builder.append(help[i]);
+				builder.insert(0, help[i]);
 			for(int k = 0; k < j % 5; k++)
-				builder.append(main[i]);
+				builder.insert(0, main[i]);
 		}
 		while(n > 5) {
 			n -= 5;
-			builder.append(help[help.length - 1]);
+			builder.insert(0, help[help.length - 1]);
 		}
 		while(n-- > 0)
-			builder.append(main[main.length - 1]);
+			builder.insert(0, main[main.length - 1]);
 		return builder.toString();
+	}
+
+
+	public static <T> boolean contains(T[] array, T value) {
+		for(T element : array)
+			if(element.equals(value))
+				return true;
+		return false;
 	}
 
 
@@ -152,7 +179,7 @@ public class Utilities {
 		final Set<Class<?>> canBeString = new HashSet<>(Arrays.asList(Boolean.class, Character.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class));
 		StringBuilder builder = new StringBuilder();
 		final String fill = fill(' ', depth * 2);
-		builder.append(fill + "{");
+		builder.append(fill + "{\n");
 		for(Field field : object.getClass().getDeclaredFields()) {
 			try {
 				field.setAccessible(true);
@@ -174,10 +201,9 @@ public class Utilities {
 
 
 	public static String fill(char c, int amount) {
-		StringBuilder builder = new StringBuilder();
-		for(int i = 0; i < amount; i++)
-			builder.append(c);
-		return builder.toString();
+		char[] chars = new char[amount];
+		Arrays.fill(chars, c);
+		return new String(chars);
 	}
 
 
@@ -314,6 +340,11 @@ public class Utilities {
 	}
 
 
+	public static ItemStack transferItem(ItemStack stack, Block block) {
+		return transferItem(stack, block, faces);
+	}
+
+
 	public static ItemStack transferItem(ItemStack stack, Block block, BlockFace[] directions) {
 		for(BlockFace face : directions) {
 			if(face != null) {
@@ -348,6 +379,17 @@ public class Utilities {
 	}
 
 
+	public static Inventory fillEmptySlotsWith(Inventory inventory, ItemStack filler) {
+		for(int i = 0; i < inventory.getSize(); i++) {
+			ItemStack stack = inventory.getItem(i);
+			if(stack == null) {
+				inventory.setItem(i, filler);
+			}
+		}
+		return inventory;
+	}
+
+
 	public static void giveItemToPlayer(HumanEntity player, ItemStack item) {
 		if(item != null) {
 			Map<Integer, ItemStack> rest = player.getInventory().addItem(item);
@@ -363,7 +405,8 @@ public class Utilities {
 
 
 	public static void dropItem(ItemStack stack, Location location) {
-		location.getWorld().dropItem(location, stack);
+		if(!Utilities.isEmpty(stack))
+			location.getWorld().dropItemNaturally(location, stack);
 	}
 
 
@@ -387,7 +430,7 @@ public class Utilities {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setString("id", item.getStack().getType().toString().toLowerCase());
 		nbt.setInt("Count", item.getAmount());
-		net.minecraft.server.v1_16_R3.ItemStack nmsitem = CraftItemStack.asNMSCopy(item.getStack());
+		net.minecraft.world.item.ItemStack nmsitem = CraftItemStack.asNMSCopy(item.getStack());
 		if(nmsitem.hasTag()) {
 			nbt.set("tag", nmsitem.getTag());
 		}
@@ -400,7 +443,7 @@ public class Utilities {
 			Material material = Material.valueOf(nbt.getString("id").toUpperCase());
 			int amount = nbt.getInt("Count");
 			ItemStack item = new ItemStack(material, 1);
-			net.minecraft.server.v1_16_R3.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
+			net.minecraft.world.item.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
 			nmsitem.setTag(nbt.getCompound("tag"));
 			item = CraftItemStack.asBukkitCopy(nmsitem);
 
@@ -418,7 +461,7 @@ public class Utilities {
 		}
 		nbt.setString("id", item.getType().toString().toLowerCase());
 		nbt.setInt("Count", item.getAmount());
-		net.minecraft.server.v1_16_R3.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
+		net.minecraft.world.item.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
 		if(nmsitem.hasTag()) {
 			nbt.set("tag", nmsitem.getTag());
 		}
@@ -427,12 +470,11 @@ public class Utilities {
 
 
 	public static ItemStack NBTtoItemStack(NBTTagCompound nbt) {
-		ItemStack item = null;
 		try {
 			Material material = Material.valueOf(nbt.getString("id").toUpperCase());
 			int amount = nbt.getInt("Count");
-			item = new ItemStack(material, amount);
-			net.minecraft.server.v1_16_R3.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
+			ItemStack item = new ItemStack(material, amount);
+			net.minecraft.world.item.ItemStack nmsitem = CraftItemStack.asNMSCopy(item);
 			nmsitem.setTag(nbt.getCompound("tag"));
 			item = CraftItemStack.asBukkitCopy(nmsitem);
 			return item;

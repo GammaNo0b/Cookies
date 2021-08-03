@@ -23,7 +23,7 @@ public class CustomCraftingTable extends MultiBlock {
 				}
 			}, new Material[][] {
 				new Material[] {
-					Material.DARK_OAK_FENCE, Material.AIR, Material.AIR, Material.BIRCH_FENCE
+					Material.DARK_OAK_FENCE, null, null, Material.BIRCH_FENCE
 				}
 			}, new Material[][] {
 				new Material[] {

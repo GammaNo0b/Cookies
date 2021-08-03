@@ -60,7 +60,7 @@ public class ChunkLoader extends AbstractSkullBlock {
 		recipe.setIngredient('N', Material.NETHERITE_INGOT);
 		recipe.setIngredient('S', Material.NETHER_STAR);
 		recipe.setIngredient('R', Material.REDSTONE);
-		recipe.setIngredient('M', CustomBlockSetup.ADVANCED_MACHINE_CASING.createDefaultItemStack());
+		recipe.setIngredient('M', CustomBlockSetup.PERFECTED_MACHINE_CASING.createDefaultItemStack());
 		recipe.setIngredient('T', Material.REDSTONE_TORCH);
 		recipe.setIngredient('I', Material.IRON_INGOT);
 		recipe.setIngredient('D', Material.DIAMOND);

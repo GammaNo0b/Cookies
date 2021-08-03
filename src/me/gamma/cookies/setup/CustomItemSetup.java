@@ -15,67 +15,73 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.objects.item.AbstractCustomItem;
-import me.gamma.cookies.objects.item.AluminumFoil;
-import me.gamma.cookies.objects.item.AngelWings;
-import me.gamma.cookies.objects.item.ArmorType;
-import me.gamma.cookies.objects.item.BerryPants;
-import me.gamma.cookies.objects.item.BronzeCoin;
-import me.gamma.cookies.objects.item.CactusShirt;
-import me.gamma.cookies.objects.item.Cheese;
-import me.gamma.cookies.objects.item.Cheeseburger;
-import me.gamma.cookies.objects.item.ColoredArmorPiece;
-import me.gamma.cookies.objects.item.Cookie;
-import me.gamma.cookies.objects.item.CookieCookBook;
-import me.gamma.cookies.objects.item.CopperWire;
-import me.gamma.cookies.objects.item.CrystalizedEyeOfEnder;
-import me.gamma.cookies.objects.item.CustomSkullItem;
-import me.gamma.cookies.objects.item.DeluxeCheeseburger;
-import me.gamma.cookies.objects.item.Donut;
-import me.gamma.cookies.objects.item.Dough;
-import me.gamma.cookies.objects.item.Drink;
-import me.gamma.cookies.objects.item.Dust;
-import me.gamma.cookies.objects.item.EnderCrystal;
-import me.gamma.cookies.objects.item.FarmerBoots;
-import me.gamma.cookies.objects.item.Flour;
-import me.gamma.cookies.objects.item.Fruit;
-import me.gamma.cookies.objects.item.GildedPaper;
-import me.gamma.cookies.objects.item.GlowHat;
-import me.gamma.cookies.objects.item.GoldCoin;
-import me.gamma.cookies.objects.item.GreenApple;
-import me.gamma.cookies.objects.item.Hamburger;
-import me.gamma.cookies.objects.item.InexhaustibleGoldBag;
-import me.gamma.cookies.objects.item.Ingot;
-import me.gamma.cookies.objects.item.InvisibilityHat;
+import me.gamma.cookies.objects.item.CustomItem;
 import me.gamma.cookies.objects.item.ItemTicker;
-import me.gamma.cookies.objects.item.KnockbackStick;
-import me.gamma.cookies.objects.item.Lettuce;
-import me.gamma.cookies.objects.item.LettuceSeeds;
-import me.gamma.cookies.objects.item.LightningBow;
-import me.gamma.cookies.objects.item.LuckyLeggings;
-import me.gamma.cookies.objects.item.LumberAxe;
-import me.gamma.cookies.objects.item.MeasuringTape;
-import me.gamma.cookies.objects.item.MilkBottle;
-import me.gamma.cookies.objects.item.MilkShake;
-import me.gamma.cookies.objects.item.MobGrinderUpgrade;
-import me.gamma.cookies.objects.item.NoobSword;
-import me.gamma.cookies.objects.item.PlayerTracker;
-import me.gamma.cookies.objects.item.PortableCraftingTable;
-import me.gamma.cookies.objects.item.PortableCustomCraftingTable;
-import me.gamma.cookies.objects.item.PortableEngineeringStation;
-import me.gamma.cookies.objects.item.PortableKitchen;
-import me.gamma.cookies.objects.item.RabbitBoots;
-import me.gamma.cookies.objects.item.RainbowArmorPiece;
-import me.gamma.cookies.objects.item.RainbowDust;
-import me.gamma.cookies.objects.item.RedstoneFrequencyGadget;
-import me.gamma.cookies.objects.item.Salt;
-import me.gamma.cookies.objects.item.ScubaHelmet;
-import me.gamma.cookies.objects.item.SilverCoin;
-import me.gamma.cookies.objects.item.SlimeBoots;
-import me.gamma.cookies.objects.item.SlimeSling;
-import me.gamma.cookies.objects.item.Toast;
-import me.gamma.cookies.objects.item.TurtleShell;
-import me.gamma.cookies.objects.item.VanillaRecipeBook;
-import me.gamma.cookies.objects.item.VeinMinerPickaxe;
+import me.gamma.cookies.objects.item.armor.AngelWings;
+import me.gamma.cookies.objects.item.armor.ArmorType;
+import me.gamma.cookies.objects.item.armor.BerryPants;
+import me.gamma.cookies.objects.item.armor.CactusShirt;
+import me.gamma.cookies.objects.item.armor.ColoredArmorPiece;
+import me.gamma.cookies.objects.item.armor.FarmerBoots;
+import me.gamma.cookies.objects.item.armor.GlowHat;
+import me.gamma.cookies.objects.item.armor.HasteArmorPiece;
+import me.gamma.cookies.objects.item.armor.InvisibilityHat;
+import me.gamma.cookies.objects.item.armor.LuckyLeggings;
+import me.gamma.cookies.objects.item.armor.RabbitBoots;
+import me.gamma.cookies.objects.item.armor.RainbowArmorPiece;
+import me.gamma.cookies.objects.item.armor.ScubaHelmet;
+import me.gamma.cookies.objects.item.armor.SlimeBoots;
+import me.gamma.cookies.objects.item.armor.TurtleShell;
+import me.gamma.cookies.objects.item.food.Cheese;
+import me.gamma.cookies.objects.item.food.Cheeseburger;
+import me.gamma.cookies.objects.item.food.Cookie;
+import me.gamma.cookies.objects.item.food.DeluxeCheeseburger;
+import me.gamma.cookies.objects.item.food.Donut;
+import me.gamma.cookies.objects.item.food.Dough;
+import me.gamma.cookies.objects.item.food.Drink;
+import me.gamma.cookies.objects.item.food.Flour;
+import me.gamma.cookies.objects.item.food.Fruit;
+import me.gamma.cookies.objects.item.food.GreenApple;
+import me.gamma.cookies.objects.item.food.Hamburger;
+import me.gamma.cookies.objects.item.food.Lettuce;
+import me.gamma.cookies.objects.item.food.MilkBottle;
+import me.gamma.cookies.objects.item.food.MilkShake;
+import me.gamma.cookies.objects.item.food.Salt;
+import me.gamma.cookies.objects.item.food.Toast;
+import me.gamma.cookies.objects.item.resources.AluminumFoil;
+import me.gamma.cookies.objects.item.resources.BronzeCoin;
+import me.gamma.cookies.objects.item.resources.CopperWire;
+import me.gamma.cookies.objects.item.resources.CrystalizedEyeOfEnder;
+import me.gamma.cookies.objects.item.resources.Dust;
+import me.gamma.cookies.objects.item.resources.EnderCrystal;
+import me.gamma.cookies.objects.item.resources.GildedPaper;
+import me.gamma.cookies.objects.item.resources.GoldCoin;
+import me.gamma.cookies.objects.item.resources.InexhaustibleGoldBag;
+import me.gamma.cookies.objects.item.resources.Ingot;
+import me.gamma.cookies.objects.item.resources.RainbowDust;
+import me.gamma.cookies.objects.item.resources.SilverCoin;
+import me.gamma.cookies.objects.item.tools.CookieCookBook;
+import me.gamma.cookies.objects.item.tools.FarmerScythe;
+import me.gamma.cookies.objects.item.tools.KnockbackStick;
+import me.gamma.cookies.objects.item.tools.LightningBow;
+import me.gamma.cookies.objects.item.tools.LumberAxe;
+import me.gamma.cookies.objects.item.tools.MachineUpgradeBase;
+import me.gamma.cookies.objects.item.tools.MachineUpgradeItem;
+import me.gamma.cookies.objects.item.tools.MeasuringTape;
+import me.gamma.cookies.objects.item.tools.NoobSword;
+import me.gamma.cookies.objects.item.tools.PlayerTracker;
+import me.gamma.cookies.objects.item.tools.PortableCraftingTable;
+import me.gamma.cookies.objects.item.tools.PortableCustomCraftingTable;
+import me.gamma.cookies.objects.item.tools.PortableEndPortal;
+import me.gamma.cookies.objects.item.tools.PortableEnderChest;
+import me.gamma.cookies.objects.item.tools.PortableEngineeringStation;
+import me.gamma.cookies.objects.item.tools.PortableKitchen;
+import me.gamma.cookies.objects.item.tools.PortableNetherPortal;
+import me.gamma.cookies.objects.item.tools.RedstoneFrequencyGadget;
+import me.gamma.cookies.objects.item.tools.SlimeInABucket;
+import me.gamma.cookies.objects.item.tools.SlimeSling;
+import me.gamma.cookies.objects.item.tools.VanillaRecipeBook;
+import me.gamma.cookies.objects.item.tools.VeinMinerPickaxe;
 import me.gamma.cookies.objects.list.CustomModelDataValues;
 import me.gamma.cookies.objects.list.HeadTextures;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
@@ -95,6 +101,7 @@ public class CustomItemSetup {
 	// Tools
 	public static final VeinMinerPickaxe VEIN_MINER_PICKAXE = registerCustomItem(new VeinMinerPickaxe());
 	public static final LumberAxe LUMBER_AXE = registerCustomItem(new LumberAxe());
+	public static final FarmerScythe FARMER_SCYTHE = registerCustomItem(new FarmerScythe());
 	public static final SlimeSling SLIME_SLING = registerCustomItem(new SlimeSling());
 	public static final PlayerTracker PLAYER_TRACKER = registerCustomItem(new PlayerTracker());
 
@@ -120,6 +127,10 @@ public class CustomItemSetup {
 	public static final ColoredArmorPiece COLORED_CHESTPLATE = registerCustomItem(new ColoredArmorPiece(ArmorType.CHESTPLATE));
 	public static final ColoredArmorPiece COLORED_LEGGINGS = registerCustomItem(new ColoredArmorPiece(ArmorType.LEGGINGS));
 	public static final ColoredArmorPiece COLORED_BOOTS = registerCustomItem(new ColoredArmorPiece(ArmorType.BOOTS));
+	public static final HasteArmorPiece HASTE_HELMET = registerCustomItem(new HasteArmorPiece(ArmorType.HELMET));
+	public static final HasteArmorPiece HASTE_CHESTPLATE = registerCustomItem(new HasteArmorPiece(ArmorType.CHESTPLATE));
+	public static final HasteArmorPiece HASTE_LEGGINGS = registerCustomItem(new HasteArmorPiece(ArmorType.LEGGINGS));
+	public static final HasteArmorPiece HASTE_BOOTS = registerCustomItem(new HasteArmorPiece(ArmorType.BOOTS));
 
 	// Resources
 	public static final Dust COAL_DUST = registerCustomItem(new Dust("coal_dust", "§8Coal Dust", Material.GUNPOWDER, CustomModelDataValues.COAL_DUST));
@@ -127,18 +138,16 @@ public class CustomItemSetup {
 	public static final Dust GOLD_DUST = registerCustomItem(new Dust("gold_dust", "§eGold Dust", Material.GLOWSTONE_DUST, CustomModelDataValues.GOLD_DUST));
 	public static final Dust COPPER_DUST = registerCustomItem(new Dust("copper_dust", "§6Copper Dust", Material.GLOWSTONE_DUST, CustomModelDataValues.COPPER_DUST));
 	public static final Dust ALUMINUM_DUST = registerCustomItem(new Dust("aluminum_dust", "§7Aluminum Dust", Material.SUGAR, CustomModelDataValues.ALUMINUM_DUST));
+	public static final Dust NICKEL_DUST = registerCustomItem(new Dust("nickel_dust", "§aNickel Dust", Material.GUNPOWDER, CustomModelDataValues.NICKEL_DUST));
 	public static final Dust LEAD_DUST = registerCustomItem(new Dust("lead_dust", "§1Lead Dust", Material.GUNPOWDER, CustomModelDataValues.LEAD_DUST));
 	public static final Dust SILVER_DUST = registerCustomItem(new Dust("silver_dust", "§7Silver Dust", Material.SUGAR, CustomModelDataValues.SILVER_DUST));
 	public static final Dust STEEL_DUST = registerCustomItem(new Dust("steel_dust", "§8Steel Dust", Material.GUNPOWDER, CustomModelDataValues.STEEL_DUST));
-	public static final Ingot COPPER_INGOT = registerCustomItem(new Ingot("copper_ingot", "§6Copper Ingot", Material.BRICK, CustomModelDataValues.COPPER_INGOT));
+	public static final CustomItem SOUL_DUST = registerCustomItem(new CustomItem("soul_dust", "§6Soul Dust", Material.GUNPOWDER, () -> RecipeCategory.RESOURCES, CustomModelDataValues.SOUL_DUST));
 	public static final Ingot ALUMINUM_INGOT = registerCustomItem(new Ingot("aluminum_ingot", "§7Aluminum Ingot", Material.IRON_INGOT, CustomModelDataValues.ALUMINUM_INGOT));
+	public static final Ingot NICKEL_INGOT = registerCustomItem(new Ingot("nickel_ingot", "§aNickel Ingot", Material.IRON_INGOT, CustomModelDataValues.NICKEL_INGOT));
 	public static final Ingot LEAD_INGOT = registerCustomItem(new Ingot("lead_ingot", "§1Lead Ingot", Material.IRON_INGOT, CustomModelDataValues.LEAD_INGOT));
 	public static final Ingot SILVER_INGOT = registerCustomItem(new Ingot("silver_ingot", "§7Silver Ingot", Material.IRON_INGOT, CustomModelDataValues.SILVER_INGOT));
 	public static final Ingot STEEL_INGOT = registerCustomItem(new Ingot("steel_ingot", "§8Steel Ingot", Material.IRON_INGOT, CustomModelDataValues.STEEL_INGOT));
-	public static final CustomSkullItem CARBON = registerCustomItem(new CustomSkullItem("carbon", "§8Carbon", () -> RecipeCategory.RESOURCES, HeadTextures.CARBON));
-	public static final CustomSkullItem COMPRESSED_CARBON = registerCustomItem(new CustomSkullItem("compressed_carbon", "§8Compressed Carbon", () -> RecipeCategory.RESOURCES, HeadTextures.COMPRESSED_CARBON));
-	public static final CustomSkullItem CARBON_CHUNK = registerCustomItem(new CustomSkullItem("carbon_chunk", "§8Carbon Chunk", () -> RecipeCategory.RESOURCES, HeadTextures.CARBON_CHUNK));
-	public static final CustomSkullItem CARBONADO = registerCustomItem(new CustomSkullItem("carbonado", "§8Carbonado", () -> RecipeCategory.RESOURCES, HeadTextures.CARBONADO));
 	public static final CopperWire COPPER_WIRE = registerCustomItem(new CopperWire());
 	public static final AluminumFoil ALUMINUM_FOIL = registerCustomItem(new AluminumFoil());
 	public static final GildedPaper GILDED_PAPER = registerCustomItem(new GildedPaper());
@@ -147,14 +156,21 @@ public class CustomItemSetup {
 	public static final GoldCoin GOLD_COIN = registerCustomItem(new GoldCoin());
 	public static final RainbowDust RAINBOW_DUST = registerCustomItem(new RainbowDust());
 	public static final EnderCrystal ENDER_CRYSTAL = registerCustomItem(new EnderCrystal());
+	public static final CustomItem CACTUS_SEEDS = registerCustomItem(new CustomItem("cactus_seeds", "§2Cactus Seeds", Material.CACTUS, () -> RecipeCategory.RESOURCES, CustomModelDataValues.CACTUS_SEEDS));
+	public static final CustomItem CARROT_SEEDS = registerCustomItem(new CustomItem("carrot_seeds", "§6Carrot Seeds", Material.CARROT, () -> RecipeCategory.RESOURCES, CustomModelDataValues.CARROT_SEEDS));
+	public static final CustomItem POTATO_SEEDS = registerCustomItem(new CustomItem("potato_seeds", "§ePotato Seeds", Material.POTATO, () -> RecipeCategory.RESOURCES, CustomModelDataValues.POTATO_SEEDS));
+	public static final CustomItem SUGAR_CANE_SEEDS = registerCustomItem(new CustomItem("sugar_cane_seeds", "§aSugar Cane Seeds", Material.SUGAR_CANE, () -> RecipeCategory.RESOURCES, CustomModelDataValues.SUGAR_CANE_SEEDS));
 
 	// Miscellaneous
 	public static final VanillaRecipeBook VANILLA_RECIPE_BOOK = registerCustomItem(new VanillaRecipeBook());
 	public static final CookieCookBook COOKIE_COOK_BOOK = registerCustomItem(new CookieCookBook());
 	public static final PortableCraftingTable PORTABLE_CRAFTING_TABLE = registerCustomItem(new PortableCraftingTable());
+	public static final PortableEnderChest PORTABLE_ENDER_CHEST = registerCustomItem(new PortableEnderChest());
 	public static final PortableCustomCraftingTable PORTABLE_CUSTOM_CRAFTING_TABLE = registerCustomItem(new PortableCustomCraftingTable());
 	public static final PortableEngineeringStation PROTABLE_ENGINEERING_STATION = registerCustomItem(new PortableEngineeringStation());
 	public static final PortableKitchen PORTABLE_KITCHEN = registerCustomItem(new PortableKitchen());
+	public static final PortableNetherPortal PORTABLE_NETHER_PORTAL = registerCustomItem(new PortableNetherPortal());
+	public static final PortableEndPortal PORTABLE_END_PORTAL = registerCustomItem(new PortableEndPortal());
 	public static final MeasuringTape MEASURING_TAPE = registerCustomItem(new MeasuringTape());
 	public static final CrystalizedEyeOfEnder CRYSTALIZED_EYE_OF_ENDER = registerCustomItem(new CrystalizedEyeOfEnder());
 
@@ -162,11 +178,14 @@ public class CustomItemSetup {
 	public static final RedstoneFrequencyGadget REDSTONE_FREQUENCY_GADGET = registerCustomItem(new RedstoneFrequencyGadget());
 
 	// Technical Components
-	public static final MobGrinderUpgrade SHARPNESS_MOBGRINDER_UPGRADE = registerCustomItem(new MobGrinderUpgrade("§cSharpness", CustomModelDataValues.SHARPNESS_MOBGRINDER_UPGRADE, new ItemStack(Material.IRON_SWORD), new ItemStack(Material.DIAMOND_SWORD)));
-	public static final MobGrinderUpgrade LOOTING_MOBGRINDER_UPGRADE = registerCustomItem(new MobGrinderUpgrade("§9Looting", CustomModelDataValues.LOOTING_MOBGRINDER_UPGRADE, new ItemStack(Material.LAPIS_BLOCK)));
-	public static final MobGrinderUpgrade FIREASPECT_MOBGRINDER_UPGRADE = registerCustomItem(new MobGrinderUpgrade("§6Fireaspect", CustomModelDataValues.FIREASPECT_MOBGRINDER_UPGRADE, new ItemStack(Material.FLINT_AND_STEEL)));
-	public static final MobGrinderUpgrade BEHEADING_MOBGRINDER_UPGRADE = registerCustomItem(new MobGrinderUpgrade("§8Beheading", CustomModelDataValues.BEHEADING_MOBGRINDER_UPGRADE, new ItemStack(Material.ZOMBIE_HEAD), new ItemStack(Material.SKELETON_SKULL), new ItemStack(Material.WITHER_SKELETON_SKULL), new ItemStack(Material.CREEPER_HEAD)));
-	public static final MobGrinderUpgrade RANGE_MOBGRINDER_UPGRADE = registerCustomItem(new MobGrinderUpgrade("§eRange", CustomModelDataValues.RANGE_MOBGRINDER_UPGRADE, new ItemStack(Material.BLAZE_ROD)));
+	public static final MachineUpgradeBase UPGRADE_BASE = registerCustomItem(new MachineUpgradeBase());
+	public static final MachineUpgradeItem UPGRADE_SHARPNESS = registerCustomItem(new MachineUpgradeItem("§bSharpness", CustomModelDataValues.UPGRADE_SHARPNESS, new ItemStack(Material.IRON_SWORD), new ItemStack(Material.DIAMOND_SWORD)));
+	public static final MachineUpgradeItem UPGRADE_FORTUNE = registerCustomItem(new MachineUpgradeItem("§9Fortune", CustomModelDataValues.UPGRADE_FORTUNE, new ItemStack(Material.LAPIS_BLOCK)));
+	public static final MachineUpgradeItem UPGRADE_FIREASPECT = registerCustomItem(new MachineUpgradeItem("§6Fireaspect", CustomModelDataValues.UPGRADE_FIREASPECT, new ItemStack(Material.FLINT_AND_STEEL)));
+	public static final MachineUpgradeItem UPGRADE_BEHEADING = registerCustomItem(new MachineUpgradeItem("§8Beheading", CustomModelDataValues.UPGRADE_BEHEADING, new ItemStack(Material.ZOMBIE_HEAD), new ItemStack(Material.SKELETON_SKULL), new ItemStack(Material.WITHER_SKELETON_SKULL), new ItemStack(Material.CREEPER_HEAD)));
+	public static final MachineUpgradeItem UPGRADE_RANGE = registerCustomItem(new MachineUpgradeItem("§eRange", CustomModelDataValues.UPGRADE_RANGE, new ItemStack(Material.BLAZE_ROD), new ItemStack(Material.LEAD)));
+	public static final MachineUpgradeItem UPGRADE_SPEED = registerCustomItem(new MachineUpgradeItem("§fSpeed", CustomModelDataValues.UPGRADE_SPEED, new ItemStack(Material.SUGAR)));
+	public static final MachineUpgradeItem UPGRADE_EFFICIENCY = registerCustomItem(new MachineUpgradeItem("§aEfficiency", CustomModelDataValues.UPGRADE_EFFICIENCY, new ItemStack(Material.EMERALD)));
 
 	// Magic
 	public static final InexhaustibleGoldBag INEXHAUSTIBLE_GOLD_BAG = registerCustomItem(new InexhaustibleGoldBag());
@@ -174,6 +193,7 @@ public class CustomItemSetup {
 	// Plants
 	public static final Lettuce LETTUCE = registerCustomItem(new Lettuce());
 	public static final GreenApple GREEN_APPLE = registerCustomItem(new GreenApple());
+	public static final Fruit PINECONE = registerCustomItem(new Fruit("pinecone", "§6Pinecone", HeadTextures.PINECONE, Material.SPRUCE_LEAVES, 80, 0, 0));
 	public static final Fruit ORANGE = registerCustomItem(new Fruit("orange", "§6Orange", HeadTextures.ORANGE, Material.JUNGLE_LEAVES, 120));
 	public static final Fruit LEMON = registerCustomItem(new Fruit("lemon", "§eLemon", HeadTextures.LEMON, Material.JUNGLE_LEAVES, 160));
 	public static final Fruit KIWI = registerCustomItem(new Fruit("kiwi", "§aKiwi", HeadTextures.KIWI, Material.JUNGLE_LEAVES, 200));
@@ -233,9 +253,8 @@ public class CustomItemSetup {
 	public static final MilkShake SWEET_BERRY_MILK_SHAKE = registerCustomItem(new MilkShake("§cSweet Berry Milk Shake", "sweet_berry_milk_shake", 6, 8, new ItemStack(Material.SWEET_BERRIES), Color.RED));
 	public static final MilkShake MELON_MILK_SHAKE = registerCustomItem(new MilkShake("§cMelon Milk Shake", "melon_milk_shake", 6, 8, new ItemStack(Material.MELON_SLICE), Color.fromRGB(255, 75, 20)));
 
-	// Other
-	public static final LettuceSeeds LETTUCE_SEEDS = registerCustomItem(new LettuceSeeds());
-
+	// Fun
+	public static final SlimeInABucket SLIME_IN_A_BUCKET = registerCustomItem(new SlimeInABucket());
 
 	public static <S extends AbstractCustomItem> S registerCustomItem(S item) {
 		customItems.add(item);
@@ -274,7 +293,7 @@ public class CustomItemSetup {
 			return null;
 		}
 		for(AbstractCustomItem item : customItems) {
-			if(item.getIdentifier().equals(meta.getLocalizedName())) {
+			if(item.getRegistryName().equals(AbstractCustomItem.IDENTIFIER.fetch(meta))) {
 				return item;
 			}
 		}

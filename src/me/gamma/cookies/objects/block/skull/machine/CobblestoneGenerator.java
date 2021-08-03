@@ -28,7 +28,7 @@ import me.gamma.cookies.util.Utilities;
 
 public class CobblestoneGenerator extends AbstractSkullBlock implements BlockTicker, Switchable {
 
-	public static Set<Location> locations = new HashSet<>();
+	private final Set<Location> locations = new HashSet<>();
 	
 	
 	public CobblestoneGenerator() {
@@ -93,7 +93,7 @@ public class CobblestoneGenerator extends AbstractSkullBlock implements BlockTic
 	public void tick(TileState block) {
 		ItemStack rest = Utilities.transferItem(new ItemStack(Material.COBBLESTONE), block.getBlock(), Utilities.faces);
 		if(rest != null) {
-			block.getWorld().dropItem(block.getLocation().add(0.0D, 0.5D, 0.0D), rest);
+			block.getWorld().dropItem(block.getLocation().add(0.5D, 0.5D, 0.5D), rest);
 		}
 	}
 

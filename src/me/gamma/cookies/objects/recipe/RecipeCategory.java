@@ -30,7 +30,7 @@ public class RecipeCategory {
 	public static final RecipeCategory RESOURCES = register("§7Resources", CustomItemSetup.COAL_DUST);
 	public static final RecipeCategory REDSTONE = register("§cRedstone", IItemSupplier.of(Material.REDSTONE));
 	public static final RecipeCategory ELECTRIC_COMPONENTS = register("§cElectric Components", CustomBlockSetup.MOTOR);
-	public static final RecipeCategory TECHNICAL_COMPONENTS = register("§9Technical Components", CustomItemSetup.SHARPNESS_MOBGRINDER_UPGRADE);
+	public static final RecipeCategory TECHNICAL_COMPONENTS = register("§9Technical Components", CustomItemSetup.UPGRADE_SHARPNESS);
 	public static final RecipeCategory MACHINES = register("§eMachines", CustomBlockSetup.ADVANCED_MACHINE_CASING);
 	public static final RecipeCategory STORAGE = register("§cStorage", IItemSupplier.of(Material.CHEST));
 	public static final RecipeCategory MAGIC = register("§5Magic", IItemSupplier.of(Material.DRAGON_BREATH));

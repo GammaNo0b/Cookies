@@ -26,14 +26,14 @@ import me.gamma.cookies.objects.property.BooleanProperty;
 
 public abstract class AbstractRedstoneGate extends AbstractSkullBlock implements Switchable, BlockTicker {
 
-	private static final BooleanProperty INVERTED = BooleanProperty.create("inverted");
+	private static final BooleanProperty INVERTED = new BooleanProperty("inverted");
 
 	private Set<Location> locations = new HashSet<>();
-	
-	
+
 	public AbstractRedstoneGate() {
 		register();
 	}
+
 
 	@Override
 	public Set<Location> getLocations() {
@@ -87,11 +87,12 @@ public abstract class AbstractRedstoneGate extends AbstractSkullBlock implements
 
 
 	@Override
-	public void onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {
+	public boolean onBlockRightClick(Player player, TileState block, PlayerInteractEvent event) {
 		if(event.getHand() == EquipmentSlot.HAND) {
 			INVERTED.toggle(block);
 			block.update();
 		}
+		return false;
 	}
 
 }

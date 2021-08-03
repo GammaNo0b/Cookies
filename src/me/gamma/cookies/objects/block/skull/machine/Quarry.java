@@ -48,12 +48,12 @@ public class Quarry extends AbstractGuiProvidingSkullBlock implements BlockTicke
 
 	public static Set<Location> locations = new HashSet<>();
 
-	private static final VectorProperty BREAK_POS = VectorProperty.create("BreakPos");
-	
-	
+	private static final VectorProperty BREAK_POS = new VectorProperty("breakpos");
+
 	public Quarry() {
 		register();
 	}
+
 
 	@Override
 	public String getBlockTexture() {
@@ -181,11 +181,12 @@ public class Quarry extends AbstractGuiProvidingSkullBlock implements BlockTicke
 
 
 	@Override
-	public void onInventoryClose(Player player, TileState inventoryHolder, Inventory gui, InventoryCloseEvent event) {
+	public void onInventoryClose(Player player, TileState block, Inventory gui, InventoryCloseEvent event) {
 		for(int i = 0; i < 4; i++) {
-			createToolProperty(i).store(inventoryHolder, gui.getItem(i));
+			createToolProperty(i).store(block, gui.getItem(i));
 		}
-		inventoryHolder.update();
+		block.update();
+		super.onInventoryClose(player, block, gui, event);
 	}
 
 
@@ -255,7 +256,7 @@ public class Quarry extends AbstractGuiProvidingSkullBlock implements BlockTicke
 
 
 	private static ItemStackProperty createToolProperty(int slot) {
-		return ItemStackProperty.create("tool" + slot);
+		return new ItemStackProperty("tool" + slot);
 	}
 
 }

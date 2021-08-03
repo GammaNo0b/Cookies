@@ -9,8 +9,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import me.gamma.cookies.util.INBTRegistry;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
-import net.minecraft.server.v1_16_R3.NBTTagList;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 
 

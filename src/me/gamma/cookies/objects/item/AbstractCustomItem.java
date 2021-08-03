@@ -22,19 +22,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
 import me.gamma.cookies.objects.IItemSupplier;
-import me.gamma.cookies.objects.property.Properties;
+import me.gamma.cookies.objects.property.StringProperty;
 
 
 
 public abstract class AbstractCustomItem implements IItemSupplier {
 
+	public static final StringProperty IDENTIFIER = new StringProperty("identifier");
+
 	public static boolean isCustomItem(ItemStack stack) {
-		return stack != null && stack.hasItemMeta() && Properties.IDENTIFIER.isPropertyOf(stack.getItemMeta());
+		return stack != null && stack.hasItemMeta() && IDENTIFIER.isPropertyOf(stack.getItemMeta());
 	}
 
 
-	public abstract String getIdentifier();
-
+	public abstract String getRegistryName();
 
 	public abstract String getDisplayName();
 
@@ -46,7 +47,6 @@ public abstract class AbstractCustomItem implements IItemSupplier {
 
 	public abstract Material getMaterial();
 
-
 	public abstract Recipe getRecipe();
 
 
@@ -55,14 +55,20 @@ public abstract class AbstractCustomItem implements IItemSupplier {
 	}
 
 
+	public boolean isUnbreakable() {
+		return false;
+	}
+
+
 	public ItemStack createDefaultItemStack() {
 		ItemStack stack = new ItemStack(this.getMaterial());
 		ItemMeta meta = stack.getItemMeta();
 		meta.setDisplayName(this.getDisplayName());
-		Properties.IDENTIFIER.store(meta, this.getIdentifier());
+		IDENTIFIER.store(meta, this.getRegistryName());
 		int customModelData = this.getCustomModelData();
 		if(customModelData >= 0)
 			meta.setCustomModelData(customModelData);
+		meta.setUnbreakable(this.isUnbreakable());
 		List<String> lore = meta.getLore() != null ? meta.getLore() : new ArrayList<>();
 		if(!this.getDescription().isEmpty()) {
 			lore.add("");
@@ -81,7 +87,7 @@ public abstract class AbstractCustomItem implements IItemSupplier {
 
 
 	public boolean isInstanceOf(ItemStack stack) {
-		return stack != null && stack.getItemMeta() != null && this.getIdentifier().equals(Properties.IDENTIFIER.fetch(stack.getItemMeta()));
+		return stack != null && stack.getItemMeta() != null && this.getRegistryName().equals(IDENTIFIER.fetch(stack.getItemMeta()));
 	}
 
 

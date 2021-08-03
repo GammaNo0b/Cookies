@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataHolder;
 
-import me.gamma.cookies.objects.property.Properties;
 import me.gamma.cookies.objects.property.UUIDProperty;
 import me.gamma.cookies.team.Team;
 
@@ -15,8 +14,8 @@ import me.gamma.cookies.team.Team;
 
 public interface Ownable {
 
-	public static final UUIDProperty OWNER = Properties.OWNER;
-	
+	public static final UUIDProperty OWNER = new UUIDProperty("owner");
+
 	default void setOwner(PersistentDataHolder holder, UUID owner) {
 		OWNER.store(holder, owner);
 	}

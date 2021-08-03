@@ -44,12 +44,12 @@ public class ItemAbsorber extends AbstractGuiProvidingSkullBlock implements Bloc
 
 	public static Set<Location> locations = new HashSet<>();
 
-	public static final ByteProperty EXTRACT_SIDES = ByteProperty.create("extractsides");
-	
-	
+	public static final ByteProperty EXTRACT_SIDES = new ByteProperty("extractsides");
+
 	public ItemAbsorber() {
 		register();
 	}
+
 
 	@Override
 	public String getBlockTexture() {
@@ -90,12 +90,13 @@ public class ItemAbsorber extends AbstractGuiProvidingSkullBlock implements Bloc
 	@Override
 	public Recipe getRecipe() {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.MACHINES, RecipeType.ENGINEER);
-		recipe.setShape("IGI", "CME", "III");
+		recipe.setShape("IGI", "SME", "ICI");
 		recipe.setIngredient('I', Material.IRON_INGOT);
 		recipe.setIngredient('G', Material.GLASS);
-		recipe.setIngredient('C', CustomBlockSetup.STORAGE_SKULL_BLOCK_TIER_2.createDefaultItemStack());
+		recipe.setIngredient('S', CustomBlockSetup.STORAGE_SKULL_BLOCK_TIER_2.createDefaultItemStack());
 		recipe.setIngredient('E', CustomItemSetup.ENDER_CRYSTAL.createDefaultItemStack());
 		recipe.setIngredient('M', CustomBlockSetup.MACHINE_CASING.createDefaultItemStack());
+		recipe.setIngredient('C', CustomBlockSetup.ELECTRICAL_CIRCUIT.createDefaultItemStack());
 		return recipe;
 	}
 

@@ -7,7 +7,8 @@ farmer-range: 4
 farmer-height: 24
 item-absorber-delay: 10
 item-absorber-range: 8
+max-storage-connectors: 8
 quarry-range: 16
 quarry-delay: 2
-max-storage-connectors: 8
+storage-system-transfer-speed: 5
 toaster-ticks: 200

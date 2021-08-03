@@ -2,19 +2,41 @@
 package me.gamma.cookies.objects.recipe;
 
 
-import org.bukkit.NamespacedKey;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
-import me.gamma.cookies.Cookies;
+import me.gamma.cookies.objects.item.AbstractCustomItem;
 
 
 
 public interface CookieRecipe extends Recipe {
 
 	RecipeType getType();
+
+
+	public static boolean sameType(ItemStack item1, ItemStack item2) {
+		if(item1 == null) {
+			return item2 == null;
+		}
+		if(item2 == null) {
+			return false;
+		}
+
+		if(item1.getType() != item2.getType()) {
+			return false;
+		}
+
+		final boolean custom1 = AbstractCustomItem.isCustomItem(item1);
+		final boolean custom2 = AbstractCustomItem.isCustomItem(item2);
+
+		if(custom1 ^ custom2) {
+			return false;
+		}
+
+		return AbstractCustomItem.IDENTIFIER.isSame(item1.getItemMeta(), item2.getItemMeta());
+	}
 
 
 	public static boolean sameIngredients(ItemStack... items) {
@@ -35,55 +57,44 @@ public interface CookieRecipe extends Recipe {
 
 
 	public static boolean sameIngredient(ItemStack item1, ItemStack item2) {
-		if(item1 == null) {
+		if(item1 == null)
 			return item2 == null;
-		}
-		if(item2 == null) {
-			return false;
-		}
 
-		if(item1.getType() != item2.getType()) {
+		if(item2 == null)
 			return false;
-		}
+
+		if(item1.getType() != item2.getType())
+			return false;
 
 		ItemMeta meta1 = item1.getItemMeta();
 		ItemMeta meta2 = item2.getItemMeta();
-		
-		if(meta1 == null) {
-			return meta2 == null;
-		}
-		if(meta2 == null) {
-			return false;
-		}
 
-		if(!meta1.getDisplayName().equals(meta2.getDisplayName())) {
+		if(meta1 == null)
+			return meta2 == null;
+
+		if(meta2 == null)
 			return false;
-		}
-		if(meta1.hasCustomModelData() != meta2.hasCustomModelData()) {
+
+		if(!meta1.getDisplayName().equals(meta2.getDisplayName()))
 			return false;
-		}
-		if(meta1.hasCustomModelData()) {
-			if(meta1.getCustomModelData() != meta2.getCustomModelData()) {
+
+		if(meta1.hasCustomModelData() ^ meta2.hasCustomModelData())
+			return false;
+
+		if(meta1.hasCustomModelData())
+			if(meta1.getCustomModelData() != meta2.getCustomModelData())
 				return false;
-			}
-		}
-		if(!meta1.getEnchants().equals(meta2.getEnchants())) {
+
+		if(!meta1.getEnchants().equals(meta2.getEnchants()))
 			return false;
-		}
-		if(!meta1.getItemFlags().equals(meta2.getItemFlags())) {
+
+		if(!meta1.getItemFlags().equals(meta2.getItemFlags()))
 			return false;
-		}
-		if(!meta1.getLocalizedName().equals(meta2.getLocalizedName())) {
+
+		if(!meta1.getLocalizedName().equals(meta2.getLocalizedName()))
 			return false;
-		}
-		if(meta1.getPersistentDataContainer().has(new NamespacedKey(Cookies.INSTANCE, "skullBlockIdentifier"), PersistentDataType.STRING) != meta2.getPersistentDataContainer().has(new NamespacedKey(Cookies.INSTANCE, "skullBlockIdentifier"), PersistentDataType.STRING)) {
-			return false;
-		}
-		if(meta1.getPersistentDataContainer().has(new NamespacedKey(Cookies.INSTANCE, "skullBlockIdentifier"), PersistentDataType.STRING)) {
-			return meta1.getPersistentDataContainer().get(new NamespacedKey(Cookies.INSTANCE, "skullBlockIdentifier"), PersistentDataType.STRING).equals(meta2.getPersistentDataContainer().get(new NamespacedKey(Cookies.INSTANCE, "skullBlockIdentifier"), PersistentDataType.STRING));
-		} else {
-			return true;
-		}
+
+		return Bukkit.getItemFactory().equals(meta1, meta2);
 	}
 
 }
