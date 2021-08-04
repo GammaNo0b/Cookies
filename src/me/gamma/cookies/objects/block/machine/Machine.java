@@ -135,6 +135,8 @@ public interface Machine extends BlockTicker, GuiProvider, Ownable, Switchable, 
 	default void createDefaultItemStack(ItemStack stack) {
 		ItemMeta meta = stack.getItemMeta();
 		REDSTONE_MODE.storeEmpty(meta);
+		for(MachineUpgrade upgrade : this.getAllowedMachineUpgrades())
+			upgrade.storeEmpty(meta);
 		stack.setItemMeta(meta);
 	}
 
@@ -149,7 +151,7 @@ public interface Machine extends BlockTicker, GuiProvider, Ownable, Switchable, 
 		for(ItemStackProperty property : this.createOutputProperties())
 			property.storeEmpty(block);
 		for(MachineUpgrade upgrade : this.getAllowedMachineUpgrades())
-			upgrade.storeEmpty(block);
+			upgrade.transfer(stack.getItemMeta(), block);
 		this.getLocations().add(block.getLocation());
 		this.getMachineMap().put(block.getLocation(), this.createInventory(block));
 	}
@@ -161,7 +163,6 @@ public interface Machine extends BlockTicker, GuiProvider, Ownable, Switchable, 
 	default void onBlockBreak(TileState block, ItemStack item) {
 		ItemMeta meta = item.getItemMeta();
 		REDSTONE_MODE.transfer(block, meta);
-		item.setItemMeta(meta);
 		Location location = block.getLocation();
 		this.getLocations().remove(location);
 		Inventory gui = this.getMachineMap().remove(location);
@@ -177,9 +178,7 @@ public interface Machine extends BlockTicker, GuiProvider, Ownable, Switchable, 
 				drops.add(stack);
 		}
 		for(MachineUpgrade upgrade : this.getAllowedMachineUpgrades()) {
-			int amount = upgrade.fetch(block);
-			if(amount > 0)
-				drops.add(new ItemBuilder(upgrade.getItem().get()).setAmount(amount).build());
+			upgrade.transfer(block, meta);
 		}
 		String identifier = CURRENT_RECIPE.fetch(block);
 		MachineRecipe recipe;
@@ -187,6 +186,7 @@ public interface Machine extends BlockTicker, GuiProvider, Ownable, Switchable, 
 			for(ItemStack stack : recipe.getIngredients())
 				drops.add(stack);
 		drops.forEach(drop -> location.getWorld().dropItem(location, drop));
+		item.setItemMeta(meta);
 	}
 
 
@@ -316,7 +316,7 @@ public interface Machine extends BlockTicker, GuiProvider, Ownable, Switchable, 
 			final String identifier = CURRENT_RECIPE.fetch(block);
 			MachineRecipe current = identifier.isEmpty() ? null : this.getRecipeMap().get(identifier);
 			if(current != null) {
-				int progress = PROGRESS.fetch(block) + this.getSpeed();
+				int progress = (int) (PROGRESS.fetch(block) + this.getSpeed() * (1 + 0.125D * MachineUpgrade.SPEED.fetch(block)));
 				// progress complete
 				if(progress >= current.getDuration()) {
 					// store results in a temporary list
@@ -331,7 +331,7 @@ public interface Machine extends BlockTicker, GuiProvider, Ownable, Switchable, 
 					for(int i = 0; i < tempresults.size(); i++) {
 						ItemStack tempresult = tempresults.get(i);
 						if(tempresult != null && tempresult.getType() != Material.AIR) {
-							double factor = 1.0D + r.nextDouble() * this.getOutputMultiplicator();
+							double factor = 1.0D + r.nextDouble() * (this.getOutputMultiplicator() + MachineUpgrade.FORTUNE.fetch(block));
 							int amount = (int) Math.round(tempresult.getAmount() * factor);
 							while(amount > 0) {
 								int shrink = Math.min(amount, tempresult.getType().getMaxStackSize());

@@ -6,6 +6,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -39,6 +40,8 @@ import org.bukkit.inventory.SmokingRecipe;
 import org.bukkit.inventory.StonecuttingRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
+
+import com.google.common.collect.Sets;
 
 import me.gamma.cookies.objects.block.machine.Machine;
 import me.gamma.cookies.objects.block.machine.MachineUpgrade;
@@ -369,14 +372,13 @@ public class InventoryManager {
 			gui.setItem(i * 9, filler);
 			gui.setItem(i * 9 + 8, filler);
 		}
-		MachineUpgrade[] upgrades = machine.getAllowedMachineUpgrades();
-		int i;
-		for(i = 0; i < upgrades.length; i++) {
-			MachineUpgrade upgrade = upgrades[i];
+		int i = 0;
+		for(MachineUpgrade upgrade : machine.getAllowedMachineUpgrades()) {
 			int amount = upgrade.fetch(block);
 			if(amount > 0) {
 				int r = i / 7;
 				int c = i - r * 7;
+				i++;
 				gui.setItem(r * 9 + c + 10, new ItemBuilder(upgrade.getItem().get()).setAmount(amount).build());
 			}
 		}
@@ -571,34 +573,28 @@ public class InventoryManager {
 					Location location = getIdentifierLocation(player.getWorld(), gui.getItem(4));
 					Block block = location.getBlock();
 					if(block.getState() instanceof TileState && player instanceof Player) {
-						int r = slot % 9;
+						int r = slot / 9;
 						int c = slot - r * 9;
-						System.out.println("r: " + r + ", c: " + c);
 						if(0 < r && r * 9 < gui.getSize() - 9 && 0 < c && c < 8) {
 							ItemStack current = event.getCurrentItem();
 							ItemStack cursor = event.getCursor();
-							System.out.println("Current: " + current);
-							System.out.println("Cursor: " + cursor);
 							MachineUpgrade currentUpgrade = MachineUpgrade.fromStack(current);
 							MachineUpgrade cursorUpgrade = MachineUpgrade.fromStack(cursor);
-							System.out.println("Current Upgrade: " + (currentUpgrade == null ? "null" : currentUpgrade.getRegistryName()));
-							System.out.println("Cursor Upgrade: " + (cursorUpgrade == null ? "null" : cursorUpgrade.getRegistryName()));
 							if(cursorUpgrade == null) {
-								if(Utilities.isEmpty(cursor)) {
+								if(Utilities.isEmpty(cursor) && !isFiller(current)) {
 									event.setCursor(current.clone());
-									current.setAmount(0);
+									event.setCurrentItem(filler(Material.LIGHT_GRAY_STAINED_GLASS_PANE));
 								}
 							} else if(machine.supportMachineUpgrade(cursorUpgrade)) {
-								System.out.println("is supported");
 								if(currentUpgrade == null) {
-									System.out.println("transfer all");
-									int transfer = Math.max(cursorUpgrade.getMaxStackSize(), cursor.getAmount());
+									int transfer = Math.min(cursorUpgrade.getMaxStackSize(), cursor.getAmount());
 									ItemStack newCurrent = cursor.clone();
 									newCurrent.setAmount(transfer);
 									event.setCurrentItem(newCurrent);
+									cursor.setAmount(cursor.getAmount() - transfer);
 								} else {
 									if(currentUpgrade.equals(cursorUpgrade)) {
-										int transfer = Math.max(cursorUpgrade.getMaxStackSize(), cursor.getAmount()) - current.getAmount();
+										int transfer = Math.min(cursorUpgrade.getMaxStackSize() - current.getAmount(), cursor.getAmount());
 										current.setAmount(current.getAmount() + transfer);
 										cursor.setAmount(cursor.getAmount() - transfer);
 									}
@@ -626,17 +622,21 @@ public class InventoryManager {
 					if(block.getState() instanceof TileState && player instanceof Player) {
 						TileState state = (TileState) block.getState();
 						int rows = gui.getSize() / 9 - 2;
+						HashSet<MachineUpgrade> upgrades = Sets.newHashSet(machine.getAllowedMachineUpgrades());
 						for(int i = 0; i < rows * 7; i++) {
 							int r = i % 7;
 							int c = i - r * 9;
 							ItemStack stack = gui.getItem(r * 9 + c + 10);
 							if(Utilities.isEmpty(stack))
-								return;
+								continue;
 							MachineUpgrade upgrade = MachineUpgrade.fromStack(stack);
 							if(upgrade == null)
 								continue;
 							upgrade.store(state, stack.getAmount());
+							upgrades.remove(upgrade);
 						}
+						upgrades.forEach(upgrade -> upgrade.storeEmpty(state));
+						state.update();
 						machine.onUpgradeInventoryClose((Player) player, state, gui, event);
 					}
 				}

@@ -5,8 +5,8 @@ package me.gamma.cookies.objects.block.machine;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import org.bukkit.block.TileState;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.objects.item.tools.MachineUpgradeItem;
 import me.gamma.cookies.objects.property.ByteProperty;
@@ -69,19 +69,23 @@ public class MachineUpgrade {
 	}
 
 
-	public void storeEmpty(TileState block) {
+	public void storeEmpty(PersistentDataHolder block) {
 		this.store(block, 0);
 	}
 
 
-	public void store(TileState block, int amount) {
-		property.store(block, (byte) amount);
-		block.update();
+	public void store(PersistentDataHolder block, int amount) {
+		this.property.store(block, (byte) amount);
 	}
 
 
-	public int fetch(TileState block) {
-		return property.fetch(block);
+	public int fetch(PersistentDataHolder block) {
+		return this.property.isPropertyOf(block) ? this.property.fetch(block) : 0;
+	}
+
+
+	public void transfer(PersistentDataHolder from, PersistentDataHolder to) {
+		this.property.transfer(from, to);
 	}
 
 
