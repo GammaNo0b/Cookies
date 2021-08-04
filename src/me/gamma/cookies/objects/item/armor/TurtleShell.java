@@ -17,14 +17,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
 
 
 
-public class TurtleShell extends AbstractCustomItem {
+public class TurtleShell extends AbstractCustomArmorItem {
 
 	@Override
 	public String getRegistryName() {
@@ -36,8 +35,8 @@ public class TurtleShell extends AbstractCustomItem {
 	public String getDisplayName() {
 		return "§aTurtle Shell";
 	}
-	
-	
+
+
 	@Override
 	public List<String> getDescription() {
 		return Arrays.asList("§7Protected like Turtles!");
@@ -45,8 +44,14 @@ public class TurtleShell extends AbstractCustomItem {
 
 
 	@Override
-	public Material getMaterial() {
-		return Material.LEATHER_CHESTPLATE;
+	public ArmorType getArmorType() {
+		return ArmorType.CHESTPLATE;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 
@@ -68,11 +73,12 @@ public class TurtleShell extends AbstractCustomItem {
 		stack.setItemMeta(meta);
 		return stack;
 	}
-	
+
+
 	@Override
 	public Listener getCustomListener() {
 		return new Listener() {
-			
+
 			@EventHandler
 			public void onChestEquip(PlayerArmorEquipEvent event) {
 				if(event.getType() == ArmorType.CHESTPLATE) {
@@ -82,7 +88,7 @@ public class TurtleShell extends AbstractCustomItem {
 						event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 3, false, false));
 				}
 			}
-			
+
 		};
 	}
 

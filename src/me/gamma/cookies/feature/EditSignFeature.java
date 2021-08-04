@@ -74,12 +74,10 @@ public class EditSignFeature implements CookieListener {
 
 
 	private void editSign(Player player, Sign sign, boolean edit) {
-		TileEntitySign tesign = (TileEntitySign) ReflectionUtils.findAndInvokeMethod(CraftBlockEntityState.class, sign, TileEntity.class);
+		TileEntitySign tesign = (TileEntitySign) ReflectionUtils.findAndGetValueFromField(CraftBlockEntityState.class, sign, TileEntity.class, 1);
 		EntityPlayer eplayer = ((CraftPlayer) player).getHandle();
-		tesign.a(player.getUniqueId());
+		tesign.a(edit ? player.getUniqueId() : null);
 		tesign.a(edit);
-		tesign.update();
-		eplayer.b.sendPacket(tesign.getUpdatePacket());
 		if(edit)
 			eplayer.b.sendPacket(new PacketPlayOutOpenSignEditor(tesign.getPosition()));
 	}

@@ -19,7 +19,6 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import me.gamma.cookies.Cookies;
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.item.PlayerRegister;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
@@ -27,7 +26,7 @@ import me.gamma.cookies.objects.recipe.RecipeType;
 
 
 
-public class InvisibilityHat extends AbstractCustomItem implements PlayerRegister {
+public class InvisibilityHat extends AbstractCustomArmorItem implements PlayerRegister {
 
 	private Set<UUID> players = new HashSet<>();
 
@@ -44,8 +43,14 @@ public class InvisibilityHat extends AbstractCustomItem implements PlayerRegiste
 
 
 	@Override
-	public Material getMaterial() {
-		return Material.LEATHER_HELMET;
+	public ArmorType getArmorType() {
+		return ArmorType.HELMET;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 

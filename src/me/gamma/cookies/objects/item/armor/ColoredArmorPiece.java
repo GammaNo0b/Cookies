@@ -19,7 +19,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.item.ItemTicker;
 import me.gamma.cookies.objects.property.IntegerProperty;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
@@ -29,7 +28,7 @@ import me.gamma.cookies.util.Utilities;
 
 
 
-public class ColoredArmorPiece extends AbstractCustomItem implements ItemTicker {
+public class ColoredArmorPiece extends AbstractCustomArmorItem implements ItemTicker {
 
 	private static final IntegerProperty TARGET_RED = new IntegerProperty("targetred");
 	private static final IntegerProperty TARGET_GREEN = new IntegerProperty("targetgreen");
@@ -38,15 +37,12 @@ public class ColoredArmorPiece extends AbstractCustomItem implements ItemTicker 
 	private ArmorType type;
 	private String identifier;
 	private String name;
-	private Material material;
 	private Set<UUID> players;
-
 
 	public ColoredArmorPiece(ArmorType type) {
 		this.type = type;
 		this.identifier = "colored_" + type.name().toLowerCase();
 		this.name = "§6" + Utilities.toCapitalWords("Colored " + type.name());
-		this.material = Material.valueOf("LEATHER_" + type.name());
 		this.players = new HashSet<>();
 	}
 
@@ -70,8 +66,14 @@ public class ColoredArmorPiece extends AbstractCustomItem implements ItemTicker 
 
 
 	@Override
-	public Material getMaterial() {
-		return this.material;
+	public ArmorType getArmorType() {
+		return this.type;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 
@@ -79,7 +81,7 @@ public class ColoredArmorPiece extends AbstractCustomItem implements ItemTicker 
 	public Recipe getRecipe() {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.ARMOR, RecipeType.CUSTOM);
 		recipe.setShape("PR", "BG");
-		recipe.setIngredient('P', this.material);
+		recipe.setIngredient('P', this.getMaterial());
 		recipe.setIngredient('R', Material.RED_DYE);
 		recipe.setIngredient('G', Material.GREEN_DYE);
 		recipe.setIngredient('B', Material.BLUE_DYE);

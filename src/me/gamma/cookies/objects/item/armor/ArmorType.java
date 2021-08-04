@@ -2,6 +2,7 @@
 package me.gamma.cookies.objects.item.armor;
 
 
+import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -31,6 +32,11 @@ public enum ArmorType {
 
 	public void setArmor(PlayerInventory inventory, ItemStack armor) {
 		inventory.setItem(this.slot, armor);
+	}
+	
+	
+	public Material getMaterial(ArmorMaterial material) {
+		return material.getMaterial(this.slot);
 	}
 
 

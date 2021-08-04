@@ -93,6 +93,19 @@ public class CustomItemSetup {
 	public static final List<AbstractCustomItem> customItems = new ArrayList<>();
 	public static final List<ItemTicker> itemTickers = new ArrayList<>();
 
+	// Miscellaneous
+	public static final VanillaRecipeBook VANILLA_RECIPE_BOOK = registerCustomItem(new VanillaRecipeBook());
+	public static final CookieCookBook COOKIE_COOK_BOOK = registerCustomItem(new CookieCookBook());
+	public static final PortableCraftingTable PORTABLE_CRAFTING_TABLE = registerCustomItem(new PortableCraftingTable());
+	public static final PortableCustomCraftingTable PORTABLE_CUSTOM_CRAFTING_TABLE = registerCustomItem(new PortableCustomCraftingTable());
+	public static final PortableEngineeringStation PROTABLE_ENGINEERING_STATION = registerCustomItem(new PortableEngineeringStation());
+	public static final PortableKitchen PORTABLE_KITCHEN = registerCustomItem(new PortableKitchen());
+	public static final PortableNetherPortal PORTABLE_NETHER_PORTAL = registerCustomItem(new PortableNetherPortal());
+	public static final PortableEndPortal PORTABLE_END_PORTAL = registerCustomItem(new PortableEndPortal());
+	public static final PortableEnderChest PORTABLE_ENDER_CHEST = registerCustomItem(new PortableEnderChest());
+	public static final CrystalizedEyeOfEnder CRYSTALIZED_EYE_OF_ENDER = registerCustomItem(new CrystalizedEyeOfEnder());
+	public static final MeasuringTape MEASURING_TAPE = registerCustomItem(new MeasuringTape());
+
 	// Weapons
 	public static final KnockbackStick KNOCKBACK_STICK = registerCustomItem(new KnockbackStick());
 	public static final NoobSword NOOB_SWORD = registerCustomItem(new NoobSword());
@@ -160,19 +173,6 @@ public class CustomItemSetup {
 	public static final CustomItem CARROT_SEEDS = registerCustomItem(new CustomItem("carrot_seeds", "§6Carrot Seeds", Material.CARROT, () -> RecipeCategory.RESOURCES, CustomModelDataValues.CARROT_SEEDS));
 	public static final CustomItem POTATO_SEEDS = registerCustomItem(new CustomItem("potato_seeds", "§ePotato Seeds", Material.POTATO, () -> RecipeCategory.RESOURCES, CustomModelDataValues.POTATO_SEEDS));
 	public static final CustomItem SUGAR_CANE_SEEDS = registerCustomItem(new CustomItem("sugar_cane_seeds", "§aSugar Cane Seeds", Material.SUGAR_CANE, () -> RecipeCategory.RESOURCES, CustomModelDataValues.SUGAR_CANE_SEEDS));
-
-	// Miscellaneous
-	public static final VanillaRecipeBook VANILLA_RECIPE_BOOK = registerCustomItem(new VanillaRecipeBook());
-	public static final CookieCookBook COOKIE_COOK_BOOK = registerCustomItem(new CookieCookBook());
-	public static final PortableCraftingTable PORTABLE_CRAFTING_TABLE = registerCustomItem(new PortableCraftingTable());
-	public static final PortableEnderChest PORTABLE_ENDER_CHEST = registerCustomItem(new PortableEnderChest());
-	public static final PortableCustomCraftingTable PORTABLE_CUSTOM_CRAFTING_TABLE = registerCustomItem(new PortableCustomCraftingTable());
-	public static final PortableEngineeringStation PROTABLE_ENGINEERING_STATION = registerCustomItem(new PortableEngineeringStation());
-	public static final PortableKitchen PORTABLE_KITCHEN = registerCustomItem(new PortableKitchen());
-	public static final PortableNetherPortal PORTABLE_NETHER_PORTAL = registerCustomItem(new PortableNetherPortal());
-	public static final PortableEndPortal PORTABLE_END_PORTAL = registerCustomItem(new PortableEndPortal());
-	public static final MeasuringTape MEASURING_TAPE = registerCustomItem(new MeasuringTape());
-	public static final CrystalizedEyeOfEnder CRYSTALIZED_EYE_OF_ENDER = registerCustomItem(new CrystalizedEyeOfEnder());
 
 	// Redstone
 	public static final RedstoneFrequencyGadget REDSTONE_FREQUENCY_GADGET = registerCustomItem(new RedstoneFrequencyGadget());

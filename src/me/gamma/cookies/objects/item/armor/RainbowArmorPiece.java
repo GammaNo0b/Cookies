@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Color;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.item.ItemTicker;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
@@ -28,19 +26,17 @@ import me.gamma.cookies.util.Utilities;
 
 
 
-public class RainbowArmorPiece extends AbstractCustomItem implements ItemTicker {
+public class RainbowArmorPiece extends AbstractCustomArmorItem implements ItemTicker {
 
 	private ArmorType type;
 	private String identifier;
 	private String name;
-	private Material material;
 	private Set<UUID> players;
 
 	public RainbowArmorPiece(ArmorType type) {
 		this.type = type;
 		this.identifier = "rainbow_" + type.name().toLowerCase();
 		this.name = Utilities.colorize(Utilities.toCapitalWords("Rainbow " + type.name()), "4c6eab3915".toCharArray(), 1);
-		this.material = Material.valueOf("LEATHER_" + type.name());
 		this.players = new HashSet<>();
 	}
 
@@ -55,8 +51,8 @@ public class RainbowArmorPiece extends AbstractCustomItem implements ItemTicker 
 	public String getDisplayName() {
 		return this.name;
 	}
-	
-	
+
+
 	@Override
 	public List<String> getDescription() {
 		return Arrays.asList("§7Portable Disco.");
@@ -64,8 +60,14 @@ public class RainbowArmorPiece extends AbstractCustomItem implements ItemTicker 
 
 
 	@Override
-	public Material getMaterial() {
-		return this.material;
+	public ArmorType getArmorType() {
+		return this.type;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 
@@ -73,14 +75,14 @@ public class RainbowArmorPiece extends AbstractCustomItem implements ItemTicker 
 	public Set<UUID> getPlayers() {
 		return this.players;
 	}
-	
-	
+
+
 	@Override
 	public boolean shouldRegisterPlayer(Player player) {
 		return this.isInstanceOf(this.type.getArmor(player.getInventory()));
 	}
-	
-	
+
+
 	@Override
 	public ItemStack getStackFromPlayer(Player player) {
 		return this.type.getArmor(player.getInventory());
@@ -112,7 +114,7 @@ public class RainbowArmorPiece extends AbstractCustomItem implements ItemTicker 
 	public Recipe getRecipe() {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.ARMOR, RecipeType.CUSTOM);
 		recipe.setShape(" R ", "RAR", " R ");
-		recipe.setIngredient('A', this.material);
+		recipe.setIngredient('A', this.getMaterial());
 		recipe.setIngredient('R', CustomItemSetup.RAINBOW_DUST.createDefaultItemStack());
 		return recipe;
 	}

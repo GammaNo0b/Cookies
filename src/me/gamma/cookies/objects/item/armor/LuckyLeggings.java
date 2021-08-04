@@ -12,7 +12,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
@@ -20,7 +19,7 @@ import me.gamma.cookies.util.Utilities;
 
 
 
-public class LuckyLeggings extends AbstractCustomItem {
+public class LuckyLeggings extends AbstractCustomArmorItem {
 
 	private int tier;
 	private String name;
@@ -46,8 +45,14 @@ public class LuckyLeggings extends AbstractCustomItem {
 
 
 	@Override
-	public Material getMaterial() {
-		return Material.LEATHER_LEGGINGS;
+	public ArmorType getArmorType() {
+		return ArmorType.LEGGINGS;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 

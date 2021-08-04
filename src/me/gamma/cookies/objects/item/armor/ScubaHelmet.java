@@ -1,4 +1,6 @@
+
 package me.gamma.cookies.objects.item.armor;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,13 +16,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
 
 
-public class ScubaHelmet extends AbstractCustomItem {
+
+public class ScubaHelmet extends AbstractCustomArmorItem {
 
 	@Override
 	public String getRegistryName() {
@@ -32,8 +34,8 @@ public class ScubaHelmet extends AbstractCustomItem {
 	public String getDisplayName() {
 		return "§6Scuba Helmet";
 	}
-	
-	
+
+
 	@Override
 	public List<String> getDescription() {
 		return Arrays.asList("§7Usefull for Underwater Explorations!");
@@ -41,8 +43,14 @@ public class ScubaHelmet extends AbstractCustomItem {
 
 
 	@Override
-	public Material getMaterial() {
-		return Material.LEATHER_HELMET;
+	public ArmorType getArmorType() {
+		return ArmorType.HELMET;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 
@@ -55,8 +63,8 @@ public class ScubaHelmet extends AbstractCustomItem {
 		recipe.setIngredient('L', Material.LEATHER);
 		return recipe;
 	}
-	
-	
+
+
 	@Override
 	public ItemStack createDefaultItemStack() {
 		ItemStack stack = super.createDefaultItemStack();
@@ -65,22 +73,22 @@ public class ScubaHelmet extends AbstractCustomItem {
 		stack.setItemMeta(meta);
 		return stack;
 	}
-	
-	
+
+
 	@Override
 	public Listener getCustomListener() {
 		return new Listener() {
-			
-			 @EventHandler
-			 public void onHelmetEquip(PlayerArmorEquipEvent event) {
-				 if(event.getType() == ArmorType.HELMET) {
-					 if(isInstanceOf(event.getOldArmor()))
-						 event.getPlayer().removePotionEffect(PotionEffectType.WATER_BREATHING);
-					 if(isInstanceOf(event.getNewArmor()))
-						 event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, Integer.MAX_VALUE, 1, false, false));
-				 }
-			 }
-			
+
+			@EventHandler
+			public void onHelmetEquip(PlayerArmorEquipEvent event) {
+				if(event.getType() == ArmorType.HELMET) {
+					if(isInstanceOf(event.getOldArmor()))
+						event.getPlayer().removePotionEffect(PotionEffectType.WATER_BREATHING);
+					if(isInstanceOf(event.getNewArmor()))
+						event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, Integer.MAX_VALUE, 1, false, false));
+				}
+			}
+
 		};
 	}
 

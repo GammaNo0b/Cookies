@@ -17,7 +17,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
@@ -25,18 +24,16 @@ import me.gamma.cookies.util.Utilities;
 
 
 
-public class HasteArmorPiece extends AbstractCustomItem {
+public class HasteArmorPiece extends AbstractCustomArmorItem {
 
 	private ArmorType type;
 	private String identifier;
 	private String name;
-	private Material material;
 
 	public HasteArmorPiece(ArmorType type) {
 		this.type = type;
 		this.identifier = "haste_" + type.name().toLowerCase();
 		this.name = "§c" + Utilities.toCapitalWords("Haste " + type.name());
-		this.material = Material.valueOf("LEATHER_" + type.name());
 	}
 
 
@@ -59,8 +56,14 @@ public class HasteArmorPiece extends AbstractCustomItem {
 
 
 	@Override
-	public Material getMaterial() {
-		return this.material;
+	public ArmorType getArmorType() {
+		return this.type;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 
@@ -78,7 +81,7 @@ public class HasteArmorPiece extends AbstractCustomItem {
 	public Recipe getRecipe() {
 		CustomRecipe recipe = new CustomRecipe(this.createDefaultItemStack(), RecipeCategory.ARMOR, RecipeType.CUSTOM);
 		recipe.setShape("GSG", "SAS", "GSG");
-		recipe.setIngredient('A', this.material);
+		recipe.setIngredient('A', this.getMaterial());
 		recipe.setIngredient('G', Material.GOLD_BLOCK);
 		recipe.setIngredient('S', Material.SUGAR);
 		return recipe;

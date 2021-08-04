@@ -26,7 +26,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.item.ItemTicker;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
@@ -36,7 +35,7 @@ import net.minecraft.world.phys.Vec3D;
 
 
 
-public class SlimeBoots extends AbstractCustomItem implements ItemTicker {
+public class SlimeBoots extends AbstractCustomArmorItem implements ItemTicker {
 
 	private Map<UUID, Double> tick3 = new HashMap<>();
 	private Map<UUID, Double> tick2 = new HashMap<>();
@@ -62,8 +61,14 @@ public class SlimeBoots extends AbstractCustomItem implements ItemTicker {
 
 
 	@Override
-	public Material getMaterial() {
-		return Material.LEATHER_BOOTS;
+	public ArmorType getArmorType() {
+		return ArmorType.BOOTS;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 

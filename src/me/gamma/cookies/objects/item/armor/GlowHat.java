@@ -16,14 +16,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
 
 
 
-public class GlowHat extends AbstractCustomItem {
+public class GlowHat extends AbstractCustomArmorItem {
 
 	@Override
 	public String getRegistryName() {
@@ -35,8 +34,8 @@ public class GlowHat extends AbstractCustomItem {
 	public String getDisplayName() {
 		return "§eGlow Hat";
 	}
-	
-	
+
+
 	@Override
 	public List<String> getDescription() {
 		return Arrays.asList("§7Makes the night brighter.");
@@ -44,8 +43,14 @@ public class GlowHat extends AbstractCustomItem {
 
 
 	@Override
-	public Material getMaterial() {
-		return Material.LEATHER_HELMET;
+	public ArmorType getArmorType() {
+		return ArmorType.HELMET;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 

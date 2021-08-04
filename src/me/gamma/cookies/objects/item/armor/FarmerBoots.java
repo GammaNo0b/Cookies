@@ -1,4 +1,6 @@
+
 package me.gamma.cookies.objects.item.armor;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,13 +16,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
 
 
-public class FarmerBoots extends AbstractCustomItem {
+
+public class FarmerBoots extends AbstractCustomArmorItem {
 
 	@Override
 	public String getRegistryName() {
@@ -32,8 +34,8 @@ public class FarmerBoots extends AbstractCustomItem {
 	public String getDisplayName() {
 		return "§eFarmer's Boots";
 	}
-	
-	
+
+
 	@Override
 	public List<String> getDescription() {
 		return Arrays.asList("§7Keeps your farmland tilled", "§7when trampling over it.");
@@ -41,8 +43,14 @@ public class FarmerBoots extends AbstractCustomItem {
 
 
 	@Override
-	public Material getMaterial() {
-		return Material.LEATHER_BOOTS;
+	public ArmorType getArmorType() {
+		return ArmorType.BOOTS;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 
@@ -54,8 +62,8 @@ public class FarmerBoots extends AbstractCustomItem {
 		recipe.setIngredient('H', Material.HAY_BLOCK);
 		return recipe;
 	}
-	
-	
+
+
 	@Override
 	public ItemStack createDefaultItemStack() {
 		ItemStack stack = super.createDefaultItemStack();
@@ -64,12 +72,12 @@ public class FarmerBoots extends AbstractCustomItem {
 		stack.setItemMeta(meta);
 		return stack;
 	}
-	
-	
+
+
 	@Override
 	public Listener getCustomListener() {
 		return new Listener() {
-			
+
 			@EventHandler
 			public void onFarmlandTrample(PlayerInteractEvent event) {
 				if(event.getAction() == Action.PHYSICAL) {
@@ -80,7 +88,7 @@ public class FarmerBoots extends AbstractCustomItem {
 					}
 				}
 			}
-			
+
 		};
 	}
 

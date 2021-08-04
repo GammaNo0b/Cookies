@@ -16,14 +16,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
 
 
 
-public class BerryPants extends AbstractCustomItem {
+public class BerryPants extends AbstractCustomArmorItem {
 
 	@Override
 	public String getRegistryName() {
@@ -44,8 +43,14 @@ public class BerryPants extends AbstractCustomItem {
 
 
 	@Override
-	public Material getMaterial() {
-		return Material.LEATHER_LEGGINGS;
+	public ArmorType getArmorType() {
+		return ArmorType.LEGGINGS;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 

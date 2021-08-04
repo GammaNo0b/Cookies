@@ -2,15 +2,9 @@
 package me.gamma.cookies.util;
 
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-
-
-public class Holder<T> implements Supplier<T>, Consumer<T> {
+public class Holder<T> implements Provider<T> {
 
 	private T value;
-
 
 	public Holder() {
 		this.value = null;
@@ -29,7 +23,7 @@ public class Holder<T> implements Supplier<T>, Consumer<T> {
 
 
 	@Override
-	public void accept(T value) {
+	public void set(T value) {
 		this.value = value;
 	}
 

@@ -2,10 +2,19 @@
 package me.gamma.cookies.util;
 
 
-public interface Provider<T> {
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-	T get();
 
-	void set(T value);
+
+public interface Provider<T> extends Supplier<T>, Consumer<T> {
+
+	void set(T t);
+
+
+	@Override
+	default void accept(T t) {
+		this.set(t);
+	}
 
 }

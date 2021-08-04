@@ -1,4 +1,6 @@
+
 package me.gamma.cookies.objects.item.armor;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,13 +16,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
 
 
-public class RabbitBoots extends AbstractCustomItem {
+
+public class RabbitBoots extends AbstractCustomArmorItem {
 
 	@Override
 	public String getRegistryName() {
@@ -32,8 +34,8 @@ public class RabbitBoots extends AbstractCustomItem {
 	public String getDisplayName() {
 		return "§6Rabbit Boots";
 	}
-	
-	
+
+
 	@Override
 	public List<String> getDescription() {
 		return Arrays.asList("§7Jump as high as rabbits!");
@@ -41,8 +43,14 @@ public class RabbitBoots extends AbstractCustomItem {
 
 
 	@Override
-	public Material getMaterial() {
-		return Material.LEATHER_BOOTS;
+	public ArmorType getArmorType() {
+		return ArmorType.BOOTS;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 
@@ -54,7 +62,8 @@ public class RabbitBoots extends AbstractCustomItem {
 		recipe.setIngredient('P', Material.RABBIT_FOOT);
 		return recipe;
 	}
-	
+
+
 	@Override
 	public ItemStack createDefaultItemStack() {
 		ItemStack stack = super.createDefaultItemStack();

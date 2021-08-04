@@ -17,14 +17,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import me.gamma.cookies.objects.item.AbstractCustomItem;
 import me.gamma.cookies.objects.recipe.CustomRecipe;
 import me.gamma.cookies.objects.recipe.RecipeCategory;
 import me.gamma.cookies.objects.recipe.RecipeType;
 
 
 
-public class CactusShirt extends AbstractCustomItem {
+public class CactusShirt extends AbstractCustomArmorItem {
 
 	@Override
 	public String getRegistryName() {
@@ -36,8 +35,8 @@ public class CactusShirt extends AbstractCustomItem {
 	public String getDisplayName() {
 		return "§2Cactus Shirt";
 	}
-	
-	
+
+
 	@Override
 	public List<String> getDescription() {
 		return Arrays.asList("§7Makes you invulnerable to Cacti.");
@@ -45,8 +44,14 @@ public class CactusShirt extends AbstractCustomItem {
 
 
 	@Override
-	public Material getMaterial() {
-		return Material.LEATHER_CHESTPLATE;
+	public ArmorType getArmorType() {
+		return ArmorType.CHESTPLATE;
+	}
+
+
+	@Override
+	public ArmorMaterial getArmorMaterial() {
+		return ArmorMaterial.LEATHER;
 	}
 
 
