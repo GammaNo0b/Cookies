@@ -296,10 +296,6 @@ public class Items {
 	public static CustomItem PHOTOVOLTAIC_CELL_2;
 	public static CustomItem PHOTOVOLTAIC_CELL_3;
 	public static CustomItem PHOTOVOLTAIC_CELL_4;
-	public static CustomItem PHOTOVOLTAIC_CELL_5;
-	public static CustomItem PHOTOVOLTAIC_CELL_6;
-	public static CustomItem PHOTOVOLTAIC_CELL_7;
-	public static CustomItem PHOTOVOLTAIC_CELL_8;
 
 	// Technical Components
 	public static CustomItem CIRCUIT_BOARD;
@@ -772,13 +768,9 @@ public class Items {
 		ELECTRICAL_CIRCUIT_4 = ITEMS.register(new CustomItem("§eComplex Electrical Circuit", HeadTextures.ELECTRICAL_CIRCUIT_4));
 		ELECTRICAL_CIRCUIT_5 = ITEMS.register(new CustomItem("§bPowerful Electrical Circuit", HeadTextures.ELECTRICAL_CIRCUIT_5));
 		PHOTOVOLTAIC_CELL_1 = ITEMS.register(new CustomItem("§fPhotovoltaic Cell I", Material.GLASS_PANE));
-		PHOTOVOLTAIC_CELL_2 = ITEMS.register(new CustomItem("§fPhotovoltaic Cell II", Material.WHITE_STAINED_GLASS_PANE));
-		PHOTOVOLTAIC_CELL_3 = ITEMS.register(new CustomItem("§ePhotovoltaic Cell III", Material.LIGHT_BLUE_STAINED_GLASS_PANE));
-		PHOTOVOLTAIC_CELL_4 = ITEMS.register(new CustomItem("§ePhotovoltaic Cell IV", Material.CYAN_STAINED_GLASS_PANE));
-		PHOTOVOLTAIC_CELL_5 = ITEMS.register(new CustomItem("§bPhotovoltaic Cell V", Material.BLUE_STAINED_GLASS_PANE));
-		PHOTOVOLTAIC_CELL_6 = ITEMS.register(new CustomItem("§bPhotovoltaic Cell VI", Material.BLUE_STAINED_GLASS_PANE));
-		PHOTOVOLTAIC_CELL_7 = ITEMS.register(new CustomItem("§dPhotovoltaic Cell VII", Material.LIME_STAINED_GLASS_PANE));
-		PHOTOVOLTAIC_CELL_8 = ITEMS.register(new CustomItem("§dPhotovoltaic Cell VIII", Material.GREEN_STAINED_GLASS_PANE));
+		PHOTOVOLTAIC_CELL_2 = ITEMS.register(new CustomItem("§ePhotovoltaic Cell II", Material.WHITE_STAINED_GLASS_PANE));
+		PHOTOVOLTAIC_CELL_3 = ITEMS.register(new CustomItem("§bPhotovoltaic Cell III", Material.LIGHT_BLUE_STAINED_GLASS_PANE));
+		PHOTOVOLTAIC_CELL_4 = ITEMS.register(new CustomItem("§dPhotovoltaic Cell IV", Material.CYAN_STAINED_GLASS_PANE));
 
 		// Technical Components
 		CIRCUIT_BOARD = ITEMS.register(new CustomItem("§fCircuit Board", Material.HEAVY_WEIGHTED_PRESSURE_PLATE));

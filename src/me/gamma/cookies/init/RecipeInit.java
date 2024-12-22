@@ -242,6 +242,11 @@ public class RecipeInit {
 		c.registerItem(COPPER_WIRE);
 		c.registerItem(COPPER_COIL);
 		c.registerItem(INSULATED_COPPER_WIRE);
+		c.registerItem(ELECTROMAGNET);
+		c.registerItem(MOTOR);
+		c.registerItem(LASER);
+		c.registerItem(ACCUMULATOR);
+		c.registerItem(ENERGY_MEASURE_GADGET);
 		c.registerItem(RESISTOR_1);
 		c.registerItem(RESISTOR_2);
 		c.registerItem(RESISTOR_3);
@@ -252,24 +257,15 @@ public class RecipeInit {
 		c.registerItem(CAPACITOR_3);
 		c.registerItem(CAPACITOR_4);
 		c.registerItem(CAPACITOR_5);
-		c.registerItem(ELECTROMAGNET);
-		c.registerItem(MOTOR);
-		c.registerItem(LASER);
-		c.registerItem(ACCUMULATOR);
 		c.registerItem(ELECTRICAL_CIRCUIT_1);
 		c.registerItem(ELECTRICAL_CIRCUIT_2);
 		c.registerItem(ELECTRICAL_CIRCUIT_3);
 		c.registerItem(ELECTRICAL_CIRCUIT_4);
 		c.registerItem(ELECTRICAL_CIRCUIT_5);
-		c.registerItem(ENERGY_MEASURE_GADGET);
 		c.registerItem(PHOTOVOLTAIC_CELL_1);
 		c.registerItem(PHOTOVOLTAIC_CELL_2);
 		c.registerItem(PHOTOVOLTAIC_CELL_3);
 		c.registerItem(PHOTOVOLTAIC_CELL_4);
-		c.registerItem(PHOTOVOLTAIC_CELL_5);
-		c.registerItem(PHOTOVOLTAIC_CELL_6);
-		c.registerItem(PHOTOVOLTAIC_CELL_7);
-		c.registerItem(PHOTOVOLTAIC_CELL_8);
 
 		c = RecipeCategory.TECHNICAL_COMPONENTS;
 		c.registerItem(CIRCUIT_BOARD);
@@ -544,6 +540,28 @@ public class RecipeInit {
 		registerRecipeCategories();
 
 		registerRecipes();
+
+		final Material GEM_1 = Material.REDSTONE;
+		final Material GEM_2 = Material.QUARTZ;
+		final Material GEM_3 = Material.EMERALD;
+		final Material GEM_4 = Material.DIAMOND;
+		final Material IINGOT_1 = Material.IRON_INGOT;
+		final AbstractCustomItem IINGOT_2 = STEEL_INGOT;
+		final AbstractCustomItem IINGOT_3 = HARDENED_METAL;
+		final AbstractCustomItem IINGOT_4 = BLAZING_ALLOY;
+		final AbstractCustomItem IINGOT_5 = ENDERIUM;
+		final Material FINGOT_1 = Material.COPPER_INGOT;
+		final AbstractCustomItem FINGOT_2 = LEAD_INGOT;
+		final AbstractCustomItem FINGOT_3 = INVAR_INGOT;
+		final AbstractCustomItem FINGOT_4 = NETHER_STEEL;
+		// final AbstractCustomItem FINGOT_5 = ENDER_STEEL;
+		final Material EINGOT_1 = Material.IRON_INGOT;
+		final AbstractCustomItem EINGOT_2 = SILVER_INGOT;
+		final AbstractCustomItem EINGOT_3 = ELECTRUM_INGOT;
+		final AbstractCustomItem EINGOT_4 = ENERGETIC_ALLOY;
+		final Material RED_1 = Material.REDSTONE;
+		final AbstractCustomItem RED_2 = REDSTONE_ALLOY;
+		final AbstractCustomItem RED_3 = REDSTONIUM;
 
 		CustomRecipe recipe;
 		RecipeType type;
@@ -1020,71 +1038,35 @@ public class RecipeInit {
 		recipe.setIngredient('C', ELECTRICAL_CIRCUIT_2);
 		recipe.setIngredient('A', ALUMINUM_INGOT);
 
-		recipe = customRecipe(PHOTOVOLTAIC_CELL_1, 2, type, "GGG", "NRN");
+		recipe = customRecipe(PHOTOVOLTAIC_CELL_1, 3, type, "GGG", "ARA", "BIB");
 		recipe.setIngredient('G', Material.GLASS_PANE);
-		recipe.setIngredient('N', Material.IRON_NUGGET);
-		recipe.setIngredient('R', Material.REDSTONE);
+		recipe.setIngredient('A', Material.AMETHYST_SHARD);
+		recipe.setIngredient('B', Material.QUARTZ);
+		recipe.setIngredient('I', EINGOT_1);
+		recipe.setIngredient('R', RED_1);
 
-		recipe = customRecipe(PHOTOVOLTAIC_CELL_2, 3, type, "GGG", "LLL", "PPP");
-		recipe.setIngredient('G', Material.GLASS_PANE);
-		recipe.setIngredient('L', Material.LAPIS_LAZULI);
-		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_1);
+		recipe = customRecipe(PHOTOVOLTAIC_CELL_2, 3, type, "GGG", "ARA", "BIB");
+		recipe.setIngredient('G', PHOTOVOLTAIC_CELL_1);
+		recipe.setIngredient('A', Material.LAPIS_LAZULI);
+		recipe.setIngredient('B', QUARTZ_DUST);
+		recipe.setIngredient('I', EINGOT_2);
+		recipe.setIngredient('R', RED_2);
 
-		recipe = customRecipe(PHOTOVOLTAIC_CELL_3, type, "CLC", "LCL", "PPP");
-		recipe.setIngredient('C', Material.CLAY_BALL);
-		recipe.setIngredient('L', Material.LAPIS_LAZULI);
-		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_2);
+		recipe = customRecipe(PHOTOVOLTAIC_CELL_3, 3, type, "GGG", "ARA", "BIB");
+		recipe.setIngredient('G', PHOTOVOLTAIC_CELL_2);
+		recipe.setIngredient('A', Material.GLOW_INK_SAC);
+		recipe.setIngredient('B', Material.GLOW_BERRIES);
+		recipe.setIngredient('I', EINGOT_3);
+		recipe.setIngredient('R', RED_2);
 
-		recipe = customRecipe(PHOTOVOLTAIC_CELL_4, type, "GGG", "DLD", "PPP");
-		recipe.setIngredient('G', Material.GLASS_PANE);
-		recipe.setIngredient('D', Material.GLOWSTONE_DUST);
-		recipe.setIngredient('L', Material.LAPIS_LAZULI);
-		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_3);
-
-		recipe = customRecipe(PHOTOVOLTAIC_CELL_5, type, "LDL", "DLD", "PPP");
-		recipe.setIngredient('D', Material.GLOWSTONE_DUST);
-		recipe.setIngredient('L', Material.LAPIS_LAZULI);
-		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_4);
-
-		recipe = customRecipe(PHOTOVOLTAIC_CELL_6, type, "GGG", "IDI", "PPP");
-		recipe.setIngredient('G', Material.GLASS_PANE);
-		recipe.setIngredient('D', Material.GLOWSTONE_DUST);
-		recipe.setIngredient('I', Material.GLOW_INK_SAC);
-		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_5);
-
-		recipe = customRecipe(PHOTOVOLTAIC_CELL_7, type, "DID", "IDI", "PPP");
-		recipe.setIngredient('D', Material.GLOWSTONE_DUST);
-		recipe.setIngredient('I', Material.GLOW_INK_SAC);
-		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_6);
-
-		recipe = customRecipe(PHOTOVOLTAIC_CELL_8, type, "DID", "IDI", "PPP");
-		recipe.setIngredient('D', Material.GLOWSTONE_DUST);
-		recipe.setIngredient('I', Material.GLOW_INK_SAC);
-		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_7);
-
+		recipe = customRecipe(PHOTOVOLTAIC_CELL_4, 3, type, "GGG", "ARA", "BIB");
+		recipe.setIngredient('G', PHOTOVOLTAIC_CELL_3);
+		recipe.setIngredient('A', Material.GLOWSTONE_DUST);
+		recipe.setIngredient('B', Material.BLAZE_POWDER);
+		recipe.setIngredient('I', EINGOT_4);
+		recipe.setIngredient('R', RED_3);
+		
 		// Technical Components
-
-		final Material GEM_1 = Material.REDSTONE;
-		final Material GEM_2 = Material.QUARTZ;
-		final Material GEM_3 = Material.EMERALD;
-		final Material GEM_4 = Material.DIAMOND;
-		final Material IINGOT_1 = Material.IRON_INGOT;
-		final AbstractCustomItem IINGOT_2 = STEEL_INGOT;
-		final AbstractCustomItem IINGOT_3 = HARDENED_METAL;
-		final AbstractCustomItem IINGOT_4 = BLAZING_ALLOY;
-		final AbstractCustomItem IINGOT_5 = ENDERIUM;
-		final Material FINGOT_1 = Material.COPPER_INGOT;
-		final AbstractCustomItem FINGOT_2 = LEAD_INGOT;
-		final AbstractCustomItem FINGOT_3 = INVAR_INGOT;
-		final AbstractCustomItem FINGOT_4 = NETHER_STEEL;
-		// final AbstractCustomItem FINGOT_5 = ENDER_STEEL;
-		final Material EINGOT_1 = Material.IRON_INGOT;
-		final AbstractCustomItem EINGOT_2 = SILVER_INGOT;
-		final AbstractCustomItem EINGOT_3 = ELECTRUM_INGOT;
-		final AbstractCustomItem EINGOT_4 = ENERGETIC_ALLOY;
-		final Material RED_1 = Material.REDSTONE;
-		final AbstractCustomItem RED_2 = REDSTONE_ALLOY;
-		final AbstractCustomItem RED_3 = REDSTONIUM;
 
 		recipe = customRecipe(CIRCUIT_BOARD, 8, type, "SS");
 		recipe.setIngredient('S', Material.SMOOTH_STONE_SLAB);
@@ -1847,10 +1829,11 @@ public class RecipeInit {
 		recipe.setIngredient('N', Material.IRON_NUGGET);
 		recipe.setIngredient('W', Material.WATER_BUCKET);
 
-		recipe = customRecipe(BASIC_SOLAR_PANEL, type, "PPP", " R ", " I ");
+		recipe = customRecipe(BASIC_SOLAR_PANEL, type, "PPP", "SRS", "SCS");
 		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_1);
 		recipe.setIngredient('R', RED_1);
-		recipe.setIngredient('I', EINGOT_1);
+		recipe.setIngredient('C', EINGOT_1);
+		recipe.setIngredient('S', Material.DAYLIGHT_DETECTOR);
 
 		recipe = customRecipe(ADVANCED_SOLAR_PANEL, 2, type, "PPP", "SRS", "SCS");
 		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_2);
