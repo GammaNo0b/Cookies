@@ -53,7 +53,9 @@ public interface Ticker {
 	 * Stops this task.
 	 */
 	default void stop() {
-		Bukkit.getScheduler().cancelTask(taskids.get(this));
+		Integer id = taskids.get(this);
+		if(id != null)
+			Bukkit.getScheduler().cancelTask(id);
 	}
 
 

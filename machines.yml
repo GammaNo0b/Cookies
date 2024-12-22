@@ -26,7 +26,7 @@ bio_press:
     internalCapacity: 4000
     upgradeSlots: 1
     baseSpeed: 1.0
-    capacity: 1000			# amount of millibuckets of bio mass that can be stored
+    capacity: 1000      # amount of millibuckets of bio mass that can be stored
   advanced:
     energyConsumption: 8
     internalCapacity: 8000
@@ -390,21 +390,21 @@ lava_generator:
   capacity: 1000    # maximum amount of lava the generator can hold
   generation: 1     # millibuckets lava generated each time
   basic:
-	frequency: 20
-	capacity: 4000
-	generation: 4
+    frequency: 20
+    capacity: 4000
+    generation: 4
   advanced:
-	frequency: 20
-	capacity: 16000
-	generation: 16
+    frequency: 20
+    capacity: 16000
+    generation: 16
   improved:
-	frequency: 20
-	capacity: 64000
-	generation: 64
+    frequency: 20
+    capacity: 64000
+    generation: 64
   perfected:
     frequency: 20
     capacity: 256000
-	generation: 256
+    generation: 256
 
 mineral_extractor:
   basic:
