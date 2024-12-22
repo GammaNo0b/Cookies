@@ -1,0 +1,67 @@
+bio_generator:
+  basic:
+    energyGeneration: 10
+    internalCapacity: 10000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+    capacity: 1000				# amount of millibuckets of bio mass that can be stored
+    fluidConsumed: 100			# amount of fluid consumed per generation
+    duration: 100				# number of ticks the consumed fluid generates energy
+  advanced:
+    energyGeneration: 20
+    internalCapacity: 20000
+    upgradeSlots: 2
+    baseSpeed: 1.0
+    capacity: 2000
+    fluidConsumed: 100
+    duration: 100
+  improved:
+    energyGeneration: 40
+    internalCapacity: 40000
+    upgradeSlots: 4
+    baseSpeed: 1.0
+    capacity: 3000
+    fluidConsumed: 100
+    duration: 100
+  perfected:
+    energyGeneration: 80
+    internalCapacity: 80000
+    upgradeSlots: 6
+    baseSpeed: 1.0
+    capacity: 4000
+    fluidConsumed: 100
+    duration: 100
+
+furnace_generator:
+  energyGeneration: 1
+  internalCapacity: 1000
+  upgradeSlots: 2
+  baseSpeed: 1.0
+
+solar_panel:
+  basic:
+    energyGeneration: 1
+    internalCapacity: 1000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyGeneration: 4
+    internalCapacity: 4000
+    upgradeSlots: 2
+    baseSpeed: 1.0
+  improved:
+    energyGeneration: 16
+    internalCapacity: 16000
+    upgradeSlots: 3
+    baseSpeed: 1.0
+  perfected:
+    energyGeneration: 64
+    internalCapacity: 64000
+    upgradeSlots: 4
+    baseSpeed: 1.0
+
+thermo_generator:
+  energyGeneration: 4
+  internalCapacity: 4000
+  upgradeSlots: 1
+  baseSpeed: 1.0

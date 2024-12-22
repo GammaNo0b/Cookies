@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.gamma.cookies.objects.item.armor.ArmorType;
+import me.gamma.cookies.object.item.armor.ArmorType;
 
 
 
@@ -73,7 +73,14 @@ public class PlayerArmorEquipEvent extends PlayerEvent implements Cancellable {
 	}
 
 	public static enum EquipMethod {
-		SHIFT_CLICK, DRAG, PICK_DROP, HOTBAR, HOTBAR_SWAP, DISPENSER, BROKE, DEATH;
+		SHIFT_CLICK,
+		DRAG,
+		PICK_DROP,
+		HOTBAR,
+		HOTBAR_SWAP,
+		DISPENSER,
+		BROKE,
+		DEATH;
 	}
 
 }

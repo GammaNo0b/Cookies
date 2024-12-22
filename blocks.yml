@@ -1,0 +1,10 @@
+conveyor_belt:
+  light:
+    capacity: 4				# maximum stack size the conveyor belt can transport at once
+    conveyorLength: 10		# number of ticks it takes for the conveyor to transport an item one block distance
+  medium:
+    capacity: 16
+    conveyorLength: 20
+  heavy:
+    capacity: 64
+    conveyorLength: 40

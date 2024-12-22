@@ -1,9 +1,13 @@
+
 package me.gamma.cookies.feature;
 
-import me.gamma.cookies.Cookies;
 
 public interface CookieFeature {
+
+	void register();
 	
-	void register(Cookies cookies);
+	void setEnabled(boolean enabled);
+	
+	boolean isEnabled();
 
 }

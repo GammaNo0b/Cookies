@@ -2,115 +2,121 @@
 package me.gamma.cookies.util;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.UUID;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Skull;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
+
+import me.gamma.cookies.object.list.HeadTextures;
 
 
 
 public class GameProfileHelper {
 
-	public static final String UUID_ADRESS = "https://api.mojang.com/users/profiles/minecraft/";
-	public static final String GAME_PROFILE_ADRESS = "https://sessionserver.mojang.com/session/minecraft/profile/";
+	private static final char[] base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".toCharArray();
 
-	private static final HashMap<String, UUID> UUID_CACHE = new HashMap<>();
-	private static final HashMap<UUID, GameProfile> GAME_PROFILE_CACHE = new HashMap<>();
+	/**
+	 * Converts the given uuid unti a string of length 12 containing only the characters a-z, A-Z, 0-9 and '-' and '_'.
+	 * 
+	 * @param uuid the uuid
+	 * @return the string
+	 */
+	private static String UUIDToBase64(UUID uuid) {
+		char[] str = new char[12];
+		Arrays.fill(str, '-');
 
-	public static UUID getUUID(String name) {
-		return getUUID(name, false);
+		long bits;
+
+		bits = uuid.getLeastSignificantBits();
+		for(int i = 0; i < 6; i++)
+			str[i] = base64[(int) ((bits >> (i * 6)) & 0x3F)];
+
+		bits = uuid.getMostSignificantBits();
+		for(int i = 0; i < 6; i++)
+			str[6 + i] = base64[(int) ((bits >> (i * 6)) & 0x3F)];
+
+		return new String(str);
 	}
 
 
-	public static UUID getUUID(String name, boolean force) {
-		if(force || !UUID_CACHE.containsKey(name)) {
-			try {
-				URL url = new URL(UUID_ADRESS + name);
-				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-				connection.setRequestMethod("GET");
-				int code = connection.getResponseCode();
-				if(code == HttpURLConnection.HTTP_OK) {
-					BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-					StringBuilder response = new StringBuilder();
-					String line;
-					while((line = reader.readLine()) != null)
-						response.append(line);
-					System.out.println(response.toString());
-					JsonElement element = new JsonParser().parse(response.toString());
-					String id = element.getAsJsonObject().get("id").getAsString();
-					char[] chars = new char[36];
-					int index = 0;
-					for(int i = 0; i < 32; i++) {
-						if(i == 8 || i == 12 || i == 16 || i == 20)
-							chars[index++] = '-';
-						chars[index++] = id.charAt(i);
-					}
-					UUID uuid = UUID.fromString(new String(chars));
-					UUID_CACHE.put(name, uuid);
-					return uuid;
-				} else {
-					return null;
-				}
-			} catch(IOException | IllegalStateException e) {
-				return null;
-			}
-		} else {
-			return UUID_CACHE.get(name);
+	/**
+	 * Creates a new unique player profile of the given texture.
+	 * 
+	 * @param texture the texture
+	 * @return a new player provile
+	 */
+	public static PlayerProfile createPlayerProfile(String texture) {
+		UUID uuid = UUID.nameUUIDFromBytes(texture.getBytes());
+		return Bukkit.createPlayerProfile(uuid, UUIDToBase64(uuid));
+	}
+
+
+	/**
+	 * Updates the texture of the skull meta to the given skin texture.
+	 * 
+	 * @param skull   the player head as skull meta
+	 * @param texture the skin texture
+	 * @return if the texture was updates successfully
+	 */
+	public static boolean setSkullTexture(SkullMeta meta, String texture) {
+		try {
+			PlayerProfile profile = createPlayerProfile(texture);
+			PlayerTextures textures = profile.getTextures();
+			textures.setSkin(new URI(HeadTextures.getTexture(texture)).toURL());
+			meta.setOwnerProfile(profile);
+			return true;
+		} catch(MalformedURLException | URISyntaxException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 
 
-	public static GameProfile getProfile(UUID uuid) {
-		return getProfile(uuid, false);
+	/**
+	 * Updates the texture of the player head item stack to the given skin texture.
+	 * 
+	 * @param skull   the player head as item stack
+	 * @param texture the skin texture
+	 * @return if the texture was updates successfully
+	 */
+	public static boolean setSkullTexture(ItemStack skull, String texture) {
+		if(!(skull.getItemMeta() instanceof SkullMeta meta))
+			return false;
+
+		if(!setSkullTexture(meta, texture))
+			return false;
+
+		skull.setItemMeta(meta);
+		return true;
 	}
 
 
-	public static GameProfile getProfile(UUID uuid, boolean force) {
-		if(force || !GAME_PROFILE_CACHE.containsKey(uuid)) {
-			try {
-				URL url = new URL(GAME_PROFILE_ADRESS + uuid.toString().replace("-", ""));
-				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-				connection.setRequestMethod("GET");
-				int code = connection.getResponseCode();
-				if(code == HttpURLConnection.HTTP_OK) {
-					BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-					StringBuilder response = new StringBuilder();
-					String line;
-					while((line = reader.readLine()) != null)
-						response.append(line);
-					System.out.println(response.toString());
-					JsonObject element = new JsonParser().parse(response.toString()).getAsJsonObject();
-					String name = element.get("name").getAsString();
-					JsonArray properties = element.get("properties").getAsJsonArray();
-					for(int i = 0; i < properties.size(); i++) {
-						JsonObject property = properties.get(i).getAsJsonObject();
-						if(property.get("name").getAsString().equals("textures")) {
-							String texture = property.get("value").getAsString();
-							GameProfile profile = new GameProfile(uuid, name);
-							Property textures = new Property("textures", texture);
-							profile.getProperties().put("textures", textures);
-							return profile;
-						}
-					}
-					return null;
-				} else {
-					return null;
-				}
-			} catch(IOException | IllegalStateException e) {
-				return null;
-			}
-		} else {
-			return GAME_PROFILE_CACHE.get(uuid);
+	/**
+	 * Updates the texture of the player head blockstate to the given skin texture.
+	 * 
+	 * @param skull   the player head as blockstate
+	 * @param texture the skin texture
+	 * @return if the texture was updates successfully
+	 */
+	public static boolean setSkullTexture(Skull skull, String texture) {
+		try {
+			PlayerProfile profile = createPlayerProfile(texture);
+			PlayerTextures textures = profile.getTextures();
+			textures.setSkin(new URI(HeadTextures.getTexture(texture)).toURL());
+			skull.setOwnerProfile(profile);
+			skull.update();
+			return true;
+		} catch(MalformedURLException | URISyntaxException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 

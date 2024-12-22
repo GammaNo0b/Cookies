@@ -1,0 +1,578 @@
+aerial_extractor:
+  basic:
+    energyConsumption: 10
+    internalCapacity: 10000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 20
+    internalCapacity: 20000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 30
+    internalCapacity: 30000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 40
+    internalCapacity: 40000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+bio_press:
+  basic:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+    capacity: 1000			# amount of millibuckets of bio mass that can be stored
+  advanced:
+    energyConsumption: 8
+    internalCapacity: 8000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+    capacity: 2000
+  improved:
+    energyConsumption: 12
+    internalCapacity: 12000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+    capacity: 3000
+  perfected:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+    capacity: 4000
+
+block_breaker:
+  energyConsumption: 5
+  internalCapacity: 10000
+  upgradeSlots: 0
+  baseSpeed: 1.0
+  breakFrequency: 20    # number of ticks between each block break
+
+carbon_press:
+  basic:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 256
+    internalCapacity: 256000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+compressor:
+  basic:
+    energyConsumption: 1
+    internalCapacity: 1000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+crafter:
+  basic:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+    patterns: 1             # number of different patterns the crafter can memorize at once
+  advanced:
+    energyConsumption: 32
+    internalCapacity: 32000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+    patterns: 2
+  improved:
+    energyConsumption: 48
+    internalCapacity: 48000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+    patterns: 4
+  perfected:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+    patterns: 8
+
+crafting_factory:
+  basic:
+    energyConsumption: 10
+    internalCapacity: 10000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+    maxSteps: 1             # maximum number of steps the crafting factory can perform
+  advanced:
+    energyConsumption: 20
+    internalCapacity: 20000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+    maxSteps: 2
+  improved:
+    energyConsumption: 30
+    internalCapacity: 30000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+    maxSteps: 3
+  perfected:
+    energyConsumption: 40
+    internalCapacity: 40000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+    maxSteps: 4
+
+crusher:
+  basic:
+    energyConsumption: 1
+    internalCapacity: 1000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+disenchanter:
+  energyConsumption: 100
+  internalCapacity: 100000
+  upgradeSlots: 6
+  baseSpeed: 1.0
+
+dryer:
+  basic:
+    energyConsumption: 1
+    internalCapacity: 1000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+dye_press:
+  basic:
+    energyConsumption: 1
+    internalCapacity: 1000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+dyer:
+  energyConsumption: 1
+  internalCapacity: 1000
+  upgradeSlots: 3
+  baseSpeed: 1.0
+
+enchanter:
+  energyConsumption: 100
+  internalCapacity: 100000
+  upgradeSlots: 6
+  baseSpeed: 1.0
+
+enchantment_combiner:
+  energyConsumption: 500
+  internalCapacity: 500000
+  upgradeSlots: 6
+  baseSpeed: 1.0
+
+experience_absorber:
+  energyConsumption: 10
+  internalCapacity: 10000
+  upgradeSlots: 4
+  baseSpeed: 1.0
+  frequency: 10           # number of ticks between each absorption attempt
+  range: 5                # range in which experience can be absorbed
+
+farmer:
+  basic:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 256
+    internalCapacity: 256000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+fluid_pump:
+  energyConsumption: 4
+  internalCapacity: 4000
+  upgradeSlots: 2
+  baseSpeed: 1.0
+  capacity: 4000          # amount of millibuckets of fluid that can be stored
+
+freezer:
+  basic:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 256
+    internalCapacity: 256000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+honey_extractor:
+  energyConsumption: 4
+  internalCapacity: 4000
+  upgradeSlots: 3
+  baseSpeed: 1.0
+
+hyper_furnace:
+  level1:
+    energyConsumption: 1
+    internalCapacity: 1000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  level2:
+    energyConsumption: 2
+    internalCapacity: 2000
+    upgradeSlots: 1
+    baseSpeed: 1.25
+  level3:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 1
+    baseSpeed: 1.5
+  level4:
+    energyConsumption: 8
+    internalCapacity: 8000
+    upgradeSlots: 2
+    baseSpeed: 1.75
+  level5:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 2
+    baseSpeed: 2.0
+  level6:
+    energyConsumption: 32
+    internalCapacity: 32000
+    upgradeSlots: 2
+    baseSpeed: 2.5
+  level7:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 3
+    baseSpeed: 3.0
+  level8:
+    energyConsumption: 128
+    internalCapacity: 128000
+    upgradeSlots: 3
+    baseSpeed: 3.5
+  level9:
+    energyConsumption: 256
+    internalCapacity: 256000
+    upgradeSlots: 4
+    baseSpeed: 4.0
+  level10:
+    energyConsumption: 512
+    internalCapacity: 512000
+    upgradeSlots: 5
+    baseSpeed: 5.0
+  level11:
+    energyConsumption: 1024
+    internalCapacity: 1024000
+    upgradeSlots: 6
+    baseSpeed: 7.5
+  level12:
+    energyConsumption: 2048
+    internalCapacity: 2048000
+    upgradeSlots: 8
+    baseSpeed: 10.0
+
+item_absorber:
+  energyConsumption: 10
+  internalCapacity: 10000
+  upgradeSlots: 4
+  baseSpeed: 1.0
+  frequency: 10           # number of ticks between each absorption attempt
+  range: 5                # range in which items can be absorbed
+
+latex_extractor:
+  energyConsumption: 10
+  internalCapacity: 10000
+  upgradeSlots: 3
+  baseSpeed: 1.0
+  frequency: 10                 # number of ticks between each latex extraction
+  capacity: 1000                # maximum amount of millibuckets latex the extractor can hold
+  extractAmount: 1              # millibuckets latex extracted each extraction
+  latexRubberCost: 100          # millibuckets of latex required for one rubber
+  latexRubberDuration: 1200     # number of ticks required to make rubber from latex
+
+lava_generator:
+  frequency: 20     # number of ticks between each lava generation
+  capacity: 1000    # maximum amount of lava the generator can hold
+  generation: 1     # millibuckets lava generated each time
+  basic:
+	frequency: 20
+	capacity: 4000
+	generation: 4
+  advanced:
+	frequency: 20
+	capacity: 16000
+	generation: 16
+  improved:
+	frequency: 20
+	capacity: 64000
+	generation: 64
+  perfected:
+    frequency: 20
+    capacity: 256000
+	generation: 256
+
+mineral_extractor:
+  basic:
+    energyConsumption: 1
+    internalCapacity: 1000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+mob_grinder:
+  energyConsumption: 20
+  internalCapacity: 20000
+  upgradeSlots: 4
+  baseSpeed: 1.0
+  frequency: 20     # number of ticks between each damageing
+  damage: 5.0        # amount of damage dealt to each mob
+
+obsidian_generator:
+  energyConsumption: 10
+  internalCapacity: 10000
+  upgradeSlots: 3
+  baseSpeed: 1.0
+  capacity: 4000              # millibuckets of lava the generator can store
+  obsidianCoolingTime: 600    # number of ticks for lava to cool down to become obsidian
+
+packing_machine:
+  basic:
+    energyConsumption: 1
+    internalCapacity: 1000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+quarry:
+  energyConsumption: 100
+  internalCapacity: 100000
+  upgradeSlots: 7
+  baseSpeed: 1.0
+  dimensions:
+  blacklisted: true
+
+rocket_assembler:
+  energyConsumption: 10
+  internalCapacity: 10000
+  upgradeSlots: 4
+  baseSpeed: 1.0
+
+sawmill:
+  basic:
+    energyConsumption: 1
+    internalCapacity: 1000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+smeltery:
+  basic:
+    energyConsumption: 1
+    internalCapacity: 1000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+  advanced:
+    energyConsumption: 4
+    internalCapacity: 4000
+    upgradeSlots: 2
+    baseSpeed: 1.25
+  improved:
+    energyConsumption: 16
+    internalCapacity: 16000
+    upgradeSlots: 4
+    baseSpeed: 1.5
+  perfected:
+    energyConsumption: 64
+    internalCapacity: 64000
+    upgradeSlots: 6
+    baseSpeed: 2.0
+
+star_maker:
+  energyConsumption: 5
+  internalCapacity: 5000
+  upgradeSlots: 2
+  baseSpeed: 1.0
+
+void_ore_miner:
+  basic:
+    energyConsumption: 1000
+    internalCapacity: 1000000
+    upgradeSlots: 2
+    baseSpeed: 1.0
+    miningDuration: 1200                 # number of ticks required for one ore mining
+  advanced:
+    energyConsumption: 2000
+    internalCapacity: 2000000
+    upgradeSlots: 4
+    baseSpeed: 2.0
+    miningDuration: 600
+  improved:
+    energyConsumption: 4000
+    internalCapacity: 4000000
+    upgradeSlots: 6
+    baseSpeed: 3.0
+    miningDuration: 300
+  perfected:
+    energyConsumption: 8000
+    internalCapacity: 8000000
+    upgradeSlots: 8
+    baseSpeed: 4.0
+    miningDuration: 200
+  mineables:                            # map of materials and weights
+    coal_ore: 900                       # higher weight means higher chance of generating
+    deepslate_coal_ore: 100
+    iron_ore: 200
+    deepslate_iron_ore: 50
+    copper_ore: 225
+    deepslate_copper_ore: 25
+    gold_ore: 50
+    deepslate_gold_ore: 50
+    redstone_ore: 25
+    deepslate_redstone_ore: 50
+    lapis_ore: 25
+    deepslate_lapis_ore: 5
+    emerald_ore: 10
+    deepslate_emerald_ore: 10
+    diamond_ore: 5
+    deepslate_diamond_ore: 15
+    nether_quartz_ore: 100
+    nether_gold_ore: 75
+    glowstone: 25
+    ancient_debris: 1
