@@ -303,14 +303,11 @@ public class Items {
 	public static CustomBlockItem MEDIUM_CONVEYOR_BELT;
 	public static CustomBlockItem HEAVY_CONVEYOR_BELT;
 	public static CustomItem UPGRADE_BASE;
-	public static CustomItem UPGRADE_SHARPNESS;
-	public static CustomItem UPGRADE_FORTUNE;
-	public static CustomItem UPGRADE_FIREASPECT;
-	public static CustomItem UPGRADE_BEHEADING;
-	public static CustomItem UPGRADE_RANGE;
 	public static CustomItem UPGRADE_SPEED;
 	public static CustomItem UPGRADE_EFFICIENCY;
 	public static CustomItem UPGRADE_ENERGY_STORAGE;
+	public static CustomItem UPGRADE_RANGE;
+	public static CustomItem UPGRADE_LUCK;
 
 	// Machines
 	public static CustomBlockItem BASIC_MACHINE_CASING;
@@ -777,15 +774,12 @@ public class Items {
 		LIGHT_CONVEYOR_BELT = ITEMS.register(new CustomBlockItem(Blocks.LIGHT_CONVEYOR_BELT, "§fLight Conveyor Belt"));
 		MEDIUM_CONVEYOR_BELT = ITEMS.register(new CustomBlockItem(Blocks.MEDIUM_CONVEYOR_BELT, "§fMedium Conveyor Belt"));
 		HEAVY_CONVEYOR_BELT = ITEMS.register(new CustomBlockItem(Blocks.HEAVY_CONVEYOR_BELT, "§fHeavy Conveyor Belt"));
-		UPGRADE_BASE = ITEMS.register(new CustomItem("§cMachine Upgrade Base", Material.MAP));
-		UPGRADE_SHARPNESS = ITEMS.register(new CustomItem("§bSharpness", Material.MAP));
-		UPGRADE_FORTUNE = ITEMS.register(new CustomItem("§9Fortune", Material.MAP));
-		UPGRADE_FIREASPECT = ITEMS.register(new CustomItem("§6Fireaspect", Material.MAP));
-		UPGRADE_BEHEADING = ITEMS.register(new CustomItem("§8Beheading", Material.MAP));
-		UPGRADE_RANGE = ITEMS.register(new CustomItem("§eRange", Material.MAP));
-		UPGRADE_SPEED = ITEMS.register(new CustomItem("§fSpeed", Material.MAP));
-		UPGRADE_EFFICIENCY = ITEMS.register(new CustomItem("§aEfficiency", Material.MAP));
-		UPGRADE_ENERGY_STORAGE = ITEMS.register(new CustomItem("§cEnergy Storage", Material.MAP));
+		UPGRADE_BASE = ITEMS.register(new CustomItem("§fMachine Upgrade Base", Material.MAP));
+		UPGRADE_SPEED = ITEMS.register(new CustomItem("§fSpeed Upgrade", Material.MAP));
+		UPGRADE_EFFICIENCY = ITEMS.register(new CustomItem("§fEfficiency Upgrade", Material.MAP));
+		UPGRADE_ENERGY_STORAGE = ITEMS.register(new CustomItem("§fEnergy Storage Upgrade", Material.MAP));
+		UPGRADE_RANGE = ITEMS.register(new CustomItem("§fRange Upgrade", Material.MAP));
+		UPGRADE_LUCK = ITEMS.register(new CustomItem("§fLuck Upgrade", Material.MAP));
 
 		// Machines
 		BASIC_MACHINE_CASING = ITEMS.register(new CustomBlockItem(Blocks.BASIC_MACHINE_CASING, "§fBasic Machine Casing"));

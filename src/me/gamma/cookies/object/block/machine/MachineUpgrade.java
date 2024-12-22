@@ -22,7 +22,7 @@ public class MachineUpgrade {
 
 	public static final MachineUpgrade SPEED = new MachineUpgrade(Items.UPGRADE_SPEED, 8, x -> x * 0.5D);
 	public static final MachineUpgrade EFFICIENCY = new MachineUpgrade(Items.UPGRADE_EFFICIENCY, 8, x -> MathHelper.intpow(0.75D, x));
-	public static final MachineUpgrade FORTUNE = new MachineUpgrade(Items.UPGRADE_FORTUNE, 8, x -> 1 + x * 0.25D);
+	public static final MachineUpgrade LUCK = new MachineUpgrade(Items.UPGRADE_LUCK, 8, x -> 1 + x * 0.25D);
 	public static final MachineUpgrade ENERGY_STORAGE = new MachineUpgrade(Items.UPGRADE_ENERGY_STORAGE, 4, x -> x);
 	public static final MachineUpgrade RANGE = new MachineUpgrade(Items.UPGRADE_RANGE, 4, x -> x);
 
@@ -32,7 +32,7 @@ public class MachineUpgrade {
 	private final IntToDoubleFunction function;
 
 	public MachineUpgrade(AbstractCustomItem item, int maxStackSize, IntToDoubleFunction function) {
-		this.property = new ByteProperty("upgrade_" + item.getIdentifier());
+		this.property = new ByteProperty(item.getIdentifier());
 		this.item = item;
 		this.maxStackSize = maxStackSize;
 		this.function = function;
@@ -95,13 +95,18 @@ public class MachineUpgrade {
 	}
 
 
+	public int getLevel(PersistentDataHolder holder) {
+		return this.fetch(holder);
+	}
+
+
 	public double getValue(int level) {
 		return this.function.applyAsDouble(level);
 	}
 
 
 	public double getValue(PersistentDataHolder holder) {
-		return this.getValue(this.fetch(holder));
+		return this.getValue(this.getLevel(holder));
 	}
 
 

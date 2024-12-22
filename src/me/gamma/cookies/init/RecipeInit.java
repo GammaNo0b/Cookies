@@ -277,14 +277,11 @@ public class RecipeInit {
 		c.registerItem(MEDIUM_CONVEYOR_BELT);
 		c.registerItem(HEAVY_CONVEYOR_BELT);
 		c.registerItem(UPGRADE_BASE);
-		c.registerItem(UPGRADE_SHARPNESS);
-		c.registerItem(UPGRADE_FORTUNE);
-		c.registerItem(UPGRADE_FIREASPECT);
-		c.registerItem(UPGRADE_BEHEADING);
-		c.registerItem(UPGRADE_RANGE);
 		c.registerItem(UPGRADE_SPEED);
 		c.registerItem(UPGRADE_EFFICIENCY);
 		c.registerItem(UPGRADE_ENERGY_STORAGE);
+		c.registerItem(UPGRADE_RANGE);
+		c.registerItem(UPGRADE_LUCK);
 
 		c = RecipeCategory.MACHINES;
 		c.registerItem(COBBLESTONE_GENERATOR);
@@ -1065,7 +1062,7 @@ public class RecipeInit {
 		recipe.setIngredient('B', Material.BLAZE_POWDER);
 		recipe.setIngredient('I', EINGOT_4);
 		recipe.setIngredient('R', RED_3);
-		
+
 		// Technical Components
 
 		recipe = customRecipe(CIRCUIT_BOARD, 8, type, "SS");
@@ -1106,58 +1103,42 @@ public class RecipeInit {
 		recipe.setIngredient('M', MOTOR);
 		recipe.setIngredient('R', RUBBER);
 
-		recipe = customRecipe(UPGRADE_BASE, type, "RR", "RR");
+		recipe = customRecipe(UPGRADE_BASE, type, "PWP", "SRS", "PWP");
+		recipe.setIngredient('P', PLASTIC_SHEET);
+		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('S', SILICON);
 		recipe.setIngredient('R', Material.REDSTONE);
 
-		recipe = customRecipe(UPGRADE_SHARPNESS, type, "GIG", "DBD", "GIG");
+		recipe = customRecipe(UPGRADE_SPEED, type, "GAG", "BUB", "GAG");
 		recipe.setIngredient('G', Material.GOLD_NUGGET);
-		recipe.setIngredient('B', UPGRADE_BASE);
-		recipe.setIngredient('I', Material.DIAMOND_SWORD);
-		recipe.setIngredient('D', Material.IRON_SWORD);
+		recipe.setIngredient('A', Material.REDSTONE);
+		recipe.setIngredient('B', Material.SUGAR);
+		recipe.setIngredient('U', UPGRADE_BASE);
 
-		recipe = customRecipe(UPGRADE_FORTUNE, type, "GLG", "EBE", "GLG");
+		recipe = customRecipe(UPGRADE_EFFICIENCY, type, "GAG", "BUB", "GAG");
 		recipe.setIngredient('G', Material.GOLD_NUGGET);
-		recipe.setIngredient('B', UPGRADE_BASE);
-		recipe.setIngredient('L', Material.LAPIS_BLOCK);
-		recipe.setIngredient('E', Material.EMERALD_BLOCK);
+		recipe.setIngredient('A', EINGOT_2);
+		recipe.setIngredient('B', Material.DIAMOND);
+		recipe.setIngredient('U', UPGRADE_BASE);
 
-		recipe = customRecipe(UPGRADE_FIREASPECT, type, "GFG", "PBP", "GFG");
+		recipe = customRecipe(UPGRADE_ENERGY_STORAGE, type, "GAG", "BUB", "GCG");
 		recipe.setIngredient('G', Material.GOLD_NUGGET);
-		recipe.setIngredient('B', UPGRADE_BASE);
-		recipe.setIngredient('F', Material.FLINT_AND_STEEL);
-		recipe.setIngredient('P', Material.BLAZE_POWDER);
+		recipe.setIngredient('A', EINGOT_3);
+		recipe.setIngredient('B', COPPER_WIRE);
+		recipe.setIngredient('C', BATTERY_GREEN);
+		recipe.setIngredient('U', UPGRADE_BASE);
 
-		recipe = customRecipe(UPGRADE_BEHEADING, type, "GSG", "ZBC", "GWG");
+		recipe = customRecipe(UPGRADE_RANGE, type, "GAG", "BUB", "GAG");
 		recipe.setIngredient('G', Material.GOLD_NUGGET);
-		recipe.setIngredient('B', UPGRADE_BASE);
-		recipe.setIngredient('S', Material.SKELETON_SKULL);
-		recipe.setIngredient('Z', Material.ZOMBIE_HEAD);
-		recipe.setIngredient('C', Material.CREEPER_HEAD);
-		recipe.setIngredient('W', Material.WITHER_SKELETON_SKULL);
+		recipe.setIngredient('A', Material.LEAD);
+		recipe.setIngredient('B', LEAD_DUST);
+		recipe.setIngredient('U', UPGRADE_BASE);
 
-		recipe = customRecipe(UPGRADE_RANGE, type, "GLG", "RBR", "GLG");
+		recipe = customRecipe(UPGRADE_LUCK, type, "GAG", "BUB", "GAG");
 		recipe.setIngredient('G', Material.GOLD_NUGGET);
-		recipe.setIngredient('B', UPGRADE_BASE);
-		recipe.setIngredient('L', Material.LEAD);
-		recipe.setIngredient('R', Material.BLAZE_ROD);
-
-		recipe = customRecipe(UPGRADE_SPEED, type, "GSG", "SBS", "GSG");
-		recipe.setIngredient('G', Material.GOLD_NUGGET);
-		recipe.setIngredient('B', UPGRADE_BASE);
-		recipe.setIngredient('S', Material.SUGAR);
-
-		recipe = customRecipe(UPGRADE_EFFICIENCY, type, "GQG", "EBE", "GQG");
-		recipe.setIngredient('G', Material.GOLD_NUGGET);
-		recipe.setIngredient('B', UPGRADE_BASE);
-		recipe.setIngredient('E', Material.EMERALD);
-		recipe.setIngredient('Q', Material.QUARTZ);
-
-		recipe = customRecipe(UPGRADE_ENERGY_STORAGE, type, "GRG", "ABC", "GRG");
-		recipe.setIngredient('G', Material.GOLD_NUGGET);
-		recipe.setIngredient('B', UPGRADE_BASE);
-		recipe.setIngredient('A', ACCUMULATOR);
-		recipe.setIngredient('C', ELECTRICAL_CIRCUIT_3);
-		recipe.setIngredient('R', Material.REDSTONE);
+		recipe.setIngredient('A', Material.EMERALD);
+		recipe.setIngredient('B', Material.LAPIS_LAZULI);
+		recipe.setIngredient('U', UPGRADE_BASE);
 
 		// Machines
 

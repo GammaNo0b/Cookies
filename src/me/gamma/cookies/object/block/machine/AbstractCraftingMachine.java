@@ -2,6 +2,7 @@
 package me.gamma.cookies.object.block.machine;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -115,12 +116,19 @@ public abstract class AbstractCraftingMachine extends AbstractItemProcessingMach
 	}
 
 
+	@Override
+	public void getAllowedUpgrades(ArrayList<MachineUpgrade> upgrades) {
+		super.getAllowedUpgrades(upgrades);
+		upgrades.add(MachineUpgrade.LUCK);
+	}
+
+
 	private int checkRecipe(TileState block, ItemStack[] inputs, MachineRecipe recipe) {
 		Map<RecipeChoice, Integer> uses = recipe.matches(inputs);
 		if(uses == null)
 			return 0;
 
-		RESULTS.store(block, recipe.getOutputs(this.getUpgradeValue(block, MachineUpgrade.FORTUNE)));
+		RESULTS.store(block, recipe.getOutputs(this.getUpgradeValue(block, MachineUpgrade.LUCK)));
 
 		this.consumeInputs(block, Stream.of(recipe.getIngredients()).map(ingredient -> RecipeInventoryTask.getRawItemFromItemChoice(ingredient, ResultChoice.ORDERED, uses.get(ingredient))).collect(Collectors.toList()));
 

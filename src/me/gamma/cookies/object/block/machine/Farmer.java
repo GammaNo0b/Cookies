@@ -151,13 +151,13 @@ public class Farmer extends AbstractItemProcessingMachine {
 	@Override
 	public void getAllowedUpgrades(ArrayList<MachineUpgrade> upgrades) {
 		super.getAllowedUpgrades(upgrades);
-		upgrades.add(MachineUpgrade.FORTUNE);
+		upgrades.add(MachineUpgrade.LUCK);
 		upgrades.add(MachineUpgrade.RANGE);
 	}
 
 
 	public int getFortune(TileState block) {
-		return this.getUpgradeLevel(block, MachineUpgrade.FORTUNE);
+		return this.getUpgradeLevel(block, MachineUpgrade.LUCK);
 	}
 
 
