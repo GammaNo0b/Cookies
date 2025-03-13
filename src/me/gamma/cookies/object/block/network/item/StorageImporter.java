@@ -109,7 +109,7 @@ public class StorageImporter extends AbstractCustomBlock implements NetworkInter
 
 	@Override
 	public Filter<ItemStack> getOutputFilter(TileState block) {
-		return (t, a) -> 0;
+		return (_, _) -> 0;
 	}
 
 

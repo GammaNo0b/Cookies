@@ -240,12 +240,20 @@ public class RecipeInit {
 
 		c = RecipeCategory.ELECTRIC_COMPONENTS;
 		c.registerItem(COPPER_WIRE);
+		c.registerItem(BRONZE_WIRE);
+		c.registerItem(SILVER_WIRE);
+		c.registerItem(ELECTRUM_WIRE);
 		c.registerItem(COPPER_COIL);
+		c.registerItem(BRONZE_COIL);
+		c.registerItem(SILVER_COIL);
+		c.registerItem(ELECTRUM_COIL);
 		c.registerItem(INSULATED_COPPER_WIRE);
+		c.registerItem(INSULATED_BRONZE_WIRE);
+		c.registerItem(INSULATED_SILVER_WIRE);
+		c.registerItem(INSULATED_ELECTRUM_WIRE);
 		c.registerItem(ELECTROMAGNET);
 		c.registerItem(MOTOR);
 		c.registerItem(LASER);
-		c.registerItem(ACCUMULATOR);
 		c.registerItem(ENERGY_MEASURE_GADGET);
 		c.registerItem(RESISTOR_1);
 		c.registerItem(RESISTOR_2);
@@ -444,10 +452,11 @@ public class RecipeInit {
 		c.registerItem(BATTERY_PURPLE);
 		c.registerItem(BATTERY_BLACK);
 		c.registerItem(LED_PURPLE);
-		c.registerItem(LED_RED);
-		c.registerItem(LED_ORANGE);
-		c.registerItem(LED_GREEN);
 		c.registerItem(LED_BLUE);
+		c.registerItem(LED_CYAN);
+		c.registerItem(LED_GREEN);
+		c.registerItem(LED_ORANGE);
+		c.registerItem(LED_RED);
 		c.registerItem(TESSERACT);
 
 		c = RecipeCategory.MAGIC;
@@ -559,6 +568,14 @@ public class RecipeInit {
 		final Material RED_1 = Material.REDSTONE;
 		final AbstractCustomItem RED_2 = REDSTONE_ALLOY;
 		final AbstractCustomItem RED_3 = REDSTONIUM;
+		final AbstractCustomItem WIRE_1 = COPPER_WIRE;
+		final AbstractCustomItem WIRE_2 = BRONZE_WIRE;
+		final AbstractCustomItem WIRE_3 = SILVER_WIRE;
+		final AbstractCustomItem WIRE_4 = ELECTRUM_WIRE;
+		final AbstractCustomItem COIL_1 = COPPER_COIL;
+		final AbstractCustomItem COIL_2 = BRONZE_COIL;
+		final AbstractCustomItem COIL_3 = SILVER_COIL;
+		final AbstractCustomItem COIL_4 = ELECTRUM_COIL;
 
 		CustomRecipe recipe;
 		RecipeType type;
@@ -916,41 +933,89 @@ public class RecipeInit {
 		recipe = customRecipe(COPPER_WIRE, 8, type, "CCC");
 		recipe.setIngredient('C', Material.COPPER_INGOT);
 
+		recipe = customRecipe(BRONZE_WIRE, 8, type, "CCC");
+		recipe.setIngredient('C', BRONZE_INGOT);
+
+		recipe = customRecipe(SILVER_WIRE, 8, type, "CCC");
+		recipe.setIngredient('C', SILVER_INGOT);
+
+		recipe = customRecipe(ELECTRUM_WIRE, 8, type, "CCC");
+		recipe.setIngredient('C', ELECTRUM_INGOT);
+
 		recipe = customRecipe(COPPER_COIL, type, " W ", "WSW", " W ");
 		recipe.setIngredient('S', Material.STICK);
 		recipe.setIngredient('W', COPPER_WIRE);
 
-		recipe = customRecipe(INSULATED_COPPER_WIRE, type, "WR");
+		recipe = customRecipe(BRONZE_COIL, type, " W ", "WSW", " W ");
+		recipe.setIngredient('S', Material.STICK);
+		recipe.setIngredient('W', BRONZE_WIRE);
+
+		recipe = customRecipe(SILVER_COIL, type, " W ", "WSW", " W ");
+		recipe.setIngredient('S', Material.STICK);
+		recipe.setIngredient('W', SILVER_WIRE);
+
+		recipe = customRecipe(ELECTRUM_COIL, type, " W ", "WSW", " W ");
+		recipe.setIngredient('S', Material.STICK);
+		recipe.setIngredient('W', ELECTRUM_WIRE);
+
+		recipe = shapelessRecipe(INSULATED_COPPER_WIRE, type, "WR");
 		recipe.setIngredient('W', COPPER_COIL);
 		recipe.setIngredient('R', RUBBER);
 
-		recipe = customRecipe(INSULATED_COPPER_WIRE, type, "WSP");
+		recipe = shapelessRecipe(INSULATED_COPPER_WIRE, type, "WSP");
 		recipe.setIngredient('W', COPPER_COIL);
 		recipe.setIngredient('S', new RecipeChoice.ExactChoice(new ItemStack(Material.SLIME_BALL), STICKY_BALL.get()));
 		recipe.setIngredient('P', Material.PAPER);
 
+		recipe = shapelessRecipe(INSULATED_BRONZE_WIRE, type, "WRR");
+		recipe.setIngredient('W', BRONZE_COIL);
+		recipe.setIngredient('R', RUBBER);
+
+		recipe = shapelessRecipe(INSULATED_BRONZE_WIRE, type, "WSP", "P  ");
+		recipe.setIngredient('W', BRONZE_COIL);
+		recipe.setIngredient('S', new RecipeChoice.ExactChoice(new ItemStack(Material.SLIME_BALL), STICKY_BALL.get()));
+		recipe.setIngredient('P', Material.PAPER);
+
+		recipe = shapelessRecipe(INSULATED_SILVER_WIRE, type, "WRR", "R  ");
+		recipe.setIngredient('W', SILVER_COIL);
+		recipe.setIngredient('R', RUBBER);
+
+		recipe = shapelessRecipe(INSULATED_SILVER_WIRE, type, "WSP", "PP ");
+		recipe.setIngredient('W', SILVER_COIL);
+		recipe.setIngredient('S', new RecipeChoice.ExactChoice(new ItemStack(Material.SLIME_BALL), STICKY_BALL.get()));
+		recipe.setIngredient('P', Material.PAPER);
+
+		recipe = shapelessRecipe(INSULATED_ELECTRUM_WIRE, type, "WRR", "RR ");
+		recipe.setIngredient('W', ELECTRUM_COIL);
+		recipe.setIngredient('R', RUBBER);
+
+		recipe = shapelessRecipe(INSULATED_ELECTRUM_WIRE, type, "WSP", "PPP");
+		recipe.setIngredient('W', ELECTRUM_COIL);
+		recipe.setIngredient('S', new RecipeChoice.ExactChoice(new ItemStack(Material.SLIME_BALL), STICKY_BALL.get()));
+		recipe.setIngredient('P', Material.PAPER);
+
 		recipe = customRecipe(RESISTOR_1, 4, type, "WCW");
-		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('W', WIRE_1);
 		recipe.setIngredient('C', Material.COAL);
 
 		recipe = customRecipe(RESISTOR_2, type, "RRR", "WCW");
 		recipe.setIngredient('R', RESISTOR_1);
-		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('W', WIRE_1);
 		recipe.setIngredient('C', CARBON);
 
 		recipe = customRecipe(RESISTOR_3, type, "RRR", "WCW");
 		recipe.setIngredient('R', RESISTOR_2);
-		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('W', WIRE_2);
 		recipe.setIngredient('C', COMPRESSED_CARBON);
 
 		recipe = customRecipe(RESISTOR_4, type, "RRR", "WCW");
 		recipe.setIngredient('R', RESISTOR_3);
-		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('W', WIRE_3);
 		recipe.setIngredient('C', CARBON_CHUNK);
 
 		recipe = customRecipe(RESISTOR_5, type, "RRR", "WCW");
 		recipe.setIngredient('R', RESISTOR_4);
-		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('W', WIRE_4);
 		recipe.setIngredient('C', CARBONADO);
 
 		recipe = customRecipe(CAPACITOR_1, 4, type, "ICI");
@@ -990,42 +1055,36 @@ public class RecipeInit {
 		recipe = customRecipe(LASER, type, "III", "CGG", "III");
 		recipe.setIngredient('I', Material.IRON_INGOT);
 		recipe.setIngredient('G', Material.GLASS_PANE);
-		recipe.setIngredient('C', COPPER_COIL);
+		recipe.setIngredient('C', SILVER_COIL);
 		recipe.setIngredient('M', ELECTROMAGNET);
-
-		recipe = customRecipe(ACCUMULATOR, type, "ASA", "ARA", "ACA");
-		recipe.setIngredient('S', SILVER_INGOT);
-		recipe.setIngredient('C', MAGNESIUM_INGOT);
-		recipe.setIngredient('R', SULFUR);
-		recipe.setIngredient('A', PLASTIC_SHEET);
 
 		recipe = customRecipe(ELECTRICAL_CIRCUIT_1, type, "RC", "PW");
 		recipe.setIngredient('P', CIRCUIT_BOARD);
-		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('W', WIRE_1);
 		recipe.setIngredient('R', RESISTOR_1);
 		recipe.setIngredient('C', CAPACITOR_1);
 
 		recipe = customRecipe(ELECTRICAL_CIRCUIT_2, type, "RC", "PW");
 		recipe.setIngredient('P', ELECTRICAL_CIRCUIT_1);
-		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('W', WIRE_1);
 		recipe.setIngredient('R', RESISTOR_2);
 		recipe.setIngredient('C', CAPACITOR_2);
 
 		recipe = customRecipe(ELECTRICAL_CIRCUIT_3, type, "RC", "PW");
 		recipe.setIngredient('P', ELECTRICAL_CIRCUIT_2);
-		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('W', WIRE_2);
 		recipe.setIngredient('R', RESISTOR_3);
 		recipe.setIngredient('C', CAPACITOR_3);
 
 		recipe = customRecipe(ELECTRICAL_CIRCUIT_4, type, "RC", "PW");
 		recipe.setIngredient('P', ELECTRICAL_CIRCUIT_3);
-		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('W', WIRE_3);
 		recipe.setIngredient('R', RESISTOR_4);
 		recipe.setIngredient('C', CAPACITOR_4);
 
 		recipe = customRecipe(ELECTRICAL_CIRCUIT_5, type, "RC", "PW");
 		recipe.setIngredient('P', ELECTRICAL_CIRCUIT_4);
-		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('W', WIRE_4);
 		recipe.setIngredient('R', RESISTOR_5);
 		recipe.setIngredient('C', CAPACITOR_5);
 
@@ -1124,7 +1183,7 @@ public class RecipeInit {
 		recipe = customRecipe(UPGRADE_ENERGY_STORAGE, type, "GAG", "BUB", "GCG");
 		recipe.setIngredient('G', Material.GOLD_NUGGET);
 		recipe.setIngredient('A', EINGOT_3);
-		recipe.setIngredient('B', COPPER_WIRE);
+		recipe.setIngredient('B', ELECTRUM_WIRE);
 		recipe.setIngredient('C', BATTERY_GREEN);
 		recipe.setIngredient('U', UPGRADE_BASE);
 
@@ -1370,84 +1429,84 @@ public class RecipeInit {
 
 		recipe = customRecipe(HYPER_FURNACE_1, type, " I ", "HFH", "EME");
 		recipe.setIngredient('I', IINGOT_1);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_1);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', BASIC_MACHINE_CASING);
 		recipe.setIngredient('F', Material.FURNACE);
 
 		recipe = customRecipe(HYPER_FURNACE_2, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_1);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_1);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', BASIC_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_1);
 
 		recipe = customRecipe(HYPER_FURNACE_3, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_1);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_1);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', BASIC_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_2);
 
 		recipe = customRecipe(HYPER_FURNACE_4, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_2);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_2);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', ADVANCED_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_3);
 
 		recipe = customRecipe(HYPER_FURNACE_5, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_2);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_2);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', ADVANCED_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_4);
 
 		recipe = customRecipe(HYPER_FURNACE_6, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_2);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_2);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', ADVANCED_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_5);
 
 		recipe = customRecipe(HYPER_FURNACE_7, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_3);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_3);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', IMPROVED_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_6);
 
 		recipe = customRecipe(HYPER_FURNACE_8, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_3);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_3);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', IMPROVED_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_7);
 
 		recipe = customRecipe(HYPER_FURNACE_9, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_3);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_3);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', IMPROVED_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_8);
 
 		recipe = customRecipe(HYPER_FURNACE_10, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_4);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_4);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', PERFECTED_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_9);
 
 		recipe = customRecipe(HYPER_FURNACE_11, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_4);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_4);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', PERFECTED_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_10);
 
 		recipe = customRecipe(HYPER_FURNACE_12, type, " I ", "HFH", "EME").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
 		recipe.setIngredient('I', IINGOT_4);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_4);
 		recipe.setIngredient('E', MOTOR);
 		recipe.setIngredient('M', PERFECTED_MACHINE_CASING);
 		recipe.setIngredient('F', HYPER_FURNACE_11);
@@ -1484,28 +1543,28 @@ public class RecipeInit {
 		recipe.setIngredient('T', Material.HOPPER);
 		recipe.setIngredient('M', MOTOR);
 		recipe.setIngredient('C', BASIC_MACHINE_CASING);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_1);
 		recipe.setIngredient('S', IINGOT_1);
 
 		recipe = customRecipe(ADVANCED_MINERAL_EXTRACTOR, type, " T ", "MCH", "SSS").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(0, 1))));
 		recipe.setIngredient('T', BASIC_MINERAL_EXTRACTOR);
 		recipe.setIngredient('M', MOTOR);
 		recipe.setIngredient('C', ADVANCED_MACHINE_CASING);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_2);
 		recipe.setIngredient('S', IINGOT_2);
 
 		recipe = customRecipe(IMPROVED_MINERAL_EXTRACTOR, type, " T ", "MCH", "SSS").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(0, 1))));
 		recipe.setIngredient('T', ADVANCED_MINERAL_EXTRACTOR);
 		recipe.setIngredient('M', MOTOR);
 		recipe.setIngredient('C', IMPROVED_MACHINE_CASING);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_3);
 		recipe.setIngredient('S', IINGOT_3);
 
 		recipe = customRecipe(PERFECTED_MINERAL_EXTRACTOR, type, " T ", "MCH", "SSS").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(0, 1))));
 		recipe.setIngredient('T', IMPROVED_MINERAL_EXTRACTOR);
 		recipe.setIngredient('M', MOTOR);
 		recipe.setIngredient('C', PERFECTED_MACHINE_CASING);
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_4);
 		recipe.setIngredient('S', IINGOT_4);
 
 		recipe = customRecipe(BASIC_AERIAL_EXTRACTOR, type, " B ", "MCE", "SSS");
@@ -1561,25 +1620,25 @@ public class RecipeInit {
 		recipe.setIngredient('C', PERFECTED_MACHINE_CASING);
 
 		recipe = customRecipe(BASIC_SMELTERY, type, " S ", "HTH", "SCS");
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_1);
 		recipe.setIngredient('S', IINGOT_1);
 		recipe.setIngredient('C', BASIC_MACHINE_CASING);
 		recipe.setIngredient('T', Material.HOPPER);
 
 		recipe = customRecipe(ADVANCED_SMELTERY, type, " S ", "HTH", "SCS").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_2);
 		recipe.setIngredient('S', IINGOT_2);
 		recipe.setIngredient('C', ADVANCED_MACHINE_CASING);
 		recipe.setIngredient('T', BASIC_SMELTERY);
 
 		recipe = customRecipe(IMPROVED_SMELTERY, type, " S ", "HTH", "SCS").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_3);
 		recipe.setIngredient('S', IINGOT_3);
 		recipe.setIngredient('C', IMPROVED_MACHINE_CASING);
 		recipe.setIngredient('T', ADVANCED_SMELTERY);
 
 		recipe = customRecipe(PERFECTED_SMELTERY, type, " S ", "HTH", "SCS").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(1, 1))));
-		recipe.setIngredient('H', COPPER_COIL);
+		recipe.setIngredient('H', COIL_4);
 		recipe.setIngredient('S', IINGOT_4);
 		recipe.setIngredient('C', PERFECTED_MACHINE_CASING);
 		recipe.setIngredient('T', IMPROVED_SMELTERY);
@@ -1837,7 +1896,7 @@ public class RecipeInit {
 		recipe = customRecipe(BASIC_BIO_GENERATOR, type, "IOI", "DMC", "FPF");
 		recipe.setIngredient('O', Material.MOSS_BLOCK);
 		recipe.setIngredient('D', MOTOR);
-		recipe.setIngredient('C', COPPER_COIL);
+		recipe.setIngredient('C', COIL_1);
 		recipe.setIngredient('M', BASIC_MACHINE_CASING);
 		recipe.setIngredient('P', Material.FURNACE);
 		recipe.setIngredient('I', IINGOT_1);
@@ -1846,7 +1905,7 @@ public class RecipeInit {
 		recipe = customRecipe(ADVANCED_BIO_GENERATOR, type, "IOI", "DMC", "FPF");
 		recipe.setIngredient('O', Material.MOSS_BLOCK);
 		recipe.setIngredient('D', MOTOR);
-		recipe.setIngredient('C', COPPER_COIL);
+		recipe.setIngredient('C', COIL_2);
 		recipe.setIngredient('M', ADVANCED_MACHINE_CASING);
 		recipe.setIngredient('P', BASIC_BIO_GENERATOR);
 		recipe.setIngredient('I', IINGOT_2);
@@ -1855,7 +1914,7 @@ public class RecipeInit {
 		recipe = customRecipe(IMPROVED_BIO_GENERATOR, type, "IOI", "DMC", "FPF");
 		recipe.setIngredient('O', Material.MOSS_BLOCK);
 		recipe.setIngredient('D', MOTOR);
-		recipe.setIngredient('C', COPPER_COIL);
+		recipe.setIngredient('C', COIL_3);
 		recipe.setIngredient('M', IMPROVED_MACHINE_CASING);
 		recipe.setIngredient('P', ADVANCED_BIO_GENERATOR);
 		recipe.setIngredient('I', IINGOT_3);
@@ -1864,7 +1923,7 @@ public class RecipeInit {
 		recipe = customRecipe(PERFECTED_BIO_GENERATOR, type, "IOI", "DMC", "FPF");
 		recipe.setIngredient('O', Material.MOSS_BLOCK);
 		recipe.setIngredient('D', MOTOR);
-		recipe.setIngredient('C', COPPER_COIL);
+		recipe.setIngredient('C', COIL_4);
 		recipe.setIngredient('M', PERFECTED_MACHINE_CASING);
 		recipe.setIngredient('P', IMPROVED_BIO_GENERATOR);
 		recipe.setIngredient('I', IINGOT_4);
@@ -2158,6 +2217,8 @@ public class RecipeInit {
 
 		// Energy
 
+		type = RecipeType.ENGINEER;
+
 		recipe = customRecipe(BATTERY_RED, type, "PLP", "CDC", "PSP");
 		recipe.setIngredient('P', PLASTIC_SHEET);
 		recipe.setIngredient('C', Material.RED_DYE);
@@ -2203,6 +2264,12 @@ public class RecipeInit {
 
 		recipe = customRecipe(LED_BLUE, type, " R ", "RWR", "AIA");
 		recipe.setIngredient('R', Material.BLUE_STAINED_GLASS_PANE);
+		recipe.setIngredient('W', COPPER_WIRE);
+		recipe.setIngredient('A', ALUMINUM_INGOT);
+		recipe.setIngredient('I', Material.IRON_INGOT);
+
+		recipe = customRecipe(LED_CYAN, type, " R ", "RWR", "AIA");
+		recipe.setIngredient('R', Material.CYAN_STAINED_GLASS_PANE);
 		recipe.setIngredient('W', COPPER_WIRE);
 		recipe.setIngredient('A', ALUMINUM_INGOT);
 		recipe.setIngredient('I', Material.IRON_INGOT);
@@ -2344,7 +2411,7 @@ public class RecipeInit {
 		recipe = customRecipe(ENDER_CORE, type, "ESY", "FPF", "YSE");
 		recipe.setIngredient('E', Material.ENDER_PEARL);
 		recipe.setIngredient('Y', Material.ENDER_EYE);
-		recipe.setIngredient('S', Material.SHULKER_SHELL);
+		recipe.setIngredient('S', Material.END_STONE);
 		recipe.setIngredient('F', Material.CHORUS_FRUIT);
 		recipe.setIngredient('P', Material.CHORUS_FLOWER);
 
@@ -2352,7 +2419,7 @@ public class RecipeInit {
 		recipe.setIngredient('S', Material.SHULKER_SHELL);
 		recipe.setIngredient('Y', Material.END_CRYSTAL);
 		recipe.setIngredient('C', ENDER_CORE);
-		recipe.setIngredient('E', Material.ELYTRA);
+		recipe.setIngredient('E', Material.DRAGON_BREATH);
 
 		recipe = shapelessRecipe(FLESH_CLUMP, type, "ABC", "DEF", "GHI");
 		recipe.setIngredient('A', Material.ROTTEN_FLESH);
@@ -2777,7 +2844,6 @@ public class RecipeInit {
 	}
 
 
-	@SuppressWarnings("unused")
 	private static CustomRecipe shapelessRecipe(IItemSupplier result, int amount, RecipeType type, String... shape) {
 		return registerRecipe(new CustomRecipe(result.get(), amount, type, RecipeShape.SHAPELESS).setShape(shape));
 	}

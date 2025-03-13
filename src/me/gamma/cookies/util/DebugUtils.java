@@ -17,7 +17,7 @@ public class DebugUtils {
 	 */
 	public static void printStackTrace() {
 		Thread thread = Thread.currentThread();
-		new Exception(String.format("Stacktrace of Thread %s [%d]", thread.getName(), thread.getId())).printStackTrace(System.out);
+		new Exception(String.format("Stacktrace of Thread %s [%d]", thread.getName(), thread.threadId())).printStackTrace(System.out);
 	}
 
 

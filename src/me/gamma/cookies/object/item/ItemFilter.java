@@ -25,10 +25,11 @@ public class ItemFilter implements Filter<ItemStack> {
 	private CountComparison countComparator;
 	private boolean whitelisted;
 	private boolean ignoreNBT;
-	
+
 	public ItemFilter() {
 		this(CountComparison.IGNORE, true, true);
 	}
+
 
 	public ItemFilter(CountComparison countComparator, boolean whitelisted, boolean ignoreNBT) {
 		this.types = new ItemStack[SIZE];
@@ -134,7 +135,7 @@ public class ItemFilter implements Filter<ItemStack> {
 
 	public static enum CountComparison implements CountComparator, Supplier<ItemStack> {
 
-		IGNORE((n, x) -> n, new ItemBuilder(Material.PLAYER_HEAD).setHeadTexture(HeadTextures.WOODEN_MINUS).build()),
+		IGNORE((n, _) -> n, new ItemBuilder(Material.PLAYER_HEAD).setHeadTexture(HeadTextures.WOODEN_MINUS).build()),
 		EXACT((n, x) -> n < x ? 0 : x, new ItemBuilder(Material.PLAYER_HEAD).setHeadTexture(HeadTextures.WOODEN_EQUAL).build()),
 		LESS((n, x) -> n < x ? n : 0, new ItemBuilder(Material.PLAYER_HEAD).setHeadTexture(HeadTextures.WOODEN_LESS_THAN).build()),
 		MORE((n, x) -> n > x ? n : 0, new ItemBuilder(Material.PLAYER_HEAD).setHeadTexture(HeadTextures.WOODEN_GREATER_THAN).build());

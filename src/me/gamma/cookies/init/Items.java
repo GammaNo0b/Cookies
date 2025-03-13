@@ -43,11 +43,11 @@ import me.gamma.cookies.object.item.resources.BatteryItem;
 import me.gamma.cookies.object.item.resources.CardItem;
 import me.gamma.cookies.object.item.resources.CardPile;
 import me.gamma.cookies.object.item.resources.EnderLinkedBlockItem;
-import me.gamma.cookies.object.item.resources.InsulatedCopperWire;
 import me.gamma.cookies.object.item.resources.Lootbox;
 import me.gamma.cookies.object.item.resources.MagicMetal;
 import me.gamma.cookies.object.item.resources.ResistorItem;
 import me.gamma.cookies.object.item.resources.TankItem;
+import me.gamma.cookies.object.item.resources.WireItem;
 import me.gamma.cookies.object.item.tools.Airgun;
 import me.gamma.cookies.object.item.tools.AngelBlockItem;
 import me.gamma.cookies.object.item.tools.CookieCookBook;
@@ -268,8 +268,17 @@ public class Items {
 
 	// Electric Components
 	public static CustomItem COPPER_WIRE;
+	public static CustomItem BRONZE_WIRE;
+	public static CustomItem SILVER_WIRE;
+	public static CustomItem ELECTRUM_WIRE;
 	public static CustomItem COPPER_COIL;
-	public static InsulatedCopperWire INSULATED_COPPER_WIRE;
+	public static CustomItem BRONZE_COIL;
+	public static CustomItem SILVER_COIL;
+	public static CustomItem ELECTRUM_COIL;
+	public static WireItem INSULATED_COPPER_WIRE;
+	public static WireItem INSULATED_BRONZE_WIRE;
+	public static WireItem INSULATED_SILVER_WIRE;
+	public static WireItem INSULATED_ELECTRUM_WIRE;
 	public static ResistorItem RESISTOR_1;
 	public static ResistorItem RESISTOR_2;
 	public static ResistorItem RESISTOR_3;
@@ -283,7 +292,6 @@ public class Items {
 	public static CustomItem ELECTROMAGNET;
 	public static CustomItem MOTOR;
 	public static CustomItem LASER;
-	public static CustomBlockItem ACCUMULATOR;
 	public static CustomBlockItem ITEM_ATTRACTOR;
 	public static CustomBlockItem MONSTER_ATTRACTOR;
 	public static CustomItem ELECTRICAL_CIRCUIT_1;
@@ -476,6 +484,7 @@ public class Items {
 	public static BatteryItem BATTERY_BLACK;
 	public static CustomBlockItem LED_PURPLE;
 	public static CustomBlockItem LED_BLUE;
+	public static CustomBlockItem LED_CYAN;
 	public static CustomBlockItem LED_GREEN;
 	public static CustomBlockItem LED_ORANGE;
 	public static CustomBlockItem LED_RED;
@@ -740,9 +749,18 @@ public class Items {
 
 		// Electric Components
 		COPPER_WIRE = ITEMS.register(new CustomItem("§fCopper Wire", Material.STRING));
-		ENERGY_MEASURE_GADGET = ITEMS.register(new EnergyMeasureGadget());
+		BRONZE_WIRE = ITEMS.register(new CustomItem("§fBronze Wire", Material.STRING));
+		SILVER_WIRE = ITEMS.register(new CustomItem("§fSilver Wire", Material.STRING));
+		ELECTRUM_WIRE = ITEMS.register(new CustomItem("§fElectrum Wire", Material.STRING));
 		COPPER_COIL = ITEMS.register(new CustomItem("§fCopper Coil", HeadTextures.COPPER_COIL));
-		INSULATED_COPPER_WIRE = ITEMS.register(new InsulatedCopperWire());
+		BRONZE_COIL = ITEMS.register(new CustomItem("§fBronze Coil", HeadTextures.BRONZE_COIL));
+		SILVER_COIL = ITEMS.register(new CustomItem("§fSilver Coil", HeadTextures.SILVER_COIL));
+		ELECTRUM_COIL = ITEMS.register(new CustomItem("§fElectrum Coil", HeadTextures.ELECTRUM_COIL));
+		INSULATED_COPPER_WIRE = ITEMS.register(new WireItem("§fInsulated Copper Wire", HeadTextures.COPPER_WIRE, 8));
+		INSULATED_BRONZE_WIRE = ITEMS.register(new WireItem("§fInsulated Bronze Wire", HeadTextures.BRONZE_WIRE, 64));
+		INSULATED_SILVER_WIRE = ITEMS.register(new WireItem("§fInsulated Silver Wire", HeadTextures.SILVER_WIRE, 512));
+		INSULATED_ELECTRUM_WIRE = ITEMS.register(new WireItem("§fInsulated Electurm Wire", HeadTextures.ELECTRUM_WIRE, 4096));
+		ENERGY_MEASURE_GADGET = ITEMS.register(new EnergyMeasureGadget());
 		RESISTOR_1 = ITEMS.register(new ResistorItem("§f1Ω Resistor", Material.ORANGE_CANDLE));
 		RESISTOR_2 = ITEMS.register(new ResistorItem("§f10Ω Resistor", Material.RED_CANDLE));
 		RESISTOR_3 = ITEMS.register(new ResistorItem("§f100Ω Resistor", Material.GREEN_CANDLE));
@@ -756,7 +774,6 @@ public class Items {
 		ELECTROMAGNET = ITEMS.register(new CustomItem("§fElectromagnet", HeadTextures.MAGNET));
 		MOTOR = ITEMS.register(new CustomItem("§fMotor", HeadTextures.ELECTROMOTOR));
 		LASER = ITEMS.register(new CustomItem("§fLaser", HeadTextures.LASER));
-		ACCUMULATOR = ITEMS.register(new CustomBlockItem(Blocks.ACCUMULATOR, "§fAccumulator"));
 		ITEM_ATTRACTOR = ITEMS.register(new CustomBlockItem(Blocks.ITEM_ATTRACTOR, "§fItem Attractor"));
 		MONSTER_ATTRACTOR = ITEMS.register(new CustomBlockItem(Blocks.MONSTER_ATTRACTOR, "§fMonster Attractor"));
 		ELECTRICAL_CIRCUIT_1 = ITEMS.register(new CustomItem("§fBasic Electrical Circuit", HeadTextures.ELECTRICAL_CIRCUIT_1));
@@ -948,6 +965,7 @@ public class Items {
 		BATTERY_BLACK = ITEMS.register(new BatteryItem(Blocks.BATTERY_BLACK, "§fBlack Battery"));
 		LED_PURPLE = ITEMS.register(new CustomBlockItem(Blocks.LED_PURPLE, "§5LED"));
 		LED_BLUE = ITEMS.register(new CustomBlockItem(Blocks.LED_BLUE, "§9LED"));
+		LED_CYAN = ITEMS.register(new CustomBlockItem(Blocks.LED_CYAN, "§3LED"));
 		LED_GREEN = ITEMS.register(new CustomBlockItem(Blocks.LED_GREEN, "§aLED"));
 		LED_ORANGE = ITEMS.register(new CustomBlockItem(Blocks.LED_ORANGE, "§6LED"));
 		LED_RED = ITEMS.register(new CustomBlockItem(Blocks.LED_RED, "§cLED"));
@@ -1035,6 +1053,11 @@ public class Items {
 	}
 
 
+	public static AbstractCustomItem getCustomItemFromIdentifier(String identifier) {
+		return ITEMS.filterFirst(item -> item.getIdentifier().equals(identifier));
+	}
+
+
 	public static AbstractCustomItem getCustomItemFromStack(ItemStack stack) {
 		if(ItemUtils.isEmpty(stack))
 			return null;
@@ -1042,12 +1065,12 @@ public class Items {
 		if(!ItemUtils.isCustomItem(stack))
 			return null;
 
-		return ITEMS.filterFirst(item -> item.getIdentifier().equals(Properties.IDENTIFIER.fetch(stack.getItemMeta())));
+		return getCustomItemFromIdentifier(Properties.IDENTIFIER.fetch(stack.getItemMeta()));
 	}
 
 
 	public static AbstractCustomItem getCustomItemFromCustomBlock(AbstractCustomBlock block) {
-		return ITEMS.filterFirst(item -> item.getIdentifier().equals(block.getIdentifier()));
+		return getCustomItemFromIdentifier(block.getIdentifier());
 	}
 
 

@@ -101,7 +101,13 @@ public class HeadTextures {
 
 	// Electric Components
 	public static final String COPPER_COIL = "7e3bc4893ba41a3f73ee28174cdf4fef6b145e41fe6c82cb7be8d8e9771a5";
-	public static final String INSULATED_COPPER_WIRE = "7b2f2b7642b54490b9ffa1e0e1b296aad2b7a4edb9361e7e8e9903b64dbb8939";
+	public static final String BRONZE_COIL = "667b59012b783b4159abf6a65e2316407740b3bcb05d0bb6a17d4113935d43f3";
+	public static final String SILVER_COIL = "a28b80692a148a8534631cd46e9810a9dc182bb1c78cb9908de652497edafd43";
+	public static final String ELECTRUM_COIL = "f4883c98f2ad40ae57693fc7779a4568391cd9f31cff4f36de4172e91aa942e2";
+	public static final String COPPER_WIRE = "8e009d8ba7c4db7c97e708f105370c8b04363fb52c22039c5e5e5fda9c43245e";
+	public static final String BRONZE_WIRE = "b3652284921a2dba440060f2f63aa3ba2b0df62c9c36bf7883acedc336df911b";
+	public static final String SILVER_WIRE = "7b2f2b7642b54490b9ffa1e0e1b296aad2b7a4edb9361e7e8e9903b64dbb8939";
+	public static final String ELECTRUM_WIRE = "6d559af79a34e4ac6cf7b19b705e659636ad68a29a067eb5e88107b41ce40ab5";
 	public static final String MAGNET = "aba8ebc4c6a81730947499bf7e1d5e73fed6c1bb2c051e96d35eb16d24610e7";
 	public static final String ELECTROMOTOR = "3d045ca3e8a29e19931656362e12477633a689c4801d8e21f7da0f80cc59e56b";
 	public static final String LASER = "9ebeec5cefd4fac3d2585748ebca98b334c99b29315e4f6283138fb13e3f38";
@@ -226,6 +232,7 @@ public class HeadTextures {
 	public static final String LED_OFF = "6df14e5017b279b03dac97d429b4a5fa6c398ad568ea43e7c40683c7398c1627";
 	public static final String LED_PURPLE = "44169cb73a3fcfa3d000c64c071de030992433180d92b48f56e26fcfcb16b9b";
 	public static final String LED_BLUE = "52ec80d2484a6210466f0bd96e5c4b83305c38b9fddf05bd74d7683099823d76";
+	public static final String LED_CYAN = "8905965342a05c981bf0b26410e5c1e46d42ad1b88ea0436b61f7faec5150b64";
 	public static final String LED_GREEN = "f561b179b6bc06956d04f46692b7533b87171374c75273085ab2a6fedb97cbb4";
 	public static final String LED_ORANGE = "48300c3a2b3a4df44a6a59c7566b9a2f1a7d5ae9719a0ed3da50ff5f8d5bca8f";
 	public static final String LED_RED = "8e2c18ab35949bf9f9e7d6a69b885ccd8cc2efb9475946d7d3fb5c3fef61";

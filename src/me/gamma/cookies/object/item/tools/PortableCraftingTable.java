@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MenuType;
 import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Items;
@@ -20,7 +21,7 @@ public class PortableCraftingTable extends PortableInventoryOpener {
 
 	@Override
 	protected void openInventory(Player player) {
-		player.openWorkbench(null, true);
+		player.openInventory(MenuType.CRAFTING.builder().title(this.getTitle()).build(player));
 	}
 
 

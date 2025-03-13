@@ -14,8 +14,8 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Rotatable;
 import org.bukkit.block.data.type.Snow;
-import org.bukkit.craftbukkit.v1_21_R2.block.CraftBlock;
-import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R3.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
@@ -178,7 +178,7 @@ public class BlockUtils {
 		private final UnaryOperator<BlockFace> transformer;
 
 		private BlockFaceDirection(BlockFace facing) {
-			this(__ -> facing);
+			this(_ -> facing);
 		}
 
 

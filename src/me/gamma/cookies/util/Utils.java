@@ -31,7 +31,7 @@ public class Utils {
 
 	public static String formatTicks(long ticks) {
 		if(ticks == 0)
-			return "0t";
+			return "0t";	
 
 		StringBuilder builder = new StringBuilder();
 

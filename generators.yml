@@ -61,7 +61,11 @@ solar_panel:
     baseSpeed: 1.0
 
 thermo_generator:
-  energyGeneration: 4
-  internalCapacity: 4000
-  upgradeSlots: 1
-  baseSpeed: 1.0
+  basic:
+    energyGeneration: 4
+    internalCapacity: 4000
+    upgradeSlots: 1
+    baseSpeed: 1.0
+    capacity: 4000
+    fluidConsumed: 100
+    duration: 10

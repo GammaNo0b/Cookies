@@ -169,7 +169,7 @@ public interface FluidSupplier extends Cartesian {
 	 * @return the removed fluid
 	 */
 	default Fluid removeFluid(TileState block, Filter<FluidType> filter, int max) {
-		Pair<FluidType, Integer> result = Supplier.supply(type -> max, filter, this.getFluidOutputs(block));
+		Pair<FluidType, Integer> result = Supplier.supply(_ -> max, filter, this.getFluidOutputs(block));
 		return new Fluid(result.left, result.right);
 	}
 
@@ -200,7 +200,7 @@ public interface FluidSupplier extends Cartesian {
 	 * @return if any fluids got transfered
 	 */
 	static boolean removeFluid(Filter<FluidType> filter, int max, List<FluidProvider> outputs, UnaryOperator<Fluid> consumer) {
-		return Supplier.supply(type -> max, filter, outputs, pair -> {
+		return Supplier.supply(_ -> max, filter, outputs, pair -> {
 			Fluid fluid = consumer.apply(new Fluid(pair.left, pair.right));
 			return new Pair<FluidType, Integer>(fluid.getType(), fluid.getMillibuckets());
 		});

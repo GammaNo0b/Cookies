@@ -81,7 +81,7 @@ public interface Supplier {
 	 * @return the pair containing the type of resource and the amount that got collected from the supplier
 	 */
 	static <T, P extends Provider<T>> Pair<T, Integer> supply(int max, List<P> outputs) {
-		return supply(t -> max, outputs);
+		return supply(_ -> max, outputs);
 	}
 
 

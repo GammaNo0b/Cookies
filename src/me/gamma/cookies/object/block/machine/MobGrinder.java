@@ -110,7 +110,7 @@ public class MobGrinder extends AbstractGuiMachine {
 	protected boolean run(TileState block) {
 		BlockFace facing = ((Rotatable) block.getBlockData()).getRotation();
 		Vector direction = facing.getDirection();
-		for(Entity entity : block.getWorld().getNearbyEntities(block.getLocation().add(0.5D, 0.5D, 0.5D).subtract(direction), 0.5D, 5.0D, 0.5D)) {
+		for(Entity entity : block.getWorld().getNearbyEntities(block.getLocation().add(0.5D, 0.5D, 0.5D).subtract(direction), 0.5D, 2.5D, 0.5D)) {
 			if(entity instanceof LivingEntity) {
 				LivingEntity living = (LivingEntity) entity;
 				if(living.isDead())

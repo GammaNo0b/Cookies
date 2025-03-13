@@ -32,7 +32,9 @@ public class BatteryItem extends AbstractBlockItem<Battery> {
 		Section section = builder.createSection("§3Battery Stats", false);
 		section.add("  §7Connecting Wires: §9" + this.block.getMaximumWireCount(null));
 		section.add("  §7Capacity: §b" + this.block.getEnergyCapacity() + " §cCC");
-		section.add("  §7Transfer Speed: §b" + this.block.getTransferRate(null) + " §cCC/t");
+		int stored = this.block.getEnergyProviderFromHolder(holder).amount();
+		if(stored > 0)
+			section.add("  §7Stored: §b" + stored + " §cCC");
 	}
 
 }

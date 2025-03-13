@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bukkit.craftbukkit.v1_21_R2.persistence.CraftPersistentDataContainer;
-import org.bukkit.craftbukkit.v1_21_R2.persistence.CraftPersistentDataTypeRegistry;
+import org.bukkit.craftbukkit.v1_21_R3.persistence.CraftPersistentDataContainer;
+import org.bukkit.craftbukkit.v1_21_R3.persistence.CraftPersistentDataTypeRegistry;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;

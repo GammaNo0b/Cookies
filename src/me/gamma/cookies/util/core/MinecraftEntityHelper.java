@@ -2,10 +2,10 @@
 package me.gamma.cookies.util.core;
 
 
-import org.bukkit.craftbukkit.v1_21_R2.entity.CraftChicken;
-import org.bukkit.craftbukkit.v1_21_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_21_R2.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_21_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_21_R3.entity.CraftChicken;
+import org.bukkit.craftbukkit.v1_21_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_21_R3.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_21_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;

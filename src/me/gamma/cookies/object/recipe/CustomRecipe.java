@@ -176,7 +176,7 @@ public class CustomRecipe implements CookieRecipe {
 		/**
 		 * Simply returns the result without modification.
 		 */
-		ResultProducer IDENTITY = (result, ingredients) -> result;
+		ResultProducer IDENTITY = (result, _) -> result;
 
 		/**
 		 * Modifies the recipe result using the ingredients.

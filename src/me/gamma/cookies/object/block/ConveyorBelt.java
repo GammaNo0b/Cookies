@@ -122,7 +122,7 @@ public class ConveyorBelt extends AbstractWorkBlock implements Cartesian {
 			return null;
 
 		ItemStack[] ref = { null };
-		supplier.removeItem(state, (type, amount) -> Math.min(amount, this.capacity), stack -> {
+		supplier.removeItem(state, (_, amount) -> Math.min(amount, this.capacity), stack -> {
 			ref[0] = stack;
 			return null;
 		});

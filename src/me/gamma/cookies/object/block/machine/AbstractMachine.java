@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,41 +19,43 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.init.Config;
 import me.gamma.cookies.init.Items;
-import me.gamma.cookies.manager.Wire;
-import me.gamma.cookies.object.Cable.TransferMode;
 import me.gamma.cookies.object.block.AbstractWorkBlock;
 import me.gamma.cookies.object.block.Ownable;
 import me.gamma.cookies.object.block.RedstoneMode;
 import me.gamma.cookies.object.block.Switchable;
 import me.gamma.cookies.object.block.Upgradeable;
+import me.gamma.cookies.object.block.network.Wire;
+import me.gamma.cookies.object.block.network.WireComponentType;
 import me.gamma.cookies.object.block.network.WireRelay;
-import me.gamma.cookies.object.block.network.energy.EnergyCable;
 import me.gamma.cookies.object.energy.EnergyConsumer;
 import me.gamma.cookies.object.energy.EnergyProvider;
 import me.gamma.cookies.object.gui.util.MachineUpgradeGui;
+import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.object.item.MachineItem;
+import me.gamma.cookies.object.item.resources.WireItem;
 import me.gamma.cookies.object.property.DoubleProperty;
 import me.gamma.cookies.object.property.EnergyProperty;
 import me.gamma.cookies.object.property.EnumProperty;
 import me.gamma.cookies.object.property.Properties;
 import me.gamma.cookies.object.property.PropertyBuilder;
+import me.gamma.cookies.object.property.StringProperty;
 import me.gamma.cookies.object.property.VectorProperty;
-import me.gamma.cookies.util.BlockUtils;
 import me.gamma.cookies.util.ItemUtils;
 import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
-public abstract class AbstractMachine extends AbstractWorkBlock implements Upgradeable, Ownable, Switchable, EnergyConsumer, EnergyCable, WireRelay {
+public abstract class AbstractMachine extends AbstractWorkBlock implements Upgradeable, Ownable, Switchable, EnergyConsumer, WireRelay<Void> {
 
 	public static final VectorProperty WIRE_POS = Properties.WIRE_POS;
+	public static final StringProperty WIRE_ITEM = Properties.WIRE_ITEM;
 
 	public static final EnergyProperty INTERNAL_STORAGE = Properties.INTERNAL_STORAGE;
 	public static final EnumProperty<RedstoneMode> REDSTONE_MODE = Properties.REDSTONE_MODE;
 	public static final DoubleProperty REST_SPEED = Properties.REST_SPEED;
 
 	protected final Set<Location> locations = new HashSet<>();
-	protected final HashMap<Location, Wire> wires = new HashMap<>();
+	protected final HashMap<Location, Wire<Void>> wires = new HashMap<>();
 	protected final MachineTier tier;
 
 	protected int energyConsumption;
@@ -92,9 +93,12 @@ public abstract class AbstractMachine extends AbstractWorkBlock implements Upgra
 
 	@Override
 	public boolean load(TileState block, PersistentDataObject data) {
-		if(data.has(WIRE_POS)) {
+		if(data.has(WIRE_POS) && data.has(WIRE_ITEM)) {
 			Location pos = WIRE_POS.fetch(data.getContainer()).toLocation(block.getWorld());
-			this.createWire(block, pos);
+			String identifier = WIRE_ITEM.fetch(data.getContainer());
+			AbstractCustomItem item = Items.getCustomItemFromIdentifier(identifier);
+			if(item instanceof WireItem wire)
+				this.createWire(block, pos, wire);
 		}
 
 		return true;
@@ -104,11 +108,13 @@ public abstract class AbstractMachine extends AbstractWorkBlock implements Upgra
 	@Override
 	public boolean save(TileState block, PersistentDataObject data) {
 		Location pos = block.getLocation();
-		Wire wire = this.wires.get(pos);
+		Wire<Void> wire = this.wires.get(pos);
 		if(wire != null) {
 			Location opposite = wire.getOpposite(pos);
-			if(opposite != null)
+			if(opposite != null) {
 				WIRE_POS.store(data.getContainer(), opposite.toVector());
+				WIRE_ITEM.store(data.getContainer(), wire.getWireItem().getIdentifier());
+			}
 			wire.destroy();
 		}
 
@@ -123,13 +129,25 @@ public abstract class AbstractMachine extends AbstractWorkBlock implements Upgra
 
 
 	@Override
-	public Wire getConnectedWire(TileState block) {
+	public EnergyProvider getWireProvider(TileState block) {
+		return this.getEnergyInput(block);
+	}
+
+
+	@Override
+	public WireComponentType getWireComponentType() {
+		return WireComponentType.CONSUMER;
+	}
+
+
+	@Override
+	public Wire<Void> getConnectedWire(TileState block) {
 		return this.wires.get(block.getLocation());
 	}
 
 
 	@Override
-	public void setConnectedWire(TileState block, Wire wire) {
+	public void setConnectedWire(TileState block, Wire<Void> wire) {
 		if(wire == null) {
 			this.wires.remove(block.getLocation());
 		} else {
@@ -216,8 +234,9 @@ public abstract class AbstractMachine extends AbstractWorkBlock implements Upgra
 			ItemUtils.dropItem(item, block);
 		}
 
-		for(int i = 0; i < this.removeAllWires(block); i++)
-			ItemUtils.dropItem(Items.INSULATED_COPPER_WIRE.get(), block);
+		Wire<Void> wire;
+		while((wire = this.removeWire(block)) != null)
+			ItemUtils.dropItem(wire.getWireItem().get(), block);
 
 		return false;
 	}
@@ -253,36 +272,6 @@ public abstract class AbstractMachine extends AbstractWorkBlock implements Upgra
 	@Override
 	public EnergyProvider getEnergyInput(TileState block) {
 		return this.getInternalStorage(block);
-	}
-
-
-	@Override
-	public EnergyProvider getBuffer(TileState block) {
-		return this.getInternalStorage(block);
-	}
-
-
-	@Override
-	public Stream<TileState> getNeighbors(TileState block) {
-		Wire wire = this.getConnectedWire(block);
-		if(wire == null)
-			return Stream.empty();
-
-		Location opposite = wire.getOpposite(block.getLocation());
-		TileState neighbor = BlockUtils.getTileState(opposite);
-		return neighbor == null ? Stream.empty() : Stream.of(neighbor);
-	}
-
-
-	@Override
-	public TransferMode getTransferMode(TileState block) {
-		return TransferMode.ROUND_ROBIN;
-	}
-
-
-	@Override
-	public int getTransferRate(TileState block) {
-		return 10;
 	}
 
 
@@ -328,8 +317,6 @@ public abstract class AbstractMachine extends AbstractWorkBlock implements Upgra
 				REST_SPEED.store(block, d);
 			}
 		}
-
-		this.collectEnergy(block);
 	}
 
 

@@ -8,12 +8,29 @@ import org.bukkit.block.TileState;
 import org.bukkit.util.Vector;
 
 import me.gamma.cookies.init.Blocks;
-import me.gamma.cookies.manager.Wire;
 import me.gamma.cookies.manager.WireManager;
+import me.gamma.cookies.object.Provider;
+import me.gamma.cookies.object.item.resources.WireItem;
 
 
 
-public interface WireHolder {
+public interface WireHolder<T> {
+
+	/**
+	 * Returns the provider of this wire holder.
+	 * 
+	 * @param block the block
+	 * @return the resource provider
+	 */
+	Provider<T> getWireProvider(TileState block);
+
+	/**
+	 * Returns the type of component this wireholder has.
+	 * 
+	 * @return the component type
+	 */
+	WireComponentType getWireComponentType();
+
 
 	/**
 	 * Creates a wire connecting this wire holder with a wire holder sitting at the given location. If the location does not have a wire holder, no wire
@@ -21,23 +38,34 @@ public interface WireHolder {
 	 * 
 	 * @param state    the block of this wire holder
 	 * @param location the location of the other possible wire holder
+	 * @param wireItem the item used to create the item
 	 * @return if the wire was created
 	 */
-	default boolean createWire(TileState state, Location location) {
-		return location.getBlock().getState() instanceof TileState other && Blocks.getCustomBlockFromBlock(other) instanceof WireHolder holder && this.createWire(state, holder, other);
+	@SuppressWarnings("unchecked")
+	default boolean createWire(TileState state, Location location, WireItem wireItem) {
+		if(!(location.getBlock().getState() instanceof TileState other))
+			return false;
+		if(!(Blocks.getCustomBlockFromBlock(other) instanceof WireHolder<?> holder))
+			return false;
+		try {
+			return this.createWire(state, (WireHolder<T>) holder, other, wireItem);
+		} catch(ClassCastException _) {
+			return false;
+		}
 	}
 
 
 	/**
 	 * Creates a wire connecting this wire holder and the given wire holder at the given locations.
 	 * 
-	 * @param state  the block state of this wire holder
-	 * @param holder the other wire holder
-	 * @param other  the block state of the other wire holder
+	 * @param state    the block state of this wire holder
+	 * @param holder   the other wire holder
+	 * @param other    the block state of the other wire holder
+	 * @param wireItem the item used to create the item
 	 * @return if the wire was created
 	 */
-	default boolean createWire(TileState state, WireHolder holder, TileState other) {
-		return WireManager.createWire(this, state, holder, other) != null;
+	default boolean createWire(TileState state, WireHolder<T> holder, TileState other, WireItem wireItem) {
+		return WireManager.createWire(this, state, holder, other, wireItem) != null;
 	}
 
 
@@ -116,7 +144,7 @@ public interface WireHolder {
 	 * @param block the block
 	 * @param wire  the wire
 	 */
-	void addWire(TileState block, Wire wire);
+	void addWire(TileState block, Wire<T> wire);
 
 	/**
 	 * Removes the given wire from the given block.
@@ -124,22 +152,14 @@ public interface WireHolder {
 	 * @param block the block
 	 * @param wire  the wire
 	 */
-	void removeWire(TileState block, Wire wire);
+	void removeWire(TileState block, Wire<T> wire);
 
 	/**
-	 * Removes the lastly added wire to this block. If this block has no wires, the method returns false.
+	 * Removes the lastly added wire to this block. If this block has no wires, the method returns null.
 	 * 
 	 * @param block the block
-	 * @return if a wire got removed
+	 * @return the removed wire or null
 	 */
-	boolean removeWire(TileState block);
-
-	/**
-	 * Removes and destroyes all wires from the given block.
-	 * 
-	 * @param block the block
-	 * @return the amount of wires destroyed
-	 */
-	int removeAllWires(TileState block);
+	Wire<T> removeWire(TileState block);
 
 }

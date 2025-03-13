@@ -37,7 +37,9 @@ public class Properties {
 	public static final StringProperty TITLE = new StringProperty("title");
 	public static final UUIDProperty UUID = new UUIDProperty("uuid");
 	public static final VectorProperty WIRE_POS = new VectorProperty("wirepos");
+	public static final StringProperty WIRE_ITEM = new StringProperty("wirename");
 	public static final ListProperty<Vector, VectorProperty> WIRE_POSITIONS = new ListProperty<>("wirepositions", VectorProperty::new);
+	public static final ListProperty<String, StringProperty> WIRE_ITEMS = new ListProperty<>("wireitems", StringProperty::new);
 
 	public static PropertyCompound<ItemFilter> createItemFilterProperty() {
 		PropertyCompound.Builder<ItemFilter> builder = new PropertyCompound.Builder<>(args -> {

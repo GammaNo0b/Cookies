@@ -28,7 +28,7 @@ public interface Filter<T> {
 	 * @return the empty filter
 	 */
 	static <T> Filter<T> empty() {
-		return (type, amount) -> amount;
+		return (_, amount) -> amount;
 	}
 
 

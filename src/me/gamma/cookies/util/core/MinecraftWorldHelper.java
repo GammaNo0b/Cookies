@@ -3,7 +3,7 @@ package me.gamma.cookies.util.core;
 
 
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_21_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_21_R3.CraftWorld;
 
 import net.minecraft.util.RandomSource;
 

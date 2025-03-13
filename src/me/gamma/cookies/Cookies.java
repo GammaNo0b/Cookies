@@ -50,6 +50,7 @@ import me.gamma.cookies.listener.PlayerArmorEquipEventListener;
 import me.gamma.cookies.listener.TeamQueueListener;
 import me.gamma.cookies.listener.TutorialListener;
 import me.gamma.cookies.manager.HologramManager;
+import me.gamma.cookies.manager.WireManager;
 import me.gamma.cookies.object.Configurable;
 import me.gamma.cookies.object.Ticker;
 import me.gamma.cookies.object.WorldPersistentDataStorage;
@@ -98,6 +99,7 @@ public class Cookies extends JavaPlugin {
 
 		Team.TEAM_REGISTRY.register();
 		NetworkManager.registerTicker();
+		WireManager.registerTicker();
 
 		WorldPersistentDataStorage.loadStorages();
 		Ticker.startTicking();

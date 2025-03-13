@@ -109,7 +109,7 @@ public class RandomOutputsRecipe implements MachineRecipe {
 			if(lore == null)
 				lore = new ArrayList<>();
 
-			lore.add(0, String.format("  §6Duration: §e%.2ss", DURATION.format(duration / 20.0D)));
+			lore.add(0, String.format("  §6Duration: §e%ss", DURATION.format(this.duration / 20.0D)));
 			meta.setLore(lore);
 			stack.setItemMeta(meta);
 			return stack;
@@ -163,7 +163,7 @@ public class RandomOutputsRecipe implements MachineRecipe {
 				lore = new ArrayList<>();
 
 			if(duration > 0)
-				lore.add(String.format("  §6Duration: §e%.2ss", DURATION.format(duration / 20.0D)));
+				lore.add(String.format("  §6Duration: §e%.2s", DURATION.format(duration / 20.0D)));
 			if(this.chance < 1.0D)
 				lore.add(String.format("  §3Chance: §b%.2f%%", this.chance * 100.0D));
 			if(this.min == this.max)

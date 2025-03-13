@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.ChiseledBookshelf;
 import org.bukkit.enchantments.Enchantment;
@@ -116,7 +117,9 @@ public class LookInBookshelfFeature implements CookieFeature, Runnable {
 
 
 	private String formatEnchantment(Map.Entry<Enchantment, Integer> entry) {
-		return String.format("§d%s§7: §b%s", Utils.toCapitalWords(entry.getKey().getKey().getKey().replace('_', ' ')), Utils.romanNumber(entry.getValue()));
+		NamespacedKey key = entry.getKey().getKeyOrNull();
+		String name = key == null ? " - " : Utils.toCapitalWords(key.getKey().replace('_', ' '));
+		return String.format("§d%s§7: §b%s", name, Utils.romanNumber(entry.getValue()));
 	}
 
 }

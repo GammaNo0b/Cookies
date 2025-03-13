@@ -15,8 +15,8 @@ public enum RedstoneMode implements GuiUtils.Menu {
 
 	REDSTONE_ON("§cRedstone On", Material.REDSTONE, b -> b),
 	REDSTONE_OFF("§4Redstone Off", Material.REDSTONE_TORCH, b -> !b),
-	ALWAYS_ON("§6Always On", Material.GLOWSTONE_DUST, b -> true),
-	ALWAYS_OFF("§8Always Off", Material.GUNPOWDER, b -> false);
+	ALWAYS_ON("§6Always On", Material.GLOWSTONE_DUST, _ -> true),
+	ALWAYS_OFF("§8Always Off", Material.GUNPOWDER, _ -> false);
 
 	private final String title;
 	private final ItemStack icon;

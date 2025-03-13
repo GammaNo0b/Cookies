@@ -31,7 +31,6 @@ import me.gamma.cookies.object.block.generator.CreativeGenerator;
 import me.gamma.cookies.object.block.generator.FluidGenerator;
 import me.gamma.cookies.object.block.generator.FurnaceGenerator;
 import me.gamma.cookies.object.block.generator.SolarPanel;
-import me.gamma.cookies.object.block.generator.ThermoGenerator;
 import me.gamma.cookies.object.block.machine.AbstractCraftingMachine;
 import me.gamma.cookies.object.block.machine.AbstractMachine;
 import me.gamma.cookies.object.block.machine.AerialExtractor;
@@ -116,7 +115,6 @@ public class Blocks {
 	public static DoubleInputRedstoneGate REDSTONE_XOR_GATE;
 
 	// Electric Components
-	public static Battery ACCUMULATOR;
 	public static MagnetBlock ITEM_ATTRACTOR;
 	public static MagnetBlock MONSTER_ATTRACTOR;
 
@@ -228,7 +226,7 @@ public class Blocks {
 
 	// Generators
 	public static FurnaceGenerator FURNACE_GENERATOR;
-	public static ThermoGenerator THERMO_GENERATOR;
+	public static FluidGenerator THERMO_GENERATOR;
 	public static SolarPanel BASIC_SOLAR_PANEL;
 	public static SolarPanel ADVANCED_SOLAR_PANEL;
 	public static SolarPanel IMPROVED_SOLAR_PANEL;
@@ -291,6 +289,7 @@ public class Blocks {
 	public static Battery BATTERY_BLACK;
 	public static LED LED_PURPLE;
 	public static LED LED_BLUE;
+	public static LED LED_CYAN;
 	public static LED LED_GREEN;
 	public static LED LED_ORANGE;
 	public static LED LED_RED;
@@ -367,7 +366,6 @@ public class Blocks {
 		REDSTONE_XOR_GATE = BLOCKS.register(new DoubleInputRedstoneGate("xor_gate", (a, b) -> a ^ b));
 
 		// Electric Components
-		ACCUMULATOR = BLOCKS.register(new Battery("accumulator", HeadTextures.ACCUMULATOR, 8, 100000, 1000));
 		ITEM_ATTRACTOR = BLOCKS.register(new MagnetBlock("item_attractor", e -> e.getType() == EntityType.ITEM, 10.0D, 0.2D));
 		MONSTER_ATTRACTOR = BLOCKS.register(new MagnetBlock("monster_attractor", e -> e instanceof Enemy, 10.0D, 0.2D));
 
@@ -478,7 +476,7 @@ public class Blocks {
 
 		// Generators
 		FURNACE_GENERATOR = BLOCKS.register(new FurnaceGenerator());
-		THERMO_GENERATOR = BLOCKS.register(new ThermoGenerator());
+		THERMO_GENERATOR = BLOCKS.register(new FluidGenerator("Thermo Generator", HeadTextures.OBSIDIAN_GENERATOR, MachineTier.BASIC, FluidType.LAVA));
 		BASIC_SOLAR_PANEL = BLOCKS.register(new SolarPanel(HeadTextures.SOLAR_PANEL_1, MachineTier.BASIC));
 		ADVANCED_SOLAR_PANEL = BLOCKS.register(new SolarPanel(HeadTextures.SOLAR_PANEL_2, MachineTier.ADVANCED));
 		IMPROVED_SOLAR_PANEL = BLOCKS.register(new SolarPanel(HeadTextures.SOLAR_PANEL_3, MachineTier.IMPROVED));
@@ -533,14 +531,15 @@ public class Blocks {
 		WASTE_BARREL = BLOCKS.register(new WasteBarrel());
 
 		// Energy
-		BATTERY_RED = BLOCKS.register(new Battery("battery_red", HeadTextures.BATTERY_RED, 3, 1000, 10));
-		BATTERY_YELLOW = BLOCKS.register(new Battery("battery_yellow", HeadTextures.BATTERY_YELLOW, 5, 4000, 40));
-		BATTERY_GREEN = BLOCKS.register(new Battery("battery_green", HeadTextures.BATTERY_GREEN, 8, 16000, 160));
-		BATTERY_CYAN = BLOCKS.register(new Battery("battery_cyan", HeadTextures.BATTERY_CYAN, 13, 64000, 640));
-		BATTERY_PURPLE = BLOCKS.register(new Battery("battery_purple", HeadTextures.BATTERY_PURPLE, 21, 256000, 2560));
-		BATTERY_BLACK = BLOCKS.register(new Battery("battery_black", HeadTextures.BATTERY_BLACK, 34, 1024000, 10240));
+		BATTERY_RED = BLOCKS.register(new Battery("battery_red", HeadTextures.BATTERY_RED, 3, 1000));
+		BATTERY_YELLOW = BLOCKS.register(new Battery("battery_yellow", HeadTextures.BATTERY_YELLOW, 5, 4000));
+		BATTERY_GREEN = BLOCKS.register(new Battery("battery_green", HeadTextures.BATTERY_GREEN, 8, 16000));
+		BATTERY_CYAN = BLOCKS.register(new Battery("battery_cyan", HeadTextures.BATTERY_CYAN, 13, 64000));
+		BATTERY_PURPLE = BLOCKS.register(new Battery("battery_purple", HeadTextures.BATTERY_PURPLE, 21, 256000));
+		BATTERY_BLACK = BLOCKS.register(new Battery("battery_black", HeadTextures.BATTERY_BLACK, 34, 1024000));
 		LED_PURPLE = BLOCKS.register(new LED("led_purple", HeadTextures.LED_PURPLE));
 		LED_BLUE = BLOCKS.register(new LED("led_blue", HeadTextures.LED_BLUE));
+		LED_CYAN = BLOCKS.register(new LED("led_cyan", HeadTextures.LED_CYAN));
 		LED_GREEN = BLOCKS.register(new LED("led_green", HeadTextures.LED_GREEN));
 		LED_ORANGE = BLOCKS.register(new LED("led_orange", HeadTextures.LED_ORANGE));
 		LED_RED = BLOCKS.register(new LED("led_red", HeadTextures.LED_RED));

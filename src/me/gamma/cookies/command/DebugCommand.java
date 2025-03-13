@@ -113,7 +113,7 @@ public class DebugCommand implements TabExecutor {
 
 	private static enum DataType {
 
-		NULL(str -> null),
+		NULL(_ -> null),
 		BOOL(Boolean::parseBoolean),
 		INT(Integer::parseInt),
 		LONG(Long::parseLong),

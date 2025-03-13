@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.bukkit.block.TileState;
 
-import me.gamma.cookies.manager.Wire;
-
 
 
 /**
@@ -16,7 +14,7 @@ import me.gamma.cookies.manager.Wire;
  * @author gamma
  *
  */
-public interface WireConnector extends WireHolder {
+public interface WireConnector<T> extends WireHolder<T> {
 
 	/**
 	 * Returns a list containing all wires connected to the given block.
@@ -24,7 +22,7 @@ public interface WireConnector extends WireHolder {
 	 * @param block the block
 	 * @return the list of connected wires
 	 */
-	List<Wire> getConnectedWires(TileState block);
+	List<Wire<T>> getConnectedWires(TileState block);
 
 	/**
 	 * Returns the maximum amount of wires this block can connect to.
@@ -42,35 +40,28 @@ public interface WireConnector extends WireHolder {
 
 
 	@Override
-	default void addWire(TileState block, Wire wire) {
+	default void addWire(TileState block, Wire<T> wire) {
 		this.getConnectedWires(block).add(wire);
 	}
 
 
 	@Override
-	default void removeWire(TileState block, Wire wire) {
+	default void removeWire(TileState block, Wire<T> wire) {
 		this.getConnectedWires(block).remove(wire);
 	}
 
 
 	@Override
-	default boolean removeWire(TileState block) {
-		List<Wire> wires = this.getConnectedWires(block);
+	default Wire<T> removeWire(TileState block) {
+		List<Wire<T>> wires = this.getConnectedWires(block);
 		if(wires.isEmpty())
-			return false;
+			return null;
 
-		wires.remove(wires.size() - 1).destroy();
-		return true;
+		Wire<T> wire = wires.remove(wires.size() - 1);
+		wire.destroy();
+		return wire;
 	}
 
 
-	@Override
-	default int removeAllWires(TileState block) {
-		List<Wire> wires = this.getConnectedWires(block);
-		int size = wires.size();
-		while(!wires.isEmpty())
-			wires.get(0).destroy();
-		return size;
-	}
 
 }

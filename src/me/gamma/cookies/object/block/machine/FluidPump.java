@@ -86,10 +86,7 @@ public class FluidPump extends AbstractProcessingMachine implements FluidSupplie
 			if(relative.getType() != type)
 				continue;
 
-			if(!(relative.getBlockData() instanceof Levelled levelled) || levelled.getLevel() != 0)
-				continue;
-
-			visited.add(block.getLocation());
+			visited.add(relative.getLocation());
 			if(this.isInfinityPool(relative, type, visited))
 				return true;
 		}
@@ -272,6 +269,7 @@ public class FluidPump extends AbstractProcessingMachine implements FluidSupplie
 		for(; i < 3; i++)
 			for(int j = 3; j < 8; j++)
 				gui.setItem((3 - i) * 9 + j, stack);
+		gui.setItem(18, new ItemBuilder(Material.BROWN_STAINED_GLASS_PANE).setName("§6Infinity Pool: " + (HAS_INFINITY_POOL.fetch(block) ? "§afound" : "§cmissing")).build());
 	}
 
 }
