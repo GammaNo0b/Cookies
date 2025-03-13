@@ -2,6 +2,7 @@
 package me.gamma.cookies.object.block.machine;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -13,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Items;
 import me.gamma.cookies.object.Provider;
@@ -113,11 +115,13 @@ public class Enchanter extends AbstractProcessingMachine implements ItemConsumer
 		return super.buildBlockProperties(builder).add(INPUT).add(OUTPUT).add(ENCHANTED_BOOK).add(PROCESSING).add(ENCHANTED_BOOK_PROCESSING).add(BOOKS).add(ITEM_INPUT_ACCESS_FLAGS, (byte) 0x3F).add(ITEM_OUTPUT_ACCESS_FLAGS, (byte) 0x3F);
 	}
 
+
 	@Override
 	public void tick(TileState block) {
 		this.tryPullItems(block);
 		super.tick(block);
 	}
+
 
 	@Override
 	protected int createNextProcess(TileState block) {
@@ -200,14 +204,18 @@ public class Enchanter extends AbstractProcessingMachine implements ItemConsumer
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemInputs(TileState block) {
-		return List.of(ItemProvider.fromInventory(this.getGui(block), INPUT_SLOT), ItemProvider.fromInventory(this.getGui(block), ENCHANTED_BOOK_SLOT, Material.ENCHANTED_BOOK));
+	public List<Provider<ItemStack>> getItemInputs(PersistentDataHolder holder) {
+		if(!(holder instanceof TileState block))
+			return List.of();
+
+		Inventory gui = this.getGui(block);
+		return List.of(ItemProvider.fromInventory(gui, INPUT_SLOT), ItemProvider.fromInventory(gui, ENCHANTED_BOOK_SLOT, Material.ENCHANTED_BOOK));
 	}
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemOutputs(TileState block) {
-		return ItemProvider.fromInventory(this.getGui(block), OUTPUT_SLOT, BOOKS_SLOT);
+	public List<Provider<ItemStack>> getItemOutputs(PersistentDataHolder holder) {
+		return holder instanceof TileState block ? ItemProvider.fromInventory(this.getGui(block), OUTPUT_SLOT, BOOKS_SLOT) : new ArrayList<>();
 	}
 
 

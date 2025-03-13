@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.fluid.FluidProvider;
 import me.gamma.cookies.object.fluid.FluidSupplier;
@@ -43,8 +44,8 @@ public class HoneyExtractor extends AbstractProcessingMachine implements FluidSu
 
 
 	@Override
-	public List<FluidProvider> getFluidOutputs(TileState block) {
-		return Arrays.asList(FluidProvider.fromProperty(FluidType.HONEY, HONEY, block, honey_capacity));
+	public List<FluidProvider> getFluidOutputs(PersistentDataHolder holder) {
+		return Arrays.asList(FluidProvider.fromProperty(FluidType.HONEY, HONEY, holder, honey_capacity));
 	}
 
 

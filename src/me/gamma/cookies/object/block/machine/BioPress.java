@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.fluid.FluidProvider;
@@ -201,14 +202,14 @@ public class BioPress extends AbstractProcessingMachine implements ItemConsumer,
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemInputs(TileState block) {
-		return ItemProvider.fromInventory(this.getGui(block), this.getInputSlots());
+	public List<Provider<ItemStack>> getItemInputs(PersistentDataHolder holder) {
+		return holder instanceof TileState block ? ItemProvider.fromInventory(this.getGui(block), this.getInputSlots()) : List.of();
 	}
 
 
 	@Override
-	public List<FluidProvider> getFluidOutputs(TileState block) {
-		return List.of(FluidProvider.fromProperty(FluidType.BIO_MASS, this.bioMass, block, this.capacity));
+	public List<FluidProvider> getFluidOutputs(PersistentDataHolder holder) {
+		return List.of(FluidProvider.fromProperty(FluidType.BIO_MASS, this.bioMass, holder, this.capacity));
 	}
 
 

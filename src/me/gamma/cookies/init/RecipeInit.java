@@ -1875,19 +1875,19 @@ public class RecipeInit {
 		recipe.setIngredient('C', EINGOT_1);
 		recipe.setIngredient('S', Material.DAYLIGHT_DETECTOR);
 
-		recipe = customRecipe(ADVANCED_SOLAR_PANEL, 2, type, "PPP", "SRS", "SCS");
+		recipe = customRecipe(ADVANCED_SOLAR_PANEL, type, "PPP", "SRS", "SCS");
 		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_2);
 		recipe.setIngredient('R', RED_2);
 		recipe.setIngredient('C', EINGOT_2);
 		recipe.setIngredient('S', BASIC_SOLAR_PANEL);
 
-		recipe = customRecipe(IMPROVED_SOLAR_PANEL, 2, type, "PPP", "SRS", "SCS");
+		recipe = customRecipe(IMPROVED_SOLAR_PANEL, type, "PPP", "SRS", "SCS");
 		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_3);
 		recipe.setIngredient('R', RED_2);
 		recipe.setIngredient('C', EINGOT_3);
 		recipe.setIngredient('S', ADVANCED_SOLAR_PANEL);
 
-		recipe = customRecipe(PERFECTED_SOLAR_PANEL, 2, type, "PPP", "SRS", "SCS");
+		recipe = customRecipe(PERFECTED_SOLAR_PANEL, type, "PPP", "SRS", "SCS");
 		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_4);
 		recipe.setIngredient('R', RED_3);
 		recipe.setIngredient('C', EINGOT_4);

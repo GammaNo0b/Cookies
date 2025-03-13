@@ -3,6 +3,7 @@ package me.gamma.cookies.object.fluid;
 
 
 import org.bukkit.block.TileState;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.property.FluidProperty;
@@ -91,31 +92,31 @@ public interface FluidProvider extends Provider<FluidType> {
 
 
 	/**
-	 * Creates a {@link FluidProvider} from the given {@link TileState} using the {@link FluidProperty}.
+	 * Creates a {@link FluidProvider} from the given {@link PersistentDataHolder} using the {@link FluidProperty}.
 	 * 
 	 * @param property the property
-	 * @param block    the block
+	 * @param holder   the data holder
 	 * @return the created fluid provider
 	 */
-	static FluidProvider fromProperty(final FluidProperty property, final TileState block) {
-		return fromProperty(property, block, Integer.MAX_VALUE);
+	static FluidProvider fromProperty(final FluidProperty property, final PersistentDataHolder holder) {
+		return fromProperty(property, holder, Integer.MAX_VALUE);
 	}
 
 
 	/**
-	 * Creates a {@link FluidProvider} from the given {@link TileState} using the {@link FluidProperty}.
+	 * Creates a {@link FluidProvider} from the given {@link PersistentDataHolder} using the {@link FluidProperty}.
 	 * 
 	 * @param property the property
-	 * @param block    the block
+	 * @param holder   the data holder
 	 * @param capacity the maximum amount of fluid that can be stored
 	 * @return the created fluid provider
 	 */
-	static FluidProvider fromProperty(final FluidProperty property, final TileState block, final int capacity) {
+	static FluidProvider fromProperty(final FluidProperty property, final PersistentDataHolder holder, final int capacity) {
 		return new FluidProvider() {
 
 			@Override
 			public int amount() {
-				return property.fetch(block).getMillibuckets();
+				return property.fetch(holder).getMillibuckets();
 			}
 
 
@@ -127,40 +128,43 @@ public interface FluidProvider extends Provider<FluidType> {
 
 			@Override
 			public void add(FluidType type, int amount) {
-				Fluid fluid = property.fetch(block);
+				Fluid fluid = property.fetch(holder);
 				fluid.grow(amount);
-				property.store(block, fluid);
-				block.update();
+				property.store(holder, fluid);
+				if(holder instanceof TileState block)
+					block.update();
 			}
 
 
 			@Override
 			public void remove(int amount) {
-				Fluid fluid = property.fetch(block);
+				Fluid fluid = property.fetch(holder);
 				fluid.shrink(amount);
-				property.store(block, fluid);
-				block.update();
+				property.store(holder, fluid);
+				if(holder instanceof TileState block)
+					block.update();
 			}
 
 
 			@Override
 			public boolean isEmpty() {
-				return property.fetch(block).isEmpty();
+				return property.fetch(holder).isEmpty();
 			}
 
 
 			@Override
 			public FluidType getType() {
-				return property.fetch(block).getType();
+				return property.fetch(holder).getType();
 			}
 
 
 			@Override
 			public void setType(FluidType type) {
-				Fluid fluid = property.fetch(block);
+				Fluid fluid = property.fetch(holder);
 				fluid.setType(type);
-				property.store(block, fluid);
-				block.update();
+				property.store(holder, fluid);
+				if(holder instanceof TileState block)
+					block.update();
 			}
 
 
@@ -179,12 +183,12 @@ public interface FluidProvider extends Provider<FluidType> {
 	}
 
 
-	static FluidProvider fromProperty(final FluidType type, final IntegerProperty property, final TileState block, final int capacity) {
+	static FluidProvider fromProperty(final FluidType type, final IntegerProperty property, final PersistentDataHolder holder, final int capacity) {
 		return new FluidProvider() {
 
 			@Override
 			public int amount() {
-				return property.fetch(block);
+				return property.fetch(holder);
 			}
 
 
@@ -196,15 +200,17 @@ public interface FluidProvider extends Provider<FluidType> {
 
 			@Override
 			public void add(FluidType type, int amount) {
-				property.increase(block, amount);
-				block.update();
+				property.increase(holder, amount);
+				if(holder instanceof TileState block)
+					block.update();
 			}
 
 
 			@Override
 			public void remove(int amount) {
-				property.decrease(block, amount);
-				block.update();
+				property.decrease(holder, amount);
+				if(holder instanceof TileState block)
+					block.update();
 			}
 
 

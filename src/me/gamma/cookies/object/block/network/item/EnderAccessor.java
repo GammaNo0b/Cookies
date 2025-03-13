@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.AbstractCustomBlock;
@@ -41,8 +41,8 @@ public class EnderAccessor extends AbstractCustomBlock implements ItemStorage, O
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemProviders(TileState block) {
-		Player player = this.getOwningPlayer(block);
+	public List<Provider<ItemStack>> getItemProviders(PersistentDataHolder holder) {
+		Player player = this.getOwningPlayer(holder);
 		return player == null ? new ArrayList<>() : ItemProvider.fromInventory(player.getEnderChest());
 	}
 

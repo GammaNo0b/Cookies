@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.item.ItemProvider;
@@ -219,7 +220,10 @@ public class RocketAssembler extends AbstractItemProcessingMachine {
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemInputs(TileState block) {
+	public List<Provider<ItemStack>> getItemInputs(PersistentDataHolder holder) {
+		if(!(holder instanceof TileState block))
+			return List.of();
+
 		Inventory gui = this.getGui(block);
 
 		List<Provider<ItemStack>> inputs = new ArrayList<>();
@@ -233,8 +237,8 @@ public class RocketAssembler extends AbstractItemProcessingMachine {
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemOutputs(TileState block) {
-		return List.of(this.getFireworkOutput(this.getGui(block)));
+	public List<Provider<ItemStack>> getItemOutputs(PersistentDataHolder holder) {
+		return holder instanceof TileState block ? List.of(this.getFireworkOutput(this.getGui(block))) : List.of();
 	}
 
 

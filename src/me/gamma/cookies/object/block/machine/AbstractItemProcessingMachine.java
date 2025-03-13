@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.gui.BlockFaceConfig;
@@ -113,9 +114,8 @@ public abstract class AbstractItemProcessingMachine extends AbstractItemGenerati
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemInputs(TileState block) {
-		Inventory inventory = this.getGui(block);
-		return ItemProvider.fromInventory(inventory, this.getInputSlots());
+	public List<Provider<ItemStack>> getItemInputs(PersistentDataHolder holder) {
+		return holder instanceof TileState block ? ItemProvider.fromInventory(this.getGui(block), this.getInputSlots()) : List.of();
 	}
 
 

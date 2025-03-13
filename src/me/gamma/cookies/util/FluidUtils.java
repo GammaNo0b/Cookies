@@ -38,34 +38,42 @@ public class FluidUtils {
 		int millibuckets = 0;
 		Material result = null;
 
-		Material type = stack.getType();
-		if(type == Material.WATER_BUCKET) {
-			fluid = FluidType.WATER;
-			millibuckets = 1000;
-			result = Material.BUCKET;
-		} else if(type == Material.LAVA_BUCKET) {
-			fluid = FluidType.LAVA;
-			millibuckets = 1000;
-			result = Material.BUCKET;
-		} else if(type == Material.MILK_BUCKET) {
-			fluid = FluidType.MILK;
-			millibuckets = 1000;
-			result = Material.BUCKET;
-		} else if(type == Material.POTION) {
-			PotionMeta meta = (PotionMeta) stack.getItemMeta();
-			if(meta.getBasePotionType() == PotionType.WATER) {
+		switch (stack.getType()) {
+			case WATER_BUCKET:
 				fluid = FluidType.WATER;
-				millibuckets = 333;
+				millibuckets = 1000;
+				result = Material.BUCKET;
+				break;
+			case LAVA_BUCKET:
+				fluid = FluidType.LAVA;
+				millibuckets = 1000;
+				result = Material.BUCKET;
+				break;
+			case MILK_BUCKET:
+				fluid = FluidType.MILK;
+				millibuckets = 1000;
+				result = Material.BUCKET;
+				break;
+			case POTION:
+				PotionMeta meta = (PotionMeta) stack.getItemMeta();
+				if(meta.getBasePotionType() == PotionType.WATER) {
+					fluid = FluidType.WATER;
+					millibuckets = 333;
+					result = Material.GLASS_BOTTLE;
+				}
+				break;
+			case HONEY_BOTTLE:
+				fluid = FluidType.HONEY;
+				millibuckets = 250;
 				result = Material.GLASS_BOTTLE;
-			}
-		} else if(type == Material.HONEY_BOTTLE) {
-			fluid = FluidType.HONEY;
-			millibuckets = 250;
-			result = Material.GLASS_BOTTLE;
-		} else if(type == Material.EXPERIENCE_BOTTLE) {
-			fluid = FluidType.EXPERIENCE;
-			millibuckets = 250;
-			result = Material.GLASS_BOTTLE;
+				break;
+			case EXPERIENCE_BOTTLE:
+				fluid = FluidType.EXPERIENCE;
+				millibuckets = 70;
+				result = Material.GLASS_BOTTLE;
+				break;
+			default:
+				break;
 		}
 
 		return new Pair<>(new Fluid(fluid, millibuckets * stack.getAmount()), new ItemStack(result, stack.getAmount()));

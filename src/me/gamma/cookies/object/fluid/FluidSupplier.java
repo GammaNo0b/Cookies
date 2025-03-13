@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.TileState;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.Filter;
@@ -38,12 +39,12 @@ public interface FluidSupplier extends Cartesian {
 	ByteProperty FLUID_OUTPUT_ACCESS_FLAGS = new ByteProperty("fluidoutputaccessflags");
 
 	/**
-	 * Returns the list of {@link FluidProvider} of the given block to supply fluids.
+	 * Returns the list of {@link FluidProvider} of the given data holder to supply fluids.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the list of fluid providers
 	 */
-	List<FluidProvider> getFluidOutputs(TileState block);
+	List<FluidProvider> getFluidOutputs(PersistentDataHolder holder);
 
 
 	/**
@@ -60,13 +61,13 @@ public interface FluidSupplier extends Cartesian {
 
 	/**
 	 * Returns the flags for each side of the block to be able to yield fluids from that side. The first six bits correspond to the six different sides in
-	 * {@link BlockUtils#cartesian}.
+	 * {@link BlockUtils#cartesian}. The seventh bit controlls automatic fluid transfer.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the access flags
 	 */
-	default byte getFluidOutputAccessFlags(TileState block) {
-		return FLUID_OUTPUT_ACCESS_FLAGS.fetch(block);
+	default byte getFluidOutputAccessFlags(PersistentDataHolder holder) {
+		return FLUID_OUTPUT_ACCESS_FLAGS.fetch(holder);
 	}
 
 
@@ -93,13 +94,13 @@ public interface FluidSupplier extends Cartesian {
 
 
 	/**
-	 * Checks if the given block can push fluids into adjacent fluid consumer.
+	 * Checks if the given data holder can push fluids into adjacent fluid consumer.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return if automation is enabled
 	 */
-	default boolean isAutoPushingFluid(TileState block) {
-		return (this.getFluidOutputAccessFlags(block) & 0x40) != 0;
+	default boolean isAutoPushingFluid(PersistentDataHolder holder) {
+		return (this.getFluidOutputAccessFlags(holder) & 0x40) != 0;
 	}
 
 
@@ -134,58 +135,58 @@ public interface FluidSupplier extends Cartesian {
 
 
 	/**
-	 * Removes a {@link Fluid} from the given block.
+	 * Removes a {@link Fluid} from the given data holder.
 	 * 
-	 * @param block the block
-	 * @param max   the maximum amount of the fluid to be removed
+	 * @param holder the data holder
+	 * @param max    the maximum amount of the fluid to be removed
 	 * @return the removed fluid
 	 */
-	default Fluid removeFluid(TileState block, int max) {
-		Pair<FluidType, Integer> result = Supplier.supply(max, this.getFluidOutputs(block));
+	default Fluid removeFluid(PersistentDataHolder holder, int max) {
+		Pair<FluidType, Integer> result = Supplier.supply(max, this.getFluidOutputs(holder));
 		return new Fluid(result.left, result.right);
 	}
 
 
 	/**
-	 * Removes a {@link Fluid} of the given {@code type} from the given block.
+	 * Removes a {@link Fluid} of the given {@code type} from the given data holder.
 	 * 
-	 * @param block the block
-	 * @param type  the type of the fluid
-	 * @param max   the maximum amount of the fluid to be removed
+	 * @param holder the data holder
+	 * @param type   the type of the fluid
+	 * @param max    the maximum amount of the fluid to be removed
 	 * @return the removed fluid
 	 */
-	default Fluid removeFluid(TileState block, FluidType type, int max) {
-		int amount = Supplier.supply(type, max, this.getFluidOutputs(block));
+	default Fluid removeFluid(PersistentDataHolder holder, FluidType type, int max) {
+		int amount = Supplier.supply(type, max, this.getFluidOutputs(holder));
 		return new Fluid(type, amount);
 	}
 
 
 	/**
-	 * Removes a {@link Fluid} from the given block with the filter.
+	 * Removes a {@link Fluid} from the given data holder with the filter.
 	 * 
-	 * @param block  the block
+	 * @param holder the data holder
 	 * @param filter the filter
 	 * @param max    the maximum amount of the fluid to be removed
 	 * @return the removed fluid
 	 */
-	default Fluid removeFluid(TileState block, Filter<FluidType> filter, int max) {
-		Pair<FluidType, Integer> result = Supplier.supply(_ -> max, filter, this.getFluidOutputs(block));
+	default Fluid removeFluid(PersistentDataHolder holder, Filter<FluidType> filter, int max) {
+		Pair<FluidType, Integer> result = Supplier.supply(_ -> max, filter, this.getFluidOutputs(holder));
 		return new Fluid(result.left, result.right);
 	}
 
 
 	/**
-	 * Removes a {@link Fluid} from the given block with the filter and passes it to the given consumer. The fluid that get's returned by the consumer
-	 * will be passed back to the supplier.
+	 * Removes a {@link Fluid} from the given data holder with the filter and passes it to the given consumer. The fluid that get's returned by the
+	 * consumer will be passed back to the supplier.
 	 * 
-	 * @param block    the block
+	 * @param holder   the data holder
 	 * @param filter   the filter
 	 * @param max      the maximum amount of the fluid to be removed
 	 * @param consumer the consumer
 	 * @return if any fluids got transfered
 	 */
-	default boolean removeFluid(TileState block, Filter<FluidType> filter, int max, UnaryOperator<Fluid> consumer) {
-		return removeFluid(filter, max, this.getFluidOutputs(block), consumer);
+	default boolean removeFluid(PersistentDataHolder holder, Filter<FluidType> filter, int max, UnaryOperator<Fluid> consumer) {
+		return removeFluid(filter, max, this.getFluidOutputs(holder), consumer);
 	}
 
 
@@ -208,13 +209,13 @@ public interface FluidSupplier extends Cartesian {
 
 
 	/**
-	 * Returns the fluid supplier of the given block or null if the block has no fluid supplier.
+	 * Returns the {@link FluidSupplier} of the given data holder.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the supplier or null
 	 */
-	static FluidSupplier getFluidSupplier(TileState block) {
-		AbstractCustomBlock custom = Blocks.getCustomBlockFromBlock(block);
+	static FluidSupplier getFluidSupplier(PersistentDataHolder holder) {
+		AbstractCustomBlock custom = Blocks.getCustomBlockFromHolder(holder);
 		return custom instanceof FluidSupplier ? (FluidSupplier) custom : null;
 	}
 

@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.TileState;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.Consumer;
@@ -39,12 +40,12 @@ public interface ItemConsumer extends Cartesian {
 	ByteProperty ITEM_INPUT_ACCESS_FLAGS = new ByteProperty("iteminputaccessflags");
 
 	/**
-	 * Returns the list of {@link ItemProvider} of the given block to consume items.
+	 * Returns the list of {@link ItemProvider} of the given data holder to consume items.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the list of item providers
 	 */
-	List<Provider<ItemStack>> getItemInputs(TileState block);
+	List<Provider<ItemStack>> getItemInputs(PersistentDataHolder holder);
 
 
 	/**
@@ -61,13 +62,13 @@ public interface ItemConsumer extends Cartesian {
 
 	/**
 	 * Returns the flags for each side of the block to be able to accept items from that side. The first six bits correspond to the six different sides in
-	 * {@link BlockUtils#cartesian}.
+	 * {@link BlockUtils#cartesian}. The seventh bit controlls automatic item transfer.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the access flags
 	 */
-	default byte getItemInputAccessFlags(TileState block) {
-		return ITEM_INPUT_ACCESS_FLAGS.fetch(block);
+	default byte getItemInputAccessFlags(PersistentDataHolder holder) {
+		return ITEM_INPUT_ACCESS_FLAGS.fetch(holder);
 	}
 
 
@@ -96,11 +97,11 @@ public interface ItemConsumer extends Cartesian {
 	/**
 	 * Checks if the given block can pull items from adjacent item providers.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return if automation is enabled
 	 */
-	default boolean isAutoPullingItems(TileState block) {
-		return (this.getItemInputAccessFlags(block) & 0x40) != 0;
+	default boolean isAutoPullingItems(PersistentDataHolder holder) {
+		return (this.getItemInputAccessFlags(holder) & 0x40) != 0;
 	}
 
 
@@ -135,46 +136,6 @@ public interface ItemConsumer extends Cartesian {
 
 
 	/**
-	 * Adds the given stack to the given block.
-	 * 
-	 * @param block the block
-	 * @param stack the stack to be consumed
-	 * @return the stack that couldn't be consumed
-	 */
-	default ItemStack addStack(TileState block, ItemStack stack) {
-		return this.addStack(block, stack, stack.getAmount());
-	}
-
-
-	/**
-	 * Adds the specified amount of the given stack to the given block.
-	 * 
-	 * @param block  the block
-	 * @param stack  the stack to be consumed
-	 * @param amount the amount to consume
-	 * @return the stack that couldn't be consumed
-	 */
-	default ItemStack addStack(TileState block, ItemStack stack, int amount) {
-		return this.addStack(block, null, false, stack, amount);
-	}
-
-
-	/**
-	 * Adds the given amount of the given stack to the given block on the given facce.
-	 * 
-	 * @param block       the block
-	 * @param face        the block face
-	 * @param checkAccess whether the access check should be done
-	 * @param stack       the stack
-	 * @param amount      the amount
-	 * @return the stack that couldn't be consumed
-	 */
-	default ItemStack addStack(TileState block, BlockFace face, boolean checkAccess, ItemStack stack, int amount) {
-		return checkAccess && !this.canAccessItemInputs(block, face) ? stack : addStack(stack, amount, this.getItemInputs(block));
-	}
-
-
-	/**
 	 * Adds the specified amount of the given stack to the list of {@link ItemProvider}.
 	 * 
 	 * @param stack  the stack to be consumed
@@ -190,14 +151,56 @@ public interface ItemConsumer extends Cartesian {
 
 
 	/**
-	 * Returns the {@link ItemConsumer} from the given block.
+	 * Adds the specified amount of the given stack to the given data holder.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
+	 * @param stack  the stack to be consumed
+	 * @param amount the amount to consume
+	 * @return the stack that couldn't be consumed
+	 */
+	default ItemStack addStack(PersistentDataHolder holder, ItemStack stack, int amount) {
+		return addStack(stack, amount, this.getItemInputs(holder));
+	}
+
+
+	/**
+	 * Adds the given stack to the given data holder.
+	 * 
+	 * @param holder the data holder
+	 * @param stack  the stack to be consumed
+	 * @return the stack that couldn't be consumed
+	 */
+	default ItemStack addStack(PersistentDataHolder holder, ItemStack stack) {
+		return this.addStack(holder, stack, stack.getAmount());
+	}
+
+
+	/**
+	 * Adds the given amount of the given stack to the given block on the given facce.
+	 * 
+	 * @param block  the block
+	 * @param face   the block face
+	 * @param stack  the stack
+	 * @param amount the amount
+	 * @return the stack that couldn't be consumed
+	 */
+	default ItemStack addStack(TileState block, BlockFace face, ItemStack stack, int amount) {
+		if(!this.canAccessItemInputs(block, face))
+			return stack;
+
+		return this.addStack(block, stack, amount);
+	}
+
+
+	/**
+	 * Returns the {@link ItemConsumer} from the given data holder.
+	 * 
+	 * @param holder the data holder
 	 * @return the item consumer or null
 	 */
-	public static ItemConsumer getItemConsumer(TileState block) {
-		AbstractCustomBlock custom = Blocks.getCustomBlockFromBlock(block);
-		return custom instanceof ItemConsumer consumer ? consumer : ItemStorage.fromVanillaStorage(block);
+	public static ItemConsumer getItemConsumer(PersistentDataHolder holder) {
+		AbstractCustomBlock custom = Blocks.getCustomBlockFromHolder(holder);
+		return custom instanceof ItemConsumer consumer ? consumer : ItemStorage.fromVanillaStorage(holder);
 	}
 
 }

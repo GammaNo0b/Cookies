@@ -18,6 +18,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.block.BlockFaceConfigurable;
 import me.gamma.cookies.object.fluid.Fluid;
@@ -169,8 +170,8 @@ public class FluidPump extends AbstractProcessingMachine implements FluidSupplie
 
 
 	@Override
-	public List<FluidProvider> getFluidOutputs(TileState block) {
-		return List.of(FluidProvider.fromProperty(FLUID, block, this.capacity));
+	public List<FluidProvider> getFluidOutputs(PersistentDataHolder holder) {
+		return List.of(FluidProvider.fromProperty(FLUID, holder, this.capacity));
 	}
 
 

@@ -5,6 +5,7 @@ package me.gamma.cookies.object.block.network.energy;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.block.network.EnderLinkedBlock;
 import me.gamma.cookies.object.energy.EnergyProvider;
@@ -56,20 +57,20 @@ public class Tesseract extends EnderLinkedBlock<Holder<Integer>> implements Ener
 
 
 	@Override
-	public byte getEnergyInputAccessFlags(TileState block) {
+	public byte getEnergyInputAccessFlags(PersistentDataHolder holder) {
 		return 0x3F;
 	}
 
 
 	@Override
-	public byte getEnergyOutputAccessFlags(TileState block) {
+	public byte getEnergyOutputAccessFlags(PersistentDataHolder holder) {
 		return 0x3F;
 	}
 
 
 	@Override
-	public EnergyProvider getEnergyProvider(TileState block) {
-		return EnergyProvider.fromHolder(this.getResource(block), CAPACITY);
+	public EnergyProvider getEnergyProvider(PersistentDataHolder holder) {
+		return EnergyProvider.fromHolder(this.getResource(holder), CAPACITY);
 	}
 
 

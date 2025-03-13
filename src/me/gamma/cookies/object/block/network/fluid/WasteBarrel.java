@@ -4,7 +4,7 @@ package me.gamma.cookies.object.block.network.fluid;
 
 import java.util.List;
 
-import org.bukkit.block.TileState;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.block.AbstractCustomBlock;
 import me.gamma.cookies.object.fluid.FluidConsumer;
@@ -29,13 +29,13 @@ public class WasteBarrel extends AbstractCustomBlock implements FluidConsumer {
 
 
 	@Override
-	public byte getFluidInputAccessFlags(TileState block) {
+	public byte getFluidInputAccessFlags(PersistentDataHolder holder) {
 		return 0x3F;
 	}
 
 
 	@Override
-	public List<FluidProvider> getFluidInputs(TileState block) {
+	public List<FluidProvider> getFluidInputs(PersistentDataHolder holder) {
 		return List.of(new FluidProvider() {
 
 			@Override

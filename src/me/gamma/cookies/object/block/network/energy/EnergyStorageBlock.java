@@ -2,7 +2,7 @@
 package me.gamma.cookies.object.block.network.energy;
 
 
-import org.bukkit.block.TileState;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.energy.EnergyProvider;
 import me.gamma.cookies.object.energy.EnergyStorage;
@@ -23,8 +23,8 @@ public interface EnergyStorageBlock extends EnergyStorage {
 
 
 	@Override
-	default EnergyProvider getEnergyProvider(TileState block) {
-		return EnergyProvider.fromProperty(INTERNAL_STORAGE, block, this.getEnergyCapacity());
+	default EnergyProvider getEnergyProvider(PersistentDataHolder holder) {
+		return EnergyProvider.fromProperty(INTERNAL_STORAGE, holder, this.getEnergyCapacity());
 	}
 
 }

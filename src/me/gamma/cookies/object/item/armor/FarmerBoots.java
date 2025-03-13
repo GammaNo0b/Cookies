@@ -12,6 +12,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.persistence.PersistentDataHolder;
+
+import me.gamma.cookies.object.LoreBuilder;
 
 
 
@@ -44,6 +47,11 @@ public class FarmerBoots extends AbstractCustomArmorItem {
 	@Override
 	protected void editItemMeta(ItemMeta meta) {
 		((LeatherArmorMeta) meta).setColor(Color.YELLOW);
+	}
+	
+	@Override
+	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+		builder.createSection("§7Prevents the trampelling of crops.", false);
 	}
 
 

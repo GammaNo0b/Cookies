@@ -9,6 +9,7 @@ import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.AbstractCustomBlock;
@@ -33,13 +34,13 @@ public class Trashcan extends AbstractCustomBlock implements ItemConsumer {
 
 
 	@Override
-	public byte getItemInputAccessFlags(TileState block) {
+	public byte getItemInputAccessFlags(PersistentDataHolder holder) {
 		return 0x3F;
 	}
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemInputs(TileState block) {
+	public List<Provider<ItemStack>> getItemInputs(PersistentDataHolder holder) {
 		return List.of(new ItemProvider() {
 
 			@Override

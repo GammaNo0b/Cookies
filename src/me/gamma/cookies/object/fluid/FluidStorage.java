@@ -4,7 +4,7 @@ package me.gamma.cookies.object.fluid;
 
 import java.util.List;
 
-import org.bukkit.block.TileState;
+import org.bukkit.persistence.PersistentDataHolder;
 
 
 
@@ -17,23 +17,23 @@ import org.bukkit.block.TileState;
 public interface FluidStorage extends FluidConsumer, FluidSupplier {
 
 	/**
-	 * Returns the list of {@link FluidProvider} of the given block that act as inputs and as outputs at the same time.
+	 * Returns the list of {@link FluidProvider} of the given data holder that act as inputs and as outputs at the same time.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the list of fluid providers
 	 */
-	List<FluidProvider> getFluidProviders(TileState block);
+	List<FluidProvider> getFluidProviders(PersistentDataHolder holder);
 
 
 	@Override
-	default List<FluidProvider> getFluidInputs(TileState block) {
-		return this.getFluidProviders(block);
+	default List<FluidProvider> getFluidInputs(PersistentDataHolder holder) {
+		return this.getFluidProviders(holder);
 	}
 
 
 	@Override
-	default List<FluidProvider> getFluidOutputs(TileState block) {
-		return this.getFluidProviders(block);
+	default List<FluidProvider> getFluidOutputs(PersistentDataHolder holder) {
+		return this.getFluidProviders(holder);
 	}
 
 }

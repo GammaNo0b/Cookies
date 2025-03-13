@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.TileState;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.Consumer;
@@ -32,12 +33,12 @@ public interface EnergyConsumer {
 	ByteProperty ENERGY_INPUT_ACCESS_FLAGS = new ByteProperty("energyinputaccessflags");
 
 	/**
-	 * Returns the {@link EnergyProvider} of the given block to consume energy.
+	 * Returns the {@link EnergyProvider} of the given data holder to consume energy.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the energy provider
 	 */
-	EnergyProvider getEnergyInput(TileState block);
+	EnergyProvider getEnergyInput(PersistentDataHolder holder);
 
 
 	/**
@@ -54,13 +55,13 @@ public interface EnergyConsumer {
 
 	/**
 	 * Returns the flags for each side of the block to be able to accept energy from that side. The first six bits correspond to the six different sides
-	 * in {@link BlockUtils#cartesian}.
+	 * in {@link BlockUtils#cartesian}. The seventh bit controlls automatic energy transfer.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the access flags
 	 */
-	default byte getEnergyInputAccessFlags(TileState block) {
-		return ENERGY_INPUT_ACCESS_FLAGS.fetch(block);
+	default byte getEnergyInputAccessFlags(PersistentDataHolder holder) {
+		return ENERGY_INPUT_ACCESS_FLAGS.fetch(holder);
 	}
 
 
@@ -87,14 +88,14 @@ public interface EnergyConsumer {
 
 
 	/**
-	 * Stores the given amount of energy into the given block.
+	 * Stores the given amount of energy into the given data holder.
 	 * 
-	 * @param block  the block
+	 * @param holder the data holder
 	 * @param amount the amount of energy to be consumed
 	 * @return the amount of energy that couldn't be consumed
 	 */
-	default int storeEnergy(TileState block, int amount) {
-		return this.storeEnergy(block, null, false, amount);
+	default int storeEnergy(PersistentDataHolder holder, int amount) {
+		return Consumer.consumeTypeless(amount, Arrays.asList(this.getEnergyInput(holder)));
 	}
 
 
@@ -106,22 +107,22 @@ public interface EnergyConsumer {
 	 * @param amount the amount of energy to be consumed
 	 * @return the amount of energy that couldn't be consumed
 	 */
-	default int storeEnergy(TileState block, BlockFace face, boolean checkAccess, int amount) {
-		if(checkAccess && !this.canAccessEnergyInput(block, face))
+	default int storeEnergy(TileState block, BlockFace face, int amount) {
+		if(!this.canAccessEnergyInput(block, face))
 			return amount;
 
-		return Consumer.consumeTypeless(amount, Arrays.asList(this.getEnergyInput(block)));
+		return this.storeEnergy(block, amount);
 	}
 
 
 	/**
-	 * Returns the {@link EnergyConsumer} from the given block.
+	 * Returns the {@link EnergyConsumer} from the given data holder.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the energy consumer or null
 	 */
-	public static EnergyConsumer getEnergyConsumer(TileState block) {
-		AbstractCustomBlock custom = Blocks.getCustomBlockFromBlock(block);
+	public static EnergyConsumer getEnergyConsumer(PersistentDataHolder holder) {
+		AbstractCustomBlock custom = Blocks.getCustomBlockFromHolder(holder);
 		return custom instanceof EnergyConsumer ? (EnergyConsumer) custom : null;
 	}
 

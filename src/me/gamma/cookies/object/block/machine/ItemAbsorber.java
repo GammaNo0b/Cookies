@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.manager.ParticleManager;
 import me.gamma.cookies.object.Provider;
@@ -176,8 +177,8 @@ public class ItemAbsorber extends AbstractGuiMachine implements ItemSupplier {
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemOutputs(TileState block) {
-		return ItemProvider.fromInventory(this.getGui(block), slots);
+	public List<Provider<ItemStack>> getItemOutputs(PersistentDataHolder holder) {
+		return holder instanceof TileState block ? ItemProvider.fromInventory(this.getGui(block), slots) : List.of();
 	}
 
 

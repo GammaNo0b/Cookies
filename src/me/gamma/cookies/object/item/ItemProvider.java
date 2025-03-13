@@ -118,18 +118,18 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 
 
 	/**
-	 * Creates an {@link ItemProvider} from the given {@link TileState} using the {@link ItemStackProperty}.
+	 * Creates an {@link ItemProvider} from the given {@link PersistentDataHolder} using the {@link ItemStackProperty}.
 	 * 
 	 * @param property the property
-	 * @param block    the block
+	 * @param holder   the data holder
 	 * @return the created item provider
 	 */
-	public static ItemProvider fromItemStackProperty(final ItemStackProperty property, final TileState block) {
+	public static ItemProvider fromItemStackProperty(final ItemStackProperty property, final PersistentDataHolder holder) {
 		return new ItemProvider() {
 
 			@Override
 			public int amount() {
-				ItemStack stack = property.fetch(block);
+				ItemStack stack = property.fetch(holder);
 				if(ItemUtils.isEmpty(stack))
 					return 0;
 				return stack.getAmount();
@@ -138,7 +138,7 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 
 			@Override
 			public int capacity() {
-				ItemStack stack = property.fetch(block);
+				ItemStack stack = property.fetch(holder);
 				if(ItemUtils.isEmpty(stack))
 					return 64;
 				return stack.getMaxStackSize();
@@ -147,29 +147,31 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 
 			@Override
 			public void add(ItemStack type, int amount) {
-				ItemStack stack = property.fetch(block);
+				ItemStack stack = property.fetch(holder);
 				if(stack == null) {
 					stack = type.clone();
 					stack.setAmount(0);
 				}
 				stack.setAmount(stack.getAmount() + amount);
-				property.store(block, stack);
-				block.update();
+				property.store(holder, stack);
+				if(holder instanceof TileState block)
+					block.update();
 			}
 
 
 			@Override
 			public void remove(int amount) {
-				ItemStack stack = property.fetch(block);
+				ItemStack stack = property.fetch(holder);
 				stack.setAmount(Math.max(stack.getAmount() - amount, 0));
-				property.store(block, stack);
-				block.update();
+				property.store(holder, stack);
+				if(holder instanceof TileState block)
+					block.update();
 			}
 
 
 			@Override
 			public ItemStack getType() {
-				return property.fetch(block).clone();
+				return property.fetch(holder).clone();
 			}
 
 
@@ -177,8 +179,9 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 			public void setType(ItemStack type) {
 				ItemStack stack = type.clone();
 				stack.setAmount(this.amount());
-				property.store(block, stack);
-				block.update();
+				property.store(holder, stack);
+				if(holder instanceof TileState block)
+					block.update();
 			}
 
 

@@ -12,7 +12,6 @@ import java.util.stream.IntStream;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -300,36 +299,19 @@ public class StorageCrateBlock extends AbstractCustomBlock implements ItemStorag
 
 
 	@Override
-	public byte getItemInputAccessFlags(TileState block) {
+	public byte getItemInputAccessFlags(PersistentDataHolder holder) {
 		return 0x3F;
 	}
 
 
 	@Override
-	public byte getItemOutputAccessFlags(TileState block) {
+	public byte getItemOutputAccessFlags(PersistentDataHolder holder) {
 		return 0x3F;
 	}
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemInputs(TileState block, BlockFace face) {
-		return ItemStorage.super.getItemInputs(block);
-	}
-
-
-	@Override
-	public List<Provider<ItemStack>> getItemOutputs(TileState block, BlockFace face) {
-		return ItemStorage.super.getItemOutputs(block);
-	}
-
-
-	@Override
-	public List<Provider<ItemStack>> getItemProviders(TileState block) {
-		return this.getItemProviders((PersistentDataHolder) block);
-	}
-
-
-	private List<Provider<ItemStack>> getItemProviders(PersistentDataHolder holder) {
+	public List<Provider<ItemStack>> getItemProviders(PersistentDataHolder holder) {
 		return IntStream.range(0, this.getCapacity()).mapToObj(StorageCrateBlock::createProperty).map(p -> (Provider<ItemStack>) ItemProvider.fromBigItemStackProperty(p, holder)).toList();
 	}
 

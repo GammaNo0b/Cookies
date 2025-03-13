@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.TileState;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.Filter;
@@ -41,12 +42,12 @@ public interface ItemSupplier extends Cartesian {
 	ByteProperty ITEM_OUTPUT_ACCESS_FLAGS = new ByteProperty("itemoutputaccessflags");
 
 	/**
-	 * Returns the list of {@link ItemProvider} of the given block to supply items.
+	 * Returns the list of {@link ItemProvider} of the given data holder to supply items.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the list of item providers
 	 */
-	List<Provider<ItemStack>> getItemOutputs(TileState block);
+	List<Provider<ItemStack>> getItemOutputs(PersistentDataHolder holder);
 
 
 	/**
@@ -63,13 +64,13 @@ public interface ItemSupplier extends Cartesian {
 
 	/**
 	 * Returns the flags for each side of the block to be able to yield items from that side. The first six bits correspond to the six different sides in
-	 * {@link BlockUtils#cartesian}.
+	 * {@link BlockUtils#cartesian}. The seventh bit controlls automatic item transfer.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the access flags
 	 */
-	default byte getItemOutputAccessFlags(TileState block) {
-		return ITEM_OUTPUT_ACCESS_FLAGS.fetch(block);
+	default byte getItemOutputAccessFlags(PersistentDataHolder holder) {
+		return ITEM_OUTPUT_ACCESS_FLAGS.fetch(holder);
 	}
 
 
@@ -96,13 +97,13 @@ public interface ItemSupplier extends Cartesian {
 
 
 	/**
-	 * Checks if the given block can push items into adjacent item consumer.
+	 * Checks if the given data holder can push items into adjacent item consumer.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return if automation is enabled
 	 */
-	default boolean isAutoPushingItems(TileState block) {
-		return (this.getItemOutputAccessFlags(block) & 0x40) != 0;
+	default boolean isAutoPushingItems(PersistentDataHolder holder) {
+		return (this.getItemOutputAccessFlags(holder) & 0x40) != 0;
 	}
 
 
@@ -184,14 +185,14 @@ public interface ItemSupplier extends Cartesian {
 
 
 	/**
-	 * Removes an {@link ItemStack} from the given block with the filter.
+	 * Removes an {@link ItemStack} from the given data holder with the filter.
 	 * 
-	 * @param block  the block
+	 * @param holder the data holder
 	 * @param filter the filter
 	 * @return the item stack that got removed
 	 */
-	default ItemStack removeItem(TileState block, ItemFilter filter) {
-		Pair<ItemStack, Integer> result = Supplier.supply(ItemStack::getMaxStackSize, filter, this.getItemOutputs(block));
+	default ItemStack removeItem(PersistentDataHolder holder, ItemFilter filter) {
+		Pair<ItemStack, Integer> result = Supplier.supply(ItemStack::getMaxStackSize, filter, this.getItemOutputs(holder));
 		ItemStack stack = result.left.clone();
 		stack.setAmount(result.right);
 		return stack;
@@ -199,16 +200,16 @@ public interface ItemSupplier extends Cartesian {
 
 
 	/**
-	 * Removes an {@link ItemStack} from the given block with the filter and passes it to the given consumer. The stack that get's returned by the
+	 * Removes an {@link ItemStack} from the given data holder with the filter and passes it to the given consumer. The stack that get's returned by the
 	 * consumer will be passed back to the supplier.
 	 * 
-	 * @param block    the block
+	 * @param holder   the data holder
 	 * @param filter   the filter
 	 * @param consumer the consumer
 	 * @return if any items got transfered
 	 */
-	default boolean removeItem(TileState block, Filter<ItemStack> filter, UnaryOperator<ItemStack> consumer) {
-		return removeItem(filter, this.getItemOutputs(block), consumer);
+	default boolean removeItem(PersistentDataHolder holder, Filter<ItemStack> filter, UnaryOperator<ItemStack> consumer) {
+		return removeItem(filter, this.getItemOutputs(holder), consumer);
 	}
 
 
@@ -234,12 +235,12 @@ public interface ItemSupplier extends Cartesian {
 	/**
 	 * Returns the item supplier of the given block or null if the block has no item supplier.
 	 * 
-	 * @param block the block
+	 * @param holder the block
 	 * @return the supplier or null
 	 */
-	static ItemSupplier getItemSupplier(TileState block) {
-		AbstractCustomBlock custom = Blocks.getCustomBlockFromBlock(block);
-		return custom instanceof ItemSupplier supplier ? supplier : ItemStorage.fromVanillaStorage(block);
+	static ItemSupplier getItemSupplier(PersistentDataHolder holder) {
+		AbstractCustomBlock custom = Blocks.getCustomBlockFromHolder(holder);
+		return custom instanceof ItemSupplier supplier ? supplier : ItemStorage.fromVanillaStorage(holder);
 	}
 
 }

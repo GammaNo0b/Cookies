@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.network.EnderLinkedBlock;
@@ -73,20 +74,20 @@ public class EnderChest extends EnderLinkedBlock<Inventory> implements ItemStora
 
 
 	@Override
-	public byte getItemInputAccessFlags(TileState block) {
+	public byte getItemInputAccessFlags(PersistentDataHolder holder) {
 		return 0x3F;
 	}
 
 
 	@Override
-	public byte getItemOutputAccessFlags(TileState block) {
+	public byte getItemOutputAccessFlags(PersistentDataHolder holder) {
 		return 0x3f;
 	}
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemProviders(TileState block) {
-		return ItemProvider.fromInventory(this.getResource(block));
+	public List<Provider<ItemStack>> getItemProviders(PersistentDataHolder holder) {
+		return ItemProvider.fromInventory(this.getResource(holder));
 	}
 
 

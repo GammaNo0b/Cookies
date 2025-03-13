@@ -2,7 +2,7 @@
 package me.gamma.cookies.object.energy;
 
 
-import org.bukkit.block.TileState;
+import org.bukkit.persistence.PersistentDataHolder;
 
 
 
@@ -15,23 +15,23 @@ import org.bukkit.block.TileState;
 public interface EnergyStorage extends EnergyConsumer, EnergySupplier {
 
 	/**
-	 * Returns the list of {@link EnergyProvider} of the given block that act as inputs and as outputs at the same time.
+	 * Returns the list of {@link EnergyProvider} of the given data holder that act as inputs and as outputs at the same time.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the list of item providers
 	 */
-	EnergyProvider getEnergyProvider(TileState block);
+	EnergyProvider getEnergyProvider(PersistentDataHolder holder);
 
 
 	@Override
-	default EnergyProvider getEnergyInput(TileState block) {
-		return this.getEnergyProvider(block);
+	default EnergyProvider getEnergyInput(PersistentDataHolder holder) {
+		return this.getEnergyProvider(holder);
 	}
 
 
 	@Override
-	default EnergyProvider getEnergyOutput(TileState block) {
-		return this.getEnergyProvider(block);
+	default EnergyProvider getEnergyOutput(PersistentDataHolder holder) {
+		return this.getEnergyProvider(holder);
 	}
 
 }

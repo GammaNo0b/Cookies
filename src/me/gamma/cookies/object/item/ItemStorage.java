@@ -8,6 +8,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.TileState;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.Provider;
@@ -26,44 +27,44 @@ public interface ItemStorage extends ItemConsumer, ItemSupplier {
 	/**
 	 * Returns the list of {@link ItemProvider} of the given block that act as inputs and as outputs at the same time.
 	 * 
-	 * @param block the block
+	 * @param holder the block
 	 * @return the list of item providers
 	 */
-	List<Provider<ItemStack>> getItemProviders(TileState block);
+	List<Provider<ItemStack>> getItemProviders(PersistentDataHolder holder);
 
 
 	@Override
-	default List<Provider<ItemStack>> getItemInputs(TileState block) {
-		return this.getItemProviders(block);
+	default List<Provider<ItemStack>> getItemInputs(PersistentDataHolder holder) {
+		return this.getItemProviders(holder);
 	}
 
 
 	@Override
-	default List<Provider<ItemStack>> getItemOutputs(TileState block) {
-		return this.getItemProviders(block);
+	default List<Provider<ItemStack>> getItemOutputs(PersistentDataHolder holder) {
+		return this.getItemProviders(holder);
 	}
 
 
-	public static ItemStorage fromVanillaStorage(TileState block) {
-		if(!(block instanceof final BlockInventoryHolder holder))
+	public static ItemStorage fromVanillaStorage(PersistentDataHolder holder) {
+		if(!(holder instanceof final BlockInventoryHolder inventoryHolder))
 			return null;
 
 		return new ItemStorage() {
 
 			@Override
-			public List<Provider<ItemStack>> getItemProviders(TileState block) {
-				return ItemProvider.fromInventory(holder.getInventory());
+			public List<Provider<ItemStack>> getItemProviders(PersistentDataHolder holder) {
+				return ItemProvider.fromInventory(inventoryHolder.getInventory());
 			}
 
 
 			@Override
-			public byte getItemInputAccessFlags(TileState block) {
+			public byte getItemInputAccessFlags(PersistentDataHolder holder) {
 				return 0x3f;
 			}
 
 
 			@Override
-			public byte getItemOutputAccessFlags(TileState block) {
+			public byte getItemOutputAccessFlags(PersistentDataHolder holder) {
 				return 0x3f;
 			}
 
@@ -81,13 +82,13 @@ public interface ItemStorage extends ItemConsumer, ItemSupplier {
 
 
 			@Override
-			public boolean isAutoPullingItems(TileState block) {
+			public boolean isAutoPullingItems(PersistentDataHolder holder) {
 				return false;
 			}
 
 
 			@Override
-			public boolean isAutoPushingItems(TileState block) {
+			public boolean isAutoPushingItems(PersistentDataHolder holder) {
 				return false;
 			}
 

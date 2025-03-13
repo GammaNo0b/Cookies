@@ -4,6 +4,7 @@ package me.gamma.cookies.object.block.generator;
 
 import org.bukkit.block.TileState;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.energy.EnergyProvider;
 import me.gamma.cookies.object.list.HeadTextures;
@@ -40,7 +41,7 @@ public class CreativeGenerator extends AbstractGenerator {
 
 
 	@Override
-	public int getUpgradeSlots(TileState block) {
+	public int getUpgradeSlots(PersistentDataHolder holder) {
 		return 0;
 	}
 
@@ -64,7 +65,7 @@ public class CreativeGenerator extends AbstractGenerator {
 
 
 	@Override
-	public EnergyProvider getInternalStorage(TileState block) {
+	public EnergyProvider getInternalStorage(PersistentDataHolder holder) {
 		return new EnergyProvider() {
 
 			@Override

@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.block.AbstractWorkBlock;
 import me.gamma.cookies.object.block.BlockFaceConfigurable;
@@ -159,8 +160,8 @@ public class Tank extends AbstractWorkBlock implements FluidStorage, UpdatingGui
 
 
 	@Override
-	public List<FluidProvider> getFluidProviders(TileState block) {
-		return Arrays.asList(FluidProvider.fromProperty(FLUID, block, this.capacity));
+	public List<FluidProvider> getFluidProviders(PersistentDataHolder holder) {
+		return Arrays.asList(FluidProvider.fromProperty(FLUID, holder, this.capacity));
 	}
 
 

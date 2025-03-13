@@ -19,6 +19,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.manager.ParticleManager;
 import me.gamma.cookies.object.fluid.FluidProvider;
@@ -90,8 +91,8 @@ public class ExperienceAbsorber extends AbstractGuiMachine implements FluidSuppl
 
 
 	@Override
-	public List<FluidProvider> getFluidOutputs(TileState block) {
-		return List.of(FluidProvider.fromProperty(FluidType.EXPERIENCE, STORED_XP, block, Integer.MAX_VALUE));
+	public List<FluidProvider> getFluidOutputs(PersistentDataHolder holder) {
+		return List.of(FluidProvider.fromProperty(FluidType.EXPERIENCE, STORED_XP, holder, Integer.MAX_VALUE));
 	}
 
 

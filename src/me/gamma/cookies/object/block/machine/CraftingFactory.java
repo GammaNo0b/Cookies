@@ -20,6 +20,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.item.ItemConsumer;
@@ -166,14 +167,14 @@ public class CraftingFactory extends AbstractProcessingMachine implements ItemCo
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemInputs(TileState block) {
-		return List.of(ItemProvider.fromInventory(this.getGui(block), 20));
+	public List<Provider<ItemStack>> getItemInputs(PersistentDataHolder holder) {
+		return holder instanceof TileState block ? List.of(ItemProvider.fromInventory(this.getGui(block), 20)) : List.of();
 	}
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemOutputs(TileState block) {
-		return List.of(ItemProvider.fromInventory(this.getGui(block), 20 + this.maxSteps));
+	public List<Provider<ItemStack>> getItemOutputs(PersistentDataHolder holder) {
+		return holder instanceof TileState block ? List.of(ItemProvider.fromInventory(this.getGui(block), 20 + this.maxSteps)) : List.of();
 	}
 
 

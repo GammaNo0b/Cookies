@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Config;
 import me.gamma.cookies.init.Items;
@@ -196,8 +197,8 @@ public abstract class AbstractGenerator extends AbstractWorkBlock implements Upg
 	}
 
 
-	public int getInteralCapacity(TileState block) {
-		return this.getInternalCapacity() * (int) (1 + this.getUpgradeValue(block, MachineUpgrade.ENERGY_STORAGE));
+	public int getInteralCapacity(PersistentDataHolder holder) {
+		return this.getInternalCapacity() * (int) (1 + this.getUpgradeValue(holder, MachineUpgrade.ENERGY_STORAGE));
 	}
 
 
@@ -265,14 +266,14 @@ public abstract class AbstractGenerator extends AbstractWorkBlock implements Upg
 	}
 
 
-	public EnergyProvider getInternalStorage(TileState block) {
-		return EnergyProvider.fromProperty(INTERNAL_STORAGE, block, this.getInteralCapacity(block));
+	public EnergyProvider getInternalStorage(PersistentDataHolder holder) {
+		return EnergyProvider.fromProperty(INTERNAL_STORAGE, holder, this.getInteralCapacity(holder));
 	}
 
 
 	@Override
-	public EnergyProvider getEnergyOutput(TileState block) {
-		return this.getInternalStorage(block);
+	public EnergyProvider getEnergyOutput(PersistentDataHolder holder) {
+		return this.getInternalStorage(holder);
 	}
 
 
@@ -357,19 +358,19 @@ public abstract class AbstractGenerator extends AbstractWorkBlock implements Upg
 
 
 	@Override
-	public int getUpgradeSlots(TileState block) {
+	public int getUpgradeSlots(PersistentDataHolder holder) {
 		return this.upgradeSlots;
 	}
 
 
 	@Override
-	public String getDisplayName(TileState block) {
+	public String getDisplayName(PersistentDataHolder holder) {
 		return this.getTitle();
 	}
 
 
 	@Override
-	public ItemStack getIcon(TileState block) {
+	public ItemStack getIcon(PersistentDataHolder holder) {
 		return new GeneratorItem(this).get();
 	}
 

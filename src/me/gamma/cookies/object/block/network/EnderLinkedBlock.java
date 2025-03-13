@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 
 import me.gamma.cookies.Cookies;
@@ -68,8 +69,8 @@ public abstract class EnderLinkedBlock<T> extends AbstractCustomBlock implements
 	}
 
 
-	protected T getResource(TileState block) {
-		return this.getResource(OWNER.fetch(block), COLOR.fetch(block));
+	protected T getResource(PersistentDataHolder holder) {
+		return this.getResource(OWNER.fetch(holder), COLOR.fetch(holder));
 	}
 
 

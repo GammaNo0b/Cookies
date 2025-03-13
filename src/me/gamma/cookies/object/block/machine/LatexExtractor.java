@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Items;
 import me.gamma.cookies.object.Provider;
@@ -169,8 +170,8 @@ public class LatexExtractor extends AbstractProcessingMachine implements ItemSup
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemOutputs(TileState block) {
-		return ItemProvider.fromInventory(this.getGui(block), 24, 25);
+	public List<Provider<ItemStack>> getItemOutputs(PersistentDataHolder holder) {
+		return holder instanceof TileState block ? ItemProvider.fromInventory(this.getGui(block), 24, 25) : List.of();
 	}
 
 

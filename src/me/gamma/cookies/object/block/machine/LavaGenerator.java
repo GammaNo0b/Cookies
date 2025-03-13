@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Config;
 import me.gamma.cookies.object.block.AbstractWorkBlock;
@@ -104,8 +105,8 @@ public class LavaGenerator extends AbstractWorkBlock implements FluidSupplier, S
 
 
 	@Override
-	public List<FluidProvider> getFluidOutputs(TileState block) {
-		return Arrays.asList(FluidProvider.fromProperty(FluidType.LAVA, LAVA, block, this.capacity));
+	public List<FluidProvider> getFluidOutputs(PersistentDataHolder holder) {
+		return Arrays.asList(FluidProvider.fromProperty(FluidType.LAVA, LAVA, holder, this.capacity));
 	}
 
 

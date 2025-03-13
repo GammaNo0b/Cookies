@@ -51,9 +51,9 @@ public interface BlockFaceConfigurable {
 	 * @return if the face is enabled
 	 */
 	public static boolean isFaceEnabled(byte flags, TileState block, BlockFace face) {
-		for(int i = 0; i < 6; i++)
-			if(BlockUtils.BlockFaceDirection.values()[i].getFacing(BlockUtils.getFacing(block.getBlockData())) == face)
-				return ((flags >> i) & 1) == 1;
+		for(BlockUtils.BlockFaceDirection direction : BlockUtils.BlockFaceDirection.values())
+			if(direction.getFacing(BlockUtils.getFacing(block.getBlockData())) == face)
+				return ((flags >> direction.ordinal()) & 1) == 1;
 		return false;
 	}
 

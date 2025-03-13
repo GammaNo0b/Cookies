@@ -16,6 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Config;
 import me.gamma.cookies.init.Items;
@@ -261,17 +262,17 @@ public abstract class AbstractMachine extends AbstractWorkBlock implements Upgra
 	/**
 	 * Returns the {@link EnergyProvider} of this machine to act as an energy buffer for later consumption.
 	 * 
-	 * @param block the block
+	 * @param holder the data holder
 	 * @return the energy storage
 	 */
-	protected EnergyProvider getInternalStorage(TileState block) {
-		return EnergyProvider.fromProperty(INTERNAL_STORAGE, block, this.getInternalCapacity());
+	protected EnergyProvider getInternalStorage(PersistentDataHolder holder) {
+		return EnergyProvider.fromProperty(INTERNAL_STORAGE, holder, this.getInternalCapacity());
 	}
 
 
 	@Override
-	public EnergyProvider getEnergyInput(TileState block) {
-		return this.getInternalStorage(block);
+	public EnergyProvider getEnergyInput(PersistentDataHolder holder) {
+		return this.getInternalStorage(holder);
 	}
 
 
@@ -365,19 +366,19 @@ public abstract class AbstractMachine extends AbstractWorkBlock implements Upgra
 
 
 	@Override
-	public int getUpgradeSlots(TileState block) {
+	public int getUpgradeSlots(PersistentDataHolder holder) {
 		return this.upgradeSlots;
 	}
 
 
 	@Override
-	public String getDisplayName(TileState block) {
+	public String getDisplayName(PersistentDataHolder holder) {
 		return this.getTitle();
 	}
 
 
 	@Override
-	public ItemStack getIcon(TileState block) {
+	public ItemStack getIcon(PersistentDataHolder holder) {
 		return new MachineItem(this).get();
 	}
 

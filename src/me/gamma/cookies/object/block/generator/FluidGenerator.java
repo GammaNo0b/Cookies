@@ -9,6 +9,7 @@ import org.bukkit.block.TileState;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.block.machine.MachineConstants;
 import me.gamma.cookies.object.block.machine.MachineTier;
@@ -147,8 +148,8 @@ public class FluidGenerator extends AbstractGuiGenerator implements FluidConsume
 
 
 	@Override
-	public List<FluidProvider> getFluidInputs(TileState block) {
-		return List.of(FluidProvider.fromProperty(this.fluidType, FLUID, block, this.capacity));
+	public List<FluidProvider> getFluidInputs(PersistentDataHolder holder) {
+		return List.of(FluidProvider.fromProperty(this.fluidType, FLUID, holder, this.capacity));
 	}
 
 

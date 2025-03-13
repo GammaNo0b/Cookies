@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.block.network.EnderLinkedBlock;
 import me.gamma.cookies.object.fluid.Fluid;
@@ -63,20 +64,20 @@ public class EnderTank extends EnderLinkedBlock<Fluid> implements FluidStorage {
 
 
 	@Override
-	public byte getFluidInputAccessFlags(TileState block) {
+	public byte getFluidInputAccessFlags(PersistentDataHolder holder) {
 		return 0x3F;
 	}
 
 
 	@Override
-	public byte getFluidOutputAccessFlags(TileState block) {
+	public byte getFluidOutputAccessFlags(PersistentDataHolder holder) {
 		return 0x3F;
 	}
 
 
 	@Override
-	public List<FluidProvider> getFluidProviders(TileState block) {
-		return List.of(FluidProvider.fromFluid(this.getResource(block), CAPACITY));
+	public List<FluidProvider> getFluidProviders(PersistentDataHolder holder) {
+		return List.of(FluidProvider.fromFluid(this.getResource(holder), CAPACITY));
 	}
 
 

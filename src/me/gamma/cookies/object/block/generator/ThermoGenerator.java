@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.block.TileState;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.fluid.FluidConsumer;
 import me.gamma.cookies.object.fluid.FluidProvider;
@@ -52,8 +53,8 @@ public class ThermoGenerator extends AbstractGenerator implements FluidConsumer 
 
 
 	@Override
-	public List<FluidProvider> getFluidInputs(TileState block) {
-		return Arrays.asList(FluidProvider.fromProperty(FluidType.LAVA, LAVA, block, 4000));
+	public List<FluidProvider> getFluidInputs(PersistentDataHolder holder) {
+		return Arrays.asList(FluidProvider.fromProperty(FluidType.LAVA, LAVA, holder, 4000));
 	}
 
 

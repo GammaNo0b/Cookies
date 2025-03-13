@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.block.TileState;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.item.BigItemStack;
@@ -71,17 +72,17 @@ public interface BigItemStorage extends ItemStorage {
 	/**
 	 * Creates an array of {@link BigItemStackProperty} for the given block.
 	 * 
-	 * @param block the block
+	 * @param holder the block
 	 * @return the array
 	 */
-	static BigItemStackProperty[] createProperties(TileState block) {
-		return createProperties(STORAGE_CAPACITY.fetch(block));
+	static BigItemStackProperty[] createProperties(PersistentDataHolder holder) {
+		return createProperties(STORAGE_CAPACITY.fetch(holder));
 	}
 
 
 	@Override
-	default List<Provider<ItemStack>> getItemProviders(TileState block) {
-		return Arrays.stream(createProperties(block)).map(property -> ItemProvider.fromBigItemStackProperty(property, block)).collect(Collectors.toList());
+	default List<Provider<ItemStack>> getItemProviders(PersistentDataHolder holder) {
+		return Arrays.stream(createProperties(holder)).map(property -> ItemProvider.fromBigItemStackProperty(property, holder)).collect(Collectors.toList());
 	}
 
 

@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Consumer;
 import me.gamma.cookies.object.Provider;
@@ -158,8 +159,8 @@ public class ObsidianGenerator extends AbstractProcessingMachine implements Item
 
 
 	@Override
-	public List<Provider<ItemStack>> getItemOutputs(TileState block) {
-		return ItemProvider.fromInventory(this.getGui(block), output_slots);
+	public List<Provider<ItemStack>> getItemOutputs(PersistentDataHolder holder) {
+		return holder instanceof TileState block ? ItemProvider.fromInventory(this.getGui(block), output_slots) : List.of();
 	}
 
 
@@ -175,8 +176,8 @@ public class ObsidianGenerator extends AbstractProcessingMachine implements Item
 
 
 	@Override
-	public List<FluidProvider> getFluidInputs(TileState block) {
-		return ArrayUtils.asList(FluidProvider.fromProperty(FluidType.LAVA, this.lava, block, this.capacity));
+	public List<FluidProvider> getFluidInputs(PersistentDataHolder holder) {
+		return ArrayUtils.asList(FluidProvider.fromProperty(FluidType.LAVA, this.lava, holder, this.capacity));
 	}
 
 

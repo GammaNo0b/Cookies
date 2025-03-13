@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.manager.ParticleManager;
 import me.gamma.cookies.object.fluid.FluidProvider;
@@ -108,8 +109,8 @@ public class Dyer extends AbstractItemProcessingMachine implements FluidSupplier
 
 
 	@Override
-	public List<FluidProvider> getFluidOutputs(TileState block) {
-		return List.of(FluidProvider.fromProperty(FluidType.RED, RED, block, dyeCapacity), FluidProvider.fromProperty(FluidType.GREEN, GREEN, block, dyeCapacity), FluidProvider.fromProperty(FluidType.BLUE, BLUE, block, dyeCapacity), FluidProvider.fromProperty(FluidType.BLACK, BLACK, block, dyeCapacity));
+	public List<FluidProvider> getFluidOutputs(PersistentDataHolder holder) {
+		return List.of(FluidProvider.fromProperty(FluidType.RED, RED, holder, dyeCapacity), FluidProvider.fromProperty(FluidType.GREEN, GREEN, holder, dyeCapacity), FluidProvider.fromProperty(FluidType.BLUE, BLUE, holder, dyeCapacity), FluidProvider.fromProperty(FluidType.BLACK, BLACK, holder, dyeCapacity));
 	}
 
 
