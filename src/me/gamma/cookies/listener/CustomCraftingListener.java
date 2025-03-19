@@ -76,6 +76,12 @@ public class CustomCraftingListener implements Listener {
 				return;
 
 			int amount = Math.min(pair.right, recipe.getResult().getMaxStackSize() / recipe.getResult().getAmount());
+			if(amount <= 0)
+				return;
+
+			if(!event.getClick().isShiftClick())
+				amount = 1;
+
 			ItemStack rest = this.setResult(inventory, recipe, ingredients, amount);
 			ItemUtils.giveItemToPlayer(event.getWhoClicked(), rest);
 			this.removeIngredients(event.getWhoClicked(), inventory, type, amount);

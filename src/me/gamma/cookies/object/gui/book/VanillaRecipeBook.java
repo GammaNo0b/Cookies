@@ -4,6 +4,7 @@ package me.gamma.cookies.object.gui.book;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.bukkit.Bukkit;
@@ -27,7 +28,10 @@ public class VanillaRecipeBook implements Book<SortType> {
 
 	private static final int SORT_TYPE_SLOT = 26;
 
+	private static final List<Material> itemRecipeMaterials;
+
 	static {
+		itemRecipeMaterials = Arrays.stream(Material.values()).filter(Material::isItem).filter(Predicate.not(Material::isAir)).filter(m -> Bukkit.getRecipesFor(new ItemStack(m)).size() > 0).toList();
 		SortType.values();
 	}
 
@@ -124,7 +128,7 @@ public class VanillaRecipeBook implements Book<SortType> {
 		NAME(Material.NAME_TAG, (m1, m2) -> m1.name().compareTo(m2.name())),
 		MAX_STACKSIZE(Material.MAP, (m1, m2) -> m1.getMaxStackSize() - m2.getMaxStackSize());
 
-		private static final int count = (int) Arrays.stream(Material.values()).filter(Material::isItem).filter(Predicate.not(Material::isAir)).filter(m -> Bukkit.getRecipesFor(new ItemStack(m)).size() > 0).count();
+		private static final int count = itemRecipeMaterials.size();
 
 		private final Material icon;
 		private final ItemStack[] materials;
@@ -132,7 +136,7 @@ public class VanillaRecipeBook implements Book<SortType> {
 
 		private SortType(Material icon, Comparator<Material> comparator) {
 			this.icon = icon;
-			this.materials = Arrays.stream(Material.values()).filter(Material::isItem).filter(Predicate.not(Material::isAir)).filter(m -> Bukkit.getRecipesFor(new ItemStack(m)).size() > 0).sorted(comparator).map(ItemStack::new).toArray(ItemStack[]::new);
+			this.materials = itemRecipeMaterials.stream().sorted(comparator).map(ItemStack::new).toArray(ItemStack[]::new);
 			this.name = Utils.toCapitalWords(this);
 		}
 
@@ -154,7 +158,7 @@ public class VanillaRecipeBook implements Book<SortType> {
 
 
 		public SortType loop() {
-			return values()[(this.ordinal() + 1) % values().length];
+			return EnumUtils.cycle(this);
 		}
 
 

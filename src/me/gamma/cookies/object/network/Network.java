@@ -4,24 +4,34 @@ package me.gamma.cookies.object.network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Particle.DustOptions;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 
+import me.gamma.cookies.manager.ParticleManager;
 import me.gamma.cookies.object.Cable;
 import me.gamma.cookies.object.Filter;
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.util.BlockUtils;
+import me.gamma.cookies.util.Utils;
 import me.gamma.cookies.util.collection.Pair;
 
 
@@ -195,6 +205,11 @@ public class Network<T> {
 	}
 
 
+	/**
+	 * Removes the component at the given location.
+	 * 
+	 * @param location the location
+	 */
 	void remove(Location location) {
 		this.components.remove(location);
 		this.interfaces.remove(location);
@@ -204,7 +219,7 @@ public class Network<T> {
 	/**
 	 * Registers all connected blocks.
 	 */
-	void update() {
+	public void update() {
 		this.reset();
 		this.main.getNeighbors(this.networkCenter.getBlock()).forEach(this::update);
 	}
@@ -237,6 +252,36 @@ public class Network<T> {
 			this.interfaces.put(location, icomponent);
 
 		component.getNeighbors(block.getBlock()).forEach(this::update);
+	}
+
+
+	/**
+	 * Highlightes the entire network using particles.
+	 */
+	public void highlightNetwork() {
+		Set<Location> visited = new HashSet<>();
+		final Set<Location> locations = new HashSet<>();
+		Queue<Pair<TileState, NetworkComponent<T>>> queue = new LinkedList<>();
+		queue.add(new Pair<>(this.getMainBlock(), this.main));
+		locations.add(this.getMainBlock().getLocation());
+
+		while(!queue.isEmpty()) {
+			Pair<TileState, NetworkComponent<T>> pair = queue.poll();
+			if(!visited.add(pair.left.getLocation()))
+				continue;
+
+			pair.right.getPotentialNeighbors(pair.left.getBlock()).map(Block::getLocation).forEach(locations::add);
+			pair.right.getNeighbors(pair.left.getBlock()).filter(p -> !visited.contains(p.left.getLocation())).forEach(queue::add);
+		}
+
+		locations.forEach(l -> l.add(0.5D, 0.5D, 0.5D));
+
+		for(int i = 0; i < 12; i++) {
+			Utils.runLater(10 * i, () -> {
+				for(Location location : locations)
+					ParticleManager.spawnParticle(Particle.DUST, new DustOptions(Color.fromRGB(0, 102, 255), 1.0f), 1.0d, 1, 2, location, 0.0D, 0.0D, 0.0D);
+			});
+		}
 	}
 
 

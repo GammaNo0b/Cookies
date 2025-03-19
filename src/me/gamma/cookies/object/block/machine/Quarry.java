@@ -9,24 +9,25 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Rotatable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.util.Vector;
 
 import me.gamma.cookies.manager.ParticleManager;
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.item.ItemProvider;
 import me.gamma.cookies.object.list.HeadTextures;
+import me.gamma.cookies.object.property.EnumProperty;
+import me.gamma.cookies.object.property.IntegerProperty;
 import me.gamma.cookies.object.property.ItemStackProperty;
 import me.gamma.cookies.object.property.ListProperty;
 import me.gamma.cookies.object.property.Properties;
@@ -41,11 +42,15 @@ import me.gamma.cookies.util.ItemUtils;
 
 public class Quarry extends AbstractItemProcessingMachine {
 
+	private static final int MAX_SIZE = 64;
+
+	public static final EnumProperty<Quarry.State> STATE = new EnumProperty<>("state", State.class);
+	public static final IntegerProperty WIDTH = Properties.WIDTH;
+	public static final IntegerProperty LENGTH = Properties.LENGTH;
 	public static final VectorProperty BREAK_POS = Properties.POS;
 	public static final ListProperty<ItemStack, ItemStackProperty> DROPS = new ListProperty<>("drops", ItemStackProperty::new);
 
-	private static final int RESET_SLOT = 18;
-	private static final ItemStack RESET_ICON = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName("§cReset").build();
+	private static final int STATE_SLOT = 18;
 
 	private List<String> dimensions;
 	private boolean blacklisted;
@@ -67,7 +72,7 @@ public class Quarry extends AbstractItemProcessingMachine {
 	@Override
 	public void setupInventory(TileState block, Inventory inventory) {
 		super.setupInventory(block, inventory);
-		inventory.setItem(RESET_SLOT, RESET_ICON);
+		inventory.setItem(STATE_SLOT, STATE.fetch(block).icon);
 	}
 
 
@@ -108,7 +113,7 @@ public class Quarry extends AbstractItemProcessingMachine {
 
 	@Override
 	protected PropertyBuilder buildBlockProperties(PropertyBuilder builder) {
-		return super.buildBlockProperties(builder).add(BREAK_POS).add(DROPS);
+		return super.buildBlockProperties(builder).add(STATE).add(WIDTH).add(LENGTH).add(BREAK_POS).add(DROPS);
 	}
 
 
@@ -127,6 +132,17 @@ public class Quarry extends AbstractItemProcessingMachine {
 	}
 
 
+	private void updateState(TileState block, Quarry.State state) {
+		STATE.store(block, state);
+		this.getGui(block).setItem(STATE_SLOT, state.icon);
+	}
+
+
+	private void resetBreakPos(TileState block) {
+		BREAK_POS.store(block, new Vector(0, block.getY() - 1, 0));
+	}
+
+
 	@Override
 	protected int[] getInputSlots() {
 		return new int[] { 10, 11, 19, 20 };
@@ -140,25 +156,89 @@ public class Quarry extends AbstractItemProcessingMachine {
 
 
 	@Override
-	public boolean onBlockPlace(Player player, PersistentDataHolder holder, TileState block) {
-		if(super.onBlockPlace(player, holder, block))
-			return true;
-
-		this.reset(block);
-
-		return false;
-	}
-
-
-	@Override
 	public boolean onMainInventoryInteract(Player player, TileState block, Inventory gui, InventoryClickEvent event) {
 		if(!super.onMainInventoryInteract(player, block, gui, event))
 			return false;
 
-		if(event.getSlot() == RESET_SLOT)
-			this.reset(block);
+		if(event.getSlot() == STATE_SLOT) {
+			Quarry.State state = STATE.fetch(block);
+			boolean left = event.getClick().isLeftClick();
+			boolean right = event.getClick().isRightClick();
+			switch (state) {
+				case SETUP:
+					if(left) {
+						if(this.searchQuarryMarkers(block)) {
+							this.resetBreakPos(block);
+							this.updateState(block, State.START);
+						}
+					}
+					break;
+				case START:
+					if(left) {
+						this.updateState(block, State.MINING);
+					} else if(right) {
+						this.updateState(block, State.SETUP);
+					}
+					break;
+				case MINING:
+					if(left || right) {
+						if(right)
+							this.resetBreakPos(block);
+						this.updateState(block, State.START);
+					}
+					break;
+				case FINISHED:
+					if(left) {
+						this.resetBreakPos(block);
+						this.updateState(block, State.START);
+					}
+					break;
+				default:
+					break;
+			}
+			block.update();
+		}
 
 		return true;
+	}
+
+
+	private boolean searchQuarryMarkers(TileState block) {
+		Location pos = block.getLocation();
+		int width = searchInDirection(pos, false);
+		if(width == 0)
+			return false;
+
+		int length = searchInDirection(pos, true);
+		if(length == 0)
+			return false;
+
+		WIDTH.store(block, width);
+		LENGTH.store(block, length);
+
+		pos.add(0.5D, 0.5D, 0.5D);
+
+		ParticleManager.drawLine(pos, pos.clone().add(width, 0, 0), Math.abs(width) + 1, 240, 0, 0);
+		ParticleManager.drawLine(pos, pos.clone().add(0, 0, length), Math.abs(length) + 1, 240, 0, 0);
+
+		return true;
+	}
+
+
+	private int searchInDirection(Location pos, boolean z) {
+		Location l;
+		for(int i = 1; i <= MAX_SIZE; i++) {
+			l = pos.clone().add(z ? 0 : i, 0, z ? i : 0);
+			if(l.getBlock().getType() == Material.REDSTONE_TORCH)
+				return i;
+
+			int j = -i;
+			l = pos.clone().add(z ? 0 : j, 0, z ? j : 0);
+			if(l.getBlock().getType() == Material.REDSTONE_TORCH)
+				return j;
+		}
+
+		return 0;
 	}
 
 
@@ -166,42 +246,54 @@ public class Quarry extends AbstractItemProcessingMachine {
 		Vector old = BREAK_POS.fetch(block);
 
 		int x = old.getBlockX();
+		if(x == -1) {
+			return null;
+		}
+
 		int y = old.getBlockY();
 		int z = old.getBlockZ();
 
-		if(++x >= 16) {
+		int width = WIDTH.fetch(block);
+		int length = LENGTH.fetch(block);
+
+		boolean done = false;
+		if(++x >= Math.abs(width)) {
 			x = 0;
 
-			if(++z >= 16) {
+			if(++z >= Math.abs(length)) {
 				z = 0;
 
 				if(y <= block.getWorld().getMinHeight())
-					return null;
+					done = true;
 
 				y--;
 			}
 		}
 
-		BREAK_POS.store(block, new Vector(x, y, z));
+		BREAK_POS.store(block, new Vector(done ? -1 : x, y, z));
 
-		Location location = block.getLocation().subtract(old.getX(), 0, old.getZ()).subtract(1, 1, 1);
-		location.setY(old.getY());
+		int dx = width > 0 ? 1 : -1;
+		int dz = length > 0 ? 1 : -1;
+		Location location = block.getLocation().add(dx * old.getBlockX(), 0, dz * old.getBlockZ()).add(dx, 0, dz);
+		location.setY(old.getBlockY());
 		return location.getBlock();
 	}
 
 
 	@Override
 	protected int createNextProcess(TileState block) {
-		super.createNextProcess(block);
+		if(STATE.fetch(block) != Quarry.State.MINING)
+			return 0;
 
 		if(!this.isValidDimension(block.getWorld()))
 			return 0;
 
 		Block b = this.nextBlock(block);
 		if(b == null) {
+			this.updateState(block, State.FINISHED);
 			return 0;
 		} else if(b.isEmpty()) {
-			return 2;
+			return 1;
 		}
 
 		if(b.isLiquid()) {
@@ -238,9 +330,11 @@ public class Quarry extends AbstractItemProcessingMachine {
 		}
 		DROPS.store(block, drops);
 
-		Location back = block.getLocation().add(0.5D, 0.5D, 0.5D).add(((Rotatable) block.getBlockData()).getRotation().getDirection().multiply(-0.25D));
+		Location bottom = block.getLocation().add(0.5D, 0.0D, 0.5D);
+		Location start = b.getLocation().add(0.5D, 0.5D, 0.5D);
 		final BlockData data = b.getBlockData().clone();
-		ParticleManager.drawAnimatedLine(b.getLocation().add(0.5D, 0.5D, 0.5D), back, 1, 50, pos -> pos.getWorld().spawnParticle(Particle.BLOCK, pos, 1, 0.1F, 0.1F, 0.1F, data));
+		ParticleManager.drawAnimatedLine(start, bottom, 1, bestSpeed, pos -> pos.getWorld().spawnParticle(Particle.BLOCK, pos, 1, 0.1F, 0.1F, 0.1F, data));
+		b.getWorld().playSound(b.getLocation(), b.getBlockData().getSoundGroup().getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 		b.setType(Material.AIR);
 
 		return bestSpeed;
@@ -249,8 +343,6 @@ public class Quarry extends AbstractItemProcessingMachine {
 
 	@Override
 	protected boolean finishProcess(TileState block) {
-		super.finishProcess(block);
-
 		List<ItemStack> results = DROPS.fetch(block);
 		while(!this.storeOutputs(block, results)) {
 			if(!this.tryPushItems(block)) {
@@ -263,12 +355,6 @@ public class Quarry extends AbstractItemProcessingMachine {
 		while(this.tryPushItems(block));
 
 		return true;
-	}
-
-
-	private void reset(TileState block) {
-		BREAK_POS.store(block, new Vector(0, block.getY() - 1, 0));
-		block.update();
 	}
 
 
@@ -285,6 +371,21 @@ public class Quarry extends AbstractItemProcessingMachine {
 	@Override
 	protected int getInputModeSlot() {
 		return 38;
+	}
+
+	private static enum State {
+
+		SETUP("§2Setup", Material.BLUE_STAINED_GLASS_PANE, "§7Click to search for markers."),
+		START("§eStart", Material.YELLOW_STAINED_GLASS_PANE, "§7L-Click to start mining,", "§7R-Click to select new markers."),
+		MINING("§aMining", Material.GREEN_STAINED_GLASS_PANE, "§7L-Click to pause mining,", "§7R-Click to reset mining."),
+		FINISHED("§cFinished", Material.RED_STAINED_GLASS_PANE, "§7Click to restart mining.");
+
+		private final ItemStack icon;
+
+		private State(String name, Material icon, String... description) {
+			this.icon = new ItemBuilder(icon).setName(name).setLore(List.of(description)).build();
+		}
+
 	}
 
 }

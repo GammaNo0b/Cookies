@@ -109,6 +109,12 @@ public interface NetworkMainComponent<T> extends NetworkComponent<T>, Ownable, T
 
 
 	@Override
+	default boolean canAccess(TileState block, UUID uuid) {
+		return this.canAccess(block, Bukkit.getOfflinePlayer(uuid));
+	}
+
+
+	@Override
 	default void reset(TileState block) {}
 
 

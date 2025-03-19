@@ -13,7 +13,9 @@ import me.gamma.cookies.object.item.ItemFilter;
 public class Properties {
 
 	public static final ByteProperty CHANNEL = new ByteProperty("channel");
+	public static final IntegerProperty COOLDOWN = new IntegerProperty("cooldown");
 	public static final FluidProperty FLUID = new FluidProperty("fluid");
+	public static final IntegerProperty LENGTH = new IntegerProperty("length");
 	public static final IntegerProperty HONEY = new IntegerProperty("honey", 0, Integer.MAX_VALUE);
 	public static final StringProperty IDENTIFIER = new StringProperty("identifier");
 	public static final EnergyProperty INTERNAL_STORAGE = new EnergyProperty("internalstorage", 0, Integer.MAX_VALUE);
@@ -34,8 +36,10 @@ public class Properties {
 	public static final DoubleProperty REST_SPEED = new DoubleProperty("restspeed");
 	public static final IntegerProperty SIZE = new IntegerProperty("size");
 	public static final IntegerProperty STORAGE_CAPACITY = new IntegerProperty("storagecapacity");
+	public static final LongProperty TIMESTAMP = new LongProperty("timestamp");
 	public static final StringProperty TITLE = new StringProperty("title");
 	public static final UUIDProperty UUID = new UUIDProperty("uuid");
+	public static final IntegerProperty WIDTH = new IntegerProperty("width");
 	public static final VectorProperty WIRE_POS = new VectorProperty("wirepos");
 	public static final StringProperty WIRE_ITEM = new StringProperty("wirename");
 	public static final ListProperty<Vector, VectorProperty> WIRE_POSITIONS = new ListProperty<>("wirepositions", VectorProperty::new);

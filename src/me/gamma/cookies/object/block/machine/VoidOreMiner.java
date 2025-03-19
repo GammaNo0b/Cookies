@@ -176,7 +176,7 @@ public class VoidOreMiner extends AbstractItemGenerationMachine {
 		while(b.getY() > block.getWorld().getMinHeight()) {
 			b = b.getRelative(0, -1, 0);
 			if(!b.getType().isAir())
-				return b.getType() == Material.BEDROCK;
+				return false;
 		}
 
 		return true;

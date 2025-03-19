@@ -126,6 +126,19 @@ public interface NetworkComponent<T> {
 
 
 	/**
+	 * Returns whether the player with the given uuid can access the given block.
+	 * 
+	 * @param block the block
+	 * @param uuid  the uuid of the player
+	 * @return if the player has access
+	 */
+	default boolean canAccess(TileState block, UUID uuid) {
+		Network<T> network = this.getNetwork(block);
+		return network == null || network.canAccess(uuid);
+	}
+
+
+	/**
 	 * Resets this network component for the given block.
 	 * 
 	 * @param block the block

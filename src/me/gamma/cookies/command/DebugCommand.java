@@ -5,6 +5,7 @@ package me.gamma.cookies.command;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -109,7 +110,7 @@ public class DebugCommand implements TabExecutor {
 		return List.of();
 	}
 
-	private static final HashMap<String, DataType> types = new HashMap<>();
+	private static final Map<String, DataType> types = new HashMap<>();
 
 	private static enum DataType {
 

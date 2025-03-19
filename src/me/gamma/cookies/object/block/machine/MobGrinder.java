@@ -25,6 +25,7 @@ public class MobGrinder extends AbstractGuiMachine {
 
 	private int frequency;
 	private double damage;
+	private int maxHits;
 
 	public MobGrinder() {
 		super(null);
@@ -37,6 +38,7 @@ public class MobGrinder extends AbstractGuiMachine {
 
 		this.frequency = config.getInt("frequency", 20);
 		this.damage = config.getDouble("damage", 0.0D);
+		this.maxHits = config.getInt("maxHits", 1);
 	}
 
 
@@ -110,6 +112,7 @@ public class MobGrinder extends AbstractGuiMachine {
 	protected boolean run(TileState block) {
 		BlockFace facing = ((Rotatable) block.getBlockData()).getRotation();
 		Vector direction = facing.getDirection();
+		int hit = 0;
 		for(Entity entity : block.getWorld().getNearbyEntities(block.getLocation().add(0.5D, 0.5D, 0.5D).subtract(direction), 0.5D, 2.5D, 0.5D)) {
 			if(entity instanceof LivingEntity) {
 				LivingEntity living = (LivingEntity) entity;
@@ -120,10 +123,12 @@ public class MobGrinder extends AbstractGuiMachine {
 				Player owner = this.getOwningPlayer(block);
 				if(owner != null)
 					MinecraftEntityHelper.setLastHurtByPlayer(living, owner);
-				return true;
+
+				if(hit++ > this.maxHits)
+					break;
 			}
 		}
-		return false;
+		return hit > 0;
 	}
 
 

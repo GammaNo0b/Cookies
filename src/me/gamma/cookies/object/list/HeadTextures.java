@@ -138,6 +138,7 @@ public class HeadTextures {
 	public static final String MOB_GRINDER = "172771fc11737063c81eb75973e9b82590951e3674f31acce8cddd1aad1b";
 	public static final String BLOCK_BREAKER = "c41265d57d3706c0b428f1b243044d50d8414926acb3752b8cb9f5b85bcdd096";
 	public static final String QUARRY = "e82086d1545ae888aa766f8ed9c66e4755b42ed3a7be4e0cfa068d7f676d6df";
+	public static final String BEDROCK_BREAKER = "382d58e893bf9b82433626d0e480e9375b58f3c2ddef450f617b60dbf506cbb9";
 	public static final String VOID_ORE_MINER = "fd9cbf5eb0893c6de5f1c752968a19ee7307e06c926987ef8733658c1ddec71a";
 	public static final String FARMER = "682e275d67f3832bbda33aa834179f56666ca86d1f2bd316edae6eced0d98064";
 	public static final String DYE_PRESS = "b99eb2998c2a78b6aa2eb592ef9c3648d3d2b01976d9f1dfc5dea37768d3d21c";
@@ -207,14 +208,13 @@ public class HeadTextures {
 	public static final String CLOWNFISH_CHEST = "99f795f21f47f4c2310cc5f4c6e3b04ceb07bd5b0352c228f343cab2157f4cbe";
 	public static final String TRASHCAN = "f32c1472a7bc6975ded7c0c51696959b89af61b75ae954cc4036bc384b3b8301";
 	public static final String STORAGE_CASING = "3dbbf5ef39cfe42775915a2494e1814ca123966c2b74bf5debc07195bc213795";
-	public static final String STORAGE_CONNECTOR = "6d75b501e4ce5a5e7bcced4386df0e05ed254f99808d2b933121a5ef993d3e37";
-	public static final String STORAGE_IMPORTER = "f71b3617402a311c09a2d9b7c788b68e73c4e70b6957c542b40202337d45c19c";
-	public static final String STORAGE_EXPORTER = "434a4805aec2d1a49a70170c525ea99b9c42f27af833826a9f55c1e7a75aedc7";
-	public static final String STORAGE_READER = "8c2cc7b1d40727afd615351a73c597643ec495eb238ce19e7c402e2da1f69d68";
-	public static final String AQUA_STORAGE_PART = "b2bb2483449fb689ab60e776cf9efe22e181cbd7c1bdbd8bb6d91c4d7e2a146b";
+	public static final String STORAGE_CONNECTOR = "a483db09f5a4a7de91434cd75c650c1269d060dcd4b663f5fcc6f80e852dba93";
+	public static final String STORAGE_MAIN_COMPONENT = "f4dd90fb167789355a9550f1441c1f3f24c9d828311f5469feb4bc7501638963";
+	public static final String STORAGE_IMPORTER = "aee47d246d7d374f1fe3dcd0a1fd225a88a15a015de3f0de74b1b3bff3c7f3c9";
+	public static final String STORAGE_EXPORTER = "2c8edc98e176e0ba1d88fd112dd6bd4df133df65471f46a2abe82c6cac6bf76b";
+	public static final String STORAGE_READER = "3e701095733677aa767875a4f22d002ec7f106dc1fba78ed464ca10324f0b11f";
 	public static final String ENDER_ACCESSOR = "87cf21ccb21e2d29c81cc15fe8d3b3ef971d182d3224a212964dddb36cf4";
 	public static final String STORAGE_MONITOR = "3b925d3a52759fde8c0258871fefd9141e5c97fdf453af3df21104cc8c488";
-	public static final String ITEM_CABLE = "76856a8f37b6c3146854f2caa7101b9dd592f4669a3c75f941e2859552bd1ae8";
 
 	// Fluid
 	public static final String COPPER_TANK = "91f437bd9754f386e27687dab7f761fd23f14bf3a5835365d6b938c95310b145";
@@ -224,9 +224,11 @@ public class HeadTextures {
 
 	// Energy
 	public static final String BATTERY_RED = "5c3f45c14e63710f3fc5d739837dd70e37835e639a16245e50b3dd83ee8085e3";
+	public static final String BATTERY_ORANGE = "ffa9d66e25974c4d08a01ef07c61a76276993facb3ed53a159ed9731e09fc83";
 	public static final String BATTERY_YELLOW = "ececd0bcaf77e5261763c3a5fedd90e87517646585decf79acc6b6d52fffdc4a";
 	public static final String BATTERY_GREEN = "8431a1992ba53520e504eedfeb2d7261e0ba2d5a28f59d03a669b0ad03a442d5";
 	public static final String BATTERY_CYAN = "8431a1992ba53520e504eedfeb2d7261e0ba2d5a28f59d03a669b0ad03a442d5";
+	public static final String BATTERY_BLUE = "cccbde9193e2148aa954a4cd9eb70c385a89138f4560e7586dde3c4267eda962";
 	public static final String BATTERY_PURPLE = "8a93d6601cfd99ffa6057c1018309707b5d1bfb2d9491bfb7ce9709bf0843785";
 	public static final String BATTERY_BLACK = "161d3c655ffe2915488cd414bc23744fadd69986e757159d7c917c6048d5fccc";
 	public static final String LED_OFF = "6df14e5017b279b03dac97d429b4a5fa6c398ad568ea43e7c40683c7398c1627";

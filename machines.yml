@@ -20,6 +20,15 @@ aerial_extractor:
     upgradeSlots: 6
     baseSpeed: 2.0
 
+bedrock_breaker:
+  energyConsumption: 1000
+  internalCapacity: 2000000
+  upgradeSlots: 4
+  baseSpeed: 1.0
+  miningDuration: 1200
+  minBedrockDusts: 1
+  maxBedrockDusts: 4
+
 bio_press:
   basic:
     energyConsumption: 4
@@ -434,7 +443,8 @@ mob_grinder:
   upgradeSlots: 4
   baseSpeed: 1.0
   frequency: 20     # number of ticks between each damageing
-  damage: 5.0        # amount of damage dealt to each mob
+  damage: 10.0      # amount of damage dealt to each mob
+  maxHits: 3        # maximum number of mobs that can be hit at once
 
 obsidian_generator:
   energyConsumption: 10

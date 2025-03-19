@@ -132,7 +132,7 @@ public class Enchanter extends AbstractProcessingMachine implements ItemConsumer
 		if(ItemUtils.isEmpty(stack))
 			return 0;
 
-		if(!ItemUtils.isCustomItem(stack) && stack.getType() == Material.GOLD_INGOT) {
+		if(!ItemUtils.isCustomItem(stack) && (stack.getType() == Material.GOLD_INGOT || stack.getType() == Material.GOLDEN_APPLE)) {
 			PROCESSING.store(block, stack);
 			ItemUtils.increaseItem(gui.getItem(INPUT_SLOT), -1);
 		} else {
@@ -160,8 +160,15 @@ public class Enchanter extends AbstractProcessingMachine implements ItemConsumer
 		Inventory gui = this.getGui(block);
 
 		ItemStack stack = PROCESSING.fetch(block);
-		if(!ItemUtils.isCustomItem(stack) && stack.getType() == Material.GOLD_INGOT) {
-			ItemStack result = Items.MAGIC_METAL.get();
+		if(!ItemUtils.isCustomItem(stack)) {
+			ItemStack result;
+			if(stack.getType() == Material.GOLD_INGOT) {
+				result = Items.MAGIC_METAL.get();
+			} else if(stack.getType() == Material.GOLDEN_APPLE) {
+				result = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE);
+			} else {
+				return false;
+			}
 			ItemStack output = gui.getItem(OUTPUT_SLOT);
 			if(ItemUtils.isEmpty(output)) {
 				gui.setItem(OUTPUT_SLOT, result);

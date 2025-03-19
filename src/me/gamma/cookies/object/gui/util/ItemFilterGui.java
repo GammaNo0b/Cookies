@@ -444,7 +444,7 @@ public class ItemFilterGui implements InventoryProvider<ItemFilterGui.FilterData
 	static record AdvancedData(TileState state, AdvancedFilterBlock<ItemStack, ItemFilter> block, ByteProperty sideFlags, Material color) implements FilterData {
 
 		public boolean hasPriority() {
-			return false;
+			return true;
 		}
 
 
@@ -462,7 +462,7 @@ public class ItemFilterGui implements InventoryProvider<ItemFilterGui.FilterData
 
 		@Override
 		public boolean hasChannel() {
-			return false;
+			return true;
 		}
 
 

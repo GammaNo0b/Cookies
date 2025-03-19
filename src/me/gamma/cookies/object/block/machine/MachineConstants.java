@@ -25,8 +25,8 @@ public class MachineConstants {
 	public static final int UPGRADE_SLOT = 13;
 
 	public static final ItemStack BORDER_MATERIAL = InventoryUtils.filler(Material.GRAY_STAINED_GLASS_PANE);
-	public static final ItemStack INPUT_BORDER_MATERIAL = InventoryUtils.filler(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
-	public static final ItemStack OUTPUT_BORDER_MATERIAL = InventoryUtils.filler(Material.ORANGE_STAINED_GLASS_PANE);
+	public static final ItemStack INPUT_BORDER_MATERIAL = InventoryUtils.filler(Material.GREEN_STAINED_GLASS_PANE);
+	public static final ItemStack OUTPUT_BORDER_MATERIAL = InventoryUtils.filler(Material.RED_STAINED_GLASS_PANE);
 	public static final ItemStack FILLER_MATERIAL = InventoryUtils.filler(Material.LIGHT_GRAY_STAINED_GLASS_PANE);
 
 	public static final int[][] inputSlots = { { 19 }, { 19, 20 }, { 10, 11, 19, 20, 28, 29 }, { 9, 10, 11, 18, 19, 20, 27, 28, 29 } };

@@ -311,6 +311,7 @@ public class RecipeInit {
 		c.registerItem(MOB_GRINDER);
 		c.registerItem(BLOCK_BREAKER);
 		c.registerItem(QUARRY);
+		c.registerItem(BEDROCK_BREAKER);
 		c.registerItem(BASIC_VOID_ORE_MINER);
 		c.registerItem(ADVANCED_VOID_ORE_MINER);
 		c.registerItem(IMPROVED_VOID_ORE_MINER);
@@ -423,6 +424,7 @@ public class RecipeInit {
 		c.registerItem(TRASHCAN);
 		c.registerItem(STORAGE_CASING);
 		c.registerItem(STORAGE_CONNECTOR);
+		c.registerItem(STORAGE_MAIN_COMPONENT);
 		c.registerItem(STORAGE_IMPORTER);
 		c.registerItem(STORAGE_EXPORTER);
 		c.registerItem(STORAGE_READER);
@@ -446,9 +448,11 @@ public class RecipeInit {
 
 		c = RecipeCategory.ENERGY;
 		c.registerItem(BATTERY_RED);
+		c.registerItem(BATTERY_ORANGE);
 		c.registerItem(BATTERY_YELLOW);
 		c.registerItem(BATTERY_GREEN);
 		c.registerItem(BATTERY_CYAN);
+		c.registerItem(BATTERY_BLUE);
 		c.registerItem(BATTERY_PURPLE);
 		c.registerItem(BATTERY_BLACK);
 		c.registerItem(LED_PURPLE);
@@ -1184,7 +1188,7 @@ public class RecipeInit {
 		recipe.setIngredient('G', Material.GOLD_NUGGET);
 		recipe.setIngredient('A', EINGOT_3);
 		recipe.setIngredient('B', ELECTRUM_WIRE);
-		recipe.setIngredient('C', BATTERY_GREEN);
+		recipe.setIngredient('C', BATTERY_RED);
 		recipe.setIngredient('U', UPGRADE_BASE);
 
 		recipe = customRecipe(UPGRADE_RANGE, type, "GAG", "BUB", "GAG");
@@ -1342,8 +1346,17 @@ public class RecipeInit {
 		recipe.setIngredient('N', IINGOT_5);
 		recipe.setIngredient('E', ELECTRICAL_CIRCUIT_5);
 
-		recipe = customRecipe(BASIC_VOID_ORE_MINER, type, "IQI", "NMN", "IBI").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(0, 1))));
+		recipe = customRecipe(BEDROCK_BREAKER, type, "EQE", "BMC", "IRI").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(0, 1))));
 		recipe.setIngredient('Q', QUARRY);
+		recipe.setIngredient('R', Material.BEDROCK);
+		recipe.setIngredient('M', PERFECTED_MACHINE_CASING);
+		recipe.setIngredient('B', BATTERY_BLACK);
+		recipe.setIngredient('C', ELECTRICAL_CIRCUIT_5);
+		recipe.setIngredient('E', EINGOT_4);
+		recipe.setIngredient('I', IINGOT_5);
+
+		recipe = customRecipe(BASIC_VOID_ORE_MINER, type, "IRI", "NMN", "IBI").setResultProducer(MACHINE_UPGRADER.apply(List.of(new Pair<>(0, 1))));
+		recipe.setIngredient('R', BEDROCK_BREAKER);
 		recipe.setIngredient('M', PERFECTED_MACHINE_CASING);
 		recipe.setIngredient('I', EINGOT_4);
 		recipe.setIngredient('N', IINGOT_5);
@@ -1869,25 +1882,25 @@ public class RecipeInit {
 		recipe.setIngredient('N', Material.IRON_NUGGET);
 		recipe.setIngredient('W', Material.WATER_BUCKET);
 
-		recipe = customRecipe(BASIC_SOLAR_PANEL, type, "PPP", "SRS", "SCS");
+		recipe = customRecipe(BASIC_SOLAR_PANEL, 2, type, "PPP", "SRS", "SCS");
 		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_1);
 		recipe.setIngredient('R', RED_1);
 		recipe.setIngredient('C', EINGOT_1);
 		recipe.setIngredient('S', Material.DAYLIGHT_DETECTOR);
 
-		recipe = customRecipe(ADVANCED_SOLAR_PANEL, type, "PPP", "SRS", "SCS");
+		recipe = customRecipe(ADVANCED_SOLAR_PANEL, 2, type, "PPP", "SRS", "SCS");
 		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_2);
 		recipe.setIngredient('R', RED_2);
 		recipe.setIngredient('C', EINGOT_2);
 		recipe.setIngredient('S', BASIC_SOLAR_PANEL);
 
-		recipe = customRecipe(IMPROVED_SOLAR_PANEL, type, "PPP", "SRS", "SCS");
+		recipe = customRecipe(IMPROVED_SOLAR_PANEL, 2, type, "PPP", "SRS", "SCS");
 		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_3);
 		recipe.setIngredient('R', RED_2);
 		recipe.setIngredient('C', EINGOT_3);
 		recipe.setIngredient('S', ADVANCED_SOLAR_PANEL);
 
-		recipe = customRecipe(PERFECTED_SOLAR_PANEL, type, "PPP", "SRS", "SCS");
+		recipe = customRecipe(PERFECTED_SOLAR_PANEL, 2, type, "PPP", "SRS", "SCS");
 		recipe.setIngredient('P', PHOTOVOLTAIC_CELL_4);
 		recipe.setIngredient('R', RED_3);
 		recipe.setIngredient('C', EINGOT_4);
@@ -2087,7 +2100,7 @@ public class RecipeInit {
 		recipe.setIngredient('O', Material.OBSIDIAN);
 		recipe.setIngredient('B', Material.BLAZE_ROD);
 		recipe.setIngredient('D', Material.GRAY_DYE);
-		recipe.setIngredient('C', Material.CHEST);
+		recipe.setIngredient('C', CLOWNFISH_STORAGE_CRATE);
 		recipe.setIngredient('E', ENDER_CRYSTAL);
 
 		recipe = customRecipe(TRASHCAN, type, "CTC", "SLS", "SSS");
@@ -2101,37 +2114,44 @@ public class RecipeInit {
 		recipe = customRecipe(STORAGE_CASING, 4, type, "PTP", "TMT", "PTP");
 		recipe.setIngredient('P', PLASTIC_SHEET);
 		recipe.setIngredient('T', TIN_INGOT);
-		recipe.setIngredient('M', IMPROVED_MACHINE_CASING);
+		recipe.setIngredient('M', ADVANCED_MACHINE_CASING);
 
-		recipe = customRecipe(STORAGE_CONNECTOR, type, "IYI", "YCY", "IYI");
-		recipe.setIngredient('Y', Material.YELLOW_DYE);
+		recipe = customRecipe(STORAGE_CONNECTOR, 4, type, "IBI", "BCB", "IBI");
+		recipe.setIngredient('B', Material.BLUE_DYE);
 		recipe.setIngredient('I', TIN_INGOT);
 		recipe.setIngredient('C', STORAGE_CASING);
+		
+		recipe = customRecipe(STORAGE_MAIN_COMPONENT, type, "IHI", "BCB", "ISI");
+		recipe.setIngredient('B', Material.BROWN_DYE);
+		recipe.setIngredient('H', Material.CHEST);
+		recipe.setIngredient('I', IINGOT_3);
+		recipe.setIngredient('S', BATTERY_GREEN);
+		recipe.setIngredient('C', STORAGE_CONNECTOR);
 
-		recipe = customRecipe(STORAGE_IMPORTER, type, "IHI", "GCG", "IGI");
+		recipe = customRecipe(STORAGE_IMPORTER, 2, type, "IHI", "GCG", "IGI");
 		recipe.setIngredient('G', Material.GREEN_DYE);
 		recipe.setIngredient('I', TIN_INGOT);
 		recipe.setIngredient('H', Material.HOPPER);
-		recipe.setIngredient('C', STORAGE_CASING);
+		recipe.setIngredient('C', STORAGE_CONNECTOR);
 
-		recipe = customRecipe(STORAGE_EXPORTER, type, "IRI", "RCR", "IHI");
+		recipe = customRecipe(STORAGE_EXPORTER, 2, type, "IRI", "RCR", "IHI");
 		recipe.setIngredient('R', Material.RED_DYE);
 		recipe.setIngredient('I', TIN_INGOT);
 		recipe.setIngredient('H', Material.HOPPER);
-		recipe.setIngredient('C', STORAGE_CASING);
+		recipe.setIngredient('C', STORAGE_CONNECTOR);
 
-		recipe = customRecipe(STORAGE_READER, type, "IOI", "LCR", "IOI");
+		recipe = customRecipe(STORAGE_READER, 2, type, "IOI", "LCR", "IOI");
 		recipe.setIngredient('O', Material.ORANGE_DYE);
 		recipe.setIngredient('I', TIN_INGOT);
 		recipe.setIngredient('R', Material.COMPARATOR);
 		recipe.setIngredient('L', Material.REDSTONE);
-		recipe.setIngredient('C', STORAGE_CASING);
+		recipe.setIngredient('C', STORAGE_CONNECTOR);
 
 		recipe = customRecipe(ENDER_ACCESSOR, type, "EPE", "BCB", "EYE");
 		recipe.setIngredient('B', Material.BLAZE_ROD);
 		recipe.setIngredient('E', ENDER_STEEL);
 		recipe.setIngredient('P', Material.ENDER_CHEST);
-		recipe.setIngredient('C', STORAGE_CASING);
+		recipe.setIngredient('C', STORAGE_CONNECTOR);
 		recipe.setIngredient('Y', ENDER_CRYSTAL);
 
 		recipe = customRecipe(STORAGE_MONITOR, type, "APA", "NME", "BCB");
@@ -2206,7 +2226,7 @@ public class RecipeInit {
 		recipe.setIngredient('O', Material.OBSIDIAN);
 		recipe.setIngredient('B', Material.BLAZE_ROD);
 		recipe.setIngredient('D', Material.GRAY_DYE);
-		recipe.setIngredient('C', Material.BUCKET);
+		recipe.setIngredient('C', BASIC_TANK);
 		recipe.setIngredient('E', ENDER_CRYSTAL);
 
 		recipe = customRecipe(WASTE_BARREL, type, "CTC", "SLS", "SSS");
@@ -2226,11 +2246,17 @@ public class RecipeInit {
 		recipe.setIngredient('L', LITHIUM_DUST);
 		recipe.setIngredient('S', SILVER_DUST);
 
+		recipe = customRecipe(BATTERY_ORANGE, type, "PBP", "CDC", "PBP");
+		recipe.setIngredient('P', PLASTIC_SHEET);
+		recipe.setIngredient('C', Material.ORANGE_DYE);
+		recipe.setIngredient('D', SULFUR);
+		recipe.setIngredient('B', BATTERY_RED);
+
 		recipe = customRecipe(BATTERY_YELLOW, type, "PBP", "CDC", "PBP");
 		recipe.setIngredient('P', PLASTIC_SHEET);
 		recipe.setIngredient('C', Material.YELLOW_DYE);
 		recipe.setIngredient('D', SULFUR);
-		recipe.setIngredient('B', BATTERY_RED);
+		recipe.setIngredient('B', BATTERY_ORANGE);
 
 		recipe = customRecipe(BATTERY_GREEN, type, "PBP", "CDC", "PBP");
 		recipe.setIngredient('P', PLASTIC_SHEET);
@@ -2244,11 +2270,17 @@ public class RecipeInit {
 		recipe.setIngredient('D', SULFUR);
 		recipe.setIngredient('B', BATTERY_GREEN);
 
+		recipe = customRecipe(BATTERY_BLUE, type, "PBP", "CDC", "PBP");
+		recipe.setIngredient('P', PLASTIC_SHEET);
+		recipe.setIngredient('C', Material.BLUE_DYE);
+		recipe.setIngredient('D', SULFUR);
+		recipe.setIngredient('B', BATTERY_CYAN);
+
 		recipe = customRecipe(BATTERY_PURPLE, type, "PBP", "CDC", "PBP");
 		recipe.setIngredient('P', PLASTIC_SHEET);
 		recipe.setIngredient('C', Material.PURPLE_DYE);
 		recipe.setIngredient('D', SULFUR);
-		recipe.setIngredient('B', BATTERY_CYAN);
+		recipe.setIngredient('B', BATTERY_BLUE);
 
 		recipe = customRecipe(BATTERY_BLACK, type, "PBP", "CDC", "PBP");
 		recipe.setIngredient('P', PLASTIC_SHEET);
@@ -2331,7 +2363,7 @@ public class RecipeInit {
 		recipe.setIngredient('B', Material.ORANGE_TULIP);
 		recipe.setIngredient('C', Material.DANDELION);
 		recipe.setIngredient('D', Material.SPORE_BLOSSOM);
-		recipe.setIngredient('E', Material.WITHER_ROSE);
+		recipe.setIngredient('E', new RecipeChoice.MaterialChoice(Material.OPEN_EYEBLOSSOM, Material.CLOSED_EYEBLOSSOM, Material.WITHER_ROSE));
 		recipe.setIngredient('F', new RecipeChoice.MaterialChoice(Material.LILY_OF_THE_VALLEY, Material.AZURE_BLUET, Material.WHITE_TULIP, Material.OXEYE_DAISY));
 		recipe.setIngredient('G', new RecipeChoice.MaterialChoice(Material.ALLIUM, Material.PINK_TULIP));
 		recipe.setIngredient('H', Material.CORNFLOWER);
@@ -2346,7 +2378,7 @@ public class RecipeInit {
 		recipe.setIngredient('F', Material.OAK_SAPLING);
 		recipe.setIngredient('G', Material.JUNGLE_SAPLING);
 		recipe.setIngredient('H', Material.DARK_OAK_SAPLING);
-		recipe.setIngredient('I', Material.BAMBOO);
+		recipe.setIngredient('I', Material.PALE_OAK_SAPLING);
 
 		recipe = shapelessRecipe(FOOD_BUNDLE, type, "ABC", "DEF", "GHI");
 		recipe.setIngredient('A', new RecipeChoice.MaterialChoice(Material.GLOW_BERRIES, Material.SWEET_BERRIES));
@@ -2482,10 +2514,8 @@ public class RecipeInit {
 		recipe.setIngredient('8', Material.FLINT);
 		recipe.setIngredient('C', OCTUPLE_COMPRESSED_COBBLESTONE);
 
-		recipe = customRecipe(COMPACT, type, "GFD", "PNP", "DFG");
-		recipe.setIngredient('G', Material.GUNPOWDER);
-		recipe.setIngredient('D', Material.GRAY_DYE);
-		recipe.setIngredient('F', Material.FIREWORK_STAR);
+		recipe = customRecipe(COMPACT, type, "BPB", "PNP", "BPB");
+		recipe.setIngredient('B', BEDROCK_DUST);
 		recipe.setIngredient('P', COMPACT_PEBBLE);
 		recipe.setIngredient('N', STICKY_GOO);
 

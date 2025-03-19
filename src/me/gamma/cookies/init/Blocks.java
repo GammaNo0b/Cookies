@@ -34,6 +34,7 @@ import me.gamma.cookies.object.block.generator.SolarPanel;
 import me.gamma.cookies.object.block.machine.AbstractCraftingMachine;
 import me.gamma.cookies.object.block.machine.AbstractMachine;
 import me.gamma.cookies.object.block.machine.AerialExtractor;
+import me.gamma.cookies.object.block.machine.BedrockBreaker;
 import me.gamma.cookies.object.block.machine.BioPress;
 import me.gamma.cookies.object.block.machine.BlockBreaker;
 import me.gamma.cookies.object.block.machine.BlockGenerator;
@@ -78,6 +79,7 @@ import me.gamma.cookies.object.block.network.item.StorageConnector;
 import me.gamma.cookies.object.block.network.item.StorageCrateBlock;
 import me.gamma.cookies.object.block.network.item.StorageExporter;
 import me.gamma.cookies.object.block.network.item.StorageImporter;
+import me.gamma.cookies.object.block.network.item.StorageMainComponent;
 import me.gamma.cookies.object.block.network.item.StorageMonitor;
 import me.gamma.cookies.object.block.network.item.StorageReader;
 import me.gamma.cookies.object.block.network.item.Trashcan;
@@ -147,6 +149,7 @@ public class Blocks {
 	public static MobGrinder MOB_GRINDER;
 	public static BlockBreaker BLOCK_BREAKER;
 	public static Quarry QUARRY;
+	public static BedrockBreaker BEDROCK_BREAKER;
 	public static VoidOreMiner BASIC_VOID_ORE_MINER;
 	public static VoidOreMiner ADVANCED_VOID_ORE_MINER;
 	public static VoidOreMiner IMPROVED_VOID_ORE_MINER;
@@ -265,6 +268,7 @@ public class Blocks {
 	public static EnderChest ENDER_CHEST;
 	public static Trashcan TRASHCAN;
 	public static StorageConnector STORAGE_CONNECTOR;
+	public static StorageMainComponent STORAGE_MAIN_COMPONENT;
 	public static StorageImporter STORAGE_IMPORTER;
 	public static StorageExporter STORAGE_EXPORTER;
 	public static StorageReader STORAGE_READER;
@@ -282,9 +286,11 @@ public class Blocks {
 
 	// Energy
 	public static Battery BATTERY_RED;
+	public static Battery BATTERY_ORANGE;
 	public static Battery BATTERY_YELLOW;
 	public static Battery BATTERY_GREEN;
 	public static Battery BATTERY_CYAN;
+	public static Battery BATTERY_BLUE;
 	public static Battery BATTERY_PURPLE;
 	public static Battery BATTERY_BLACK;
 	public static LED LED_PURPLE;
@@ -397,6 +403,7 @@ public class Blocks {
 		PERFECTED_FARMER = BLOCKS.register(new Farmer(MachineTier.PERFECTED));
 		MOB_GRINDER = BLOCKS.register(new MobGrinder());
 		BLOCK_BREAKER = BLOCKS.register(new BlockBreaker());
+		BEDROCK_BREAKER = BLOCKS.register(new BedrockBreaker());
 		QUARRY = BLOCKS.register(new Quarry());
 		BASIC_VOID_ORE_MINER = BLOCKS.register(new VoidOreMiner(MachineTier.BASIC));
 		ADVANCED_VOID_ORE_MINER = BLOCKS.register(new VoidOreMiner(MachineTier.ADVANCED));
@@ -515,6 +522,7 @@ public class Blocks {
 		ENDER_CHEST = BLOCKS.register(new EnderChest());
 		TRASHCAN = BLOCKS.register(new Trashcan());
 		STORAGE_CONNECTOR = BLOCKS.register(new StorageConnector());
+		STORAGE_MAIN_COMPONENT = BLOCKS.register(new StorageMainComponent());
 		STORAGE_IMPORTER = BLOCKS.register(new StorageImporter());
 		STORAGE_EXPORTER = BLOCKS.register(new StorageExporter());
 		STORAGE_READER = BLOCKS.register(new StorageReader());
@@ -532,11 +540,13 @@ public class Blocks {
 
 		// Energy
 		BATTERY_RED = BLOCKS.register(new Battery("battery_red", HeadTextures.BATTERY_RED, 3, 1000));
-		BATTERY_YELLOW = BLOCKS.register(new Battery("battery_yellow", HeadTextures.BATTERY_YELLOW, 5, 4000));
-		BATTERY_GREEN = BLOCKS.register(new Battery("battery_green", HeadTextures.BATTERY_GREEN, 8, 16000));
-		BATTERY_CYAN = BLOCKS.register(new Battery("battery_cyan", HeadTextures.BATTERY_CYAN, 13, 64000));
-		BATTERY_PURPLE = BLOCKS.register(new Battery("battery_purple", HeadTextures.BATTERY_PURPLE, 21, 256000));
-		BATTERY_BLACK = BLOCKS.register(new Battery("battery_black", HeadTextures.BATTERY_BLACK, 34, 1024000));
+		BATTERY_ORANGE = BLOCKS.register(new Battery("battery_orange", HeadTextures.BATTERY_ORANGE, 5, 4000));
+		BATTERY_YELLOW = BLOCKS.register(new Battery("battery_yellow", HeadTextures.BATTERY_YELLOW, 8, 16000));
+		BATTERY_GREEN = BLOCKS.register(new Battery("battery_green", HeadTextures.BATTERY_GREEN, 13, 64000));
+		BATTERY_CYAN = BLOCKS.register(new Battery("battery_cyan", HeadTextures.BATTERY_CYAN, 21, 256000));
+		BATTERY_BLUE = BLOCKS.register(new Battery("battery_blue", HeadTextures.BATTERY_BLUE, 34, 1024000));
+		BATTERY_PURPLE = BLOCKS.register(new Battery("battery_purple", HeadTextures.BATTERY_PURPLE, 55, 4096000));
+		BATTERY_BLACK = BLOCKS.register(new Battery("battery_black", HeadTextures.BATTERY_BLACK, 89, 16384000));
 		LED_PURPLE = BLOCKS.register(new LED("led_purple", HeadTextures.LED_PURPLE));
 		LED_BLUE = BLOCKS.register(new LED("led_blue", HeadTextures.LED_BLUE));
 		LED_CYAN = BLOCKS.register(new LED("led_cyan", HeadTextures.LED_CYAN));

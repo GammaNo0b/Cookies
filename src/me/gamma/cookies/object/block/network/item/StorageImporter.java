@@ -21,7 +21,6 @@ import me.gamma.cookies.object.Filter;
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.AbstractCustomBlock;
 import me.gamma.cookies.object.block.AdvancedFilterBlock;
-import me.gamma.cookies.object.block.BlockFaceConfigurable;
 import me.gamma.cookies.object.block.Cartesian;
 import me.gamma.cookies.object.gui.util.ItemFilterGui;
 import me.gamma.cookies.object.item.ItemFilter;
@@ -34,7 +33,6 @@ import me.gamma.cookies.object.property.IntegerProperty;
 import me.gamma.cookies.object.property.Properties;
 import me.gamma.cookies.object.property.PropertyBuilder;
 import me.gamma.cookies.object.property.PropertyCompound;
-import me.gamma.cookies.util.BlockUtils;
 
 
 
@@ -43,7 +41,6 @@ public class StorageImporter extends AbstractCustomBlock implements NetworkInter
 	public static final PropertyCompound<ItemFilter> ITEM_FILTER = Properties.createItemFilterProperty();
 	public static final IntegerProperty PRIORITY = Properties.PRIORITY;
 	public static final ByteProperty CHANNEL = Properties.CHANNEL;
-	public static final ByteProperty BLOCK_FACE_ACCESS_FLAGS = new ByteProperty("blockfaceaccessflags");
 
 	@Override
 	public int getPriority(TileState block) {
@@ -73,25 +70,17 @@ public class StorageImporter extends AbstractCustomBlock implements NetworkInter
 
 	@Override
 	public List<Provider<ItemStack>> getInputs(TileState block) {
-		List<Provider<ItemStack>> inputs = new ArrayList<>();
-		byte flags = BLOCK_FACE_ACCESS_FLAGS.fetch(block);
-		for(BlockFace face : BlockUtils.cartesian) {
-			if(!BlockFaceConfigurable.isFaceEnabled(flags, block, face))
-				continue;
+		BlockFace facing = this.getFacing(block);
+		BlockState state = block.getBlock().getRelative(facing.getOppositeFace()).getState();
 
-			BlockState state = block.getBlock().getRelative(face).getState();
+		if(state instanceof TileState tile)
+			if(Blocks.getCustomBlockFromBlock(tile) instanceof ItemSupplier supplier)
+				return supplier.getItemOutputs(tile, facing);
 
-			if(state instanceof TileState tile) {
-				if(Blocks.getCustomBlockFromBlock(tile) instanceof ItemSupplier supplier) {
-					inputs.addAll(supplier.getItemOutputs(tile, face.getOppositeFace()));
-					continue;
-				}
-			}
+		if(state instanceof BlockInventoryHolder holder)
+			return ItemProvider.fromInventory(holder.getInventory());
 
-			if(state instanceof BlockInventoryHolder holder)
-				inputs.addAll(ItemProvider.fromInventory(holder.getInventory()));
-		}
-		return inputs;
+		return List.of();
 	}
 
 
@@ -152,7 +141,7 @@ public class StorageImporter extends AbstractCustomBlock implements NetworkInter
 
 	@Override
 	public PropertyBuilder buildBlockItemProperties(PropertyBuilder builder) {
-		return super.buildBlockItemProperties(builder).add(ITEM_FILTER, new ItemFilter()).add(PRIORITY).add(CHANNEL).add(BLOCK_FACE_ACCESS_FLAGS, (byte) 0x3F);
+		return super.buildBlockItemProperties(builder).add(ITEM_FILTER, new ItemFilter()).add(PRIORITY).add(CHANNEL);
 	}
 
 
@@ -182,8 +171,8 @@ public class StorageImporter extends AbstractCustomBlock implements NetworkInter
 
 	@Override
 	public boolean onBlockRightClick(Player player, TileState block, ItemStack stack, PlayerInteractEvent event) {
-		if(!player.isSneaking()) {
-			ItemFilterGui.open(player, block, this, BLOCK_FACE_ACCESS_FLAGS, Material.GREEN_STAINED_GLASS_PANE);
+		if(!player.isSneaking() && this.canAccess(block, player.getUniqueId())) {
+			ItemFilterGui.open(player, block, this, null, Material.GREEN_STAINED_GLASS_PANE);
 			return true;
 		}
 		return false;

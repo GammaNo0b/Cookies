@@ -210,6 +210,7 @@ public class Items {
 	public static CustomItem COMPRESSED_CARBON;
 	public static CustomItem CARBON_CHUNK;
 	public static CustomItem CARBONADO;
+	public static CustomItem BEDROCK_DUST;
 	public static CustomItem STICKY_BALL;
 	public static CustomItem RUBBER;
 	public static CustomItem RUBBER_SHEETS;
@@ -341,6 +342,7 @@ public class Items {
 	public static MachineItem MOB_GRINDER;
 	public static MachineItem BLOCK_BREAKER;
 	public static MachineItem QUARRY;
+	public static MachineItem BEDROCK_BREAKER;
 	public static MachineItem BASIC_VOID_ORE_MINER;
 	public static MachineItem ADVANCED_VOID_ORE_MINER;
 	public static MachineItem IMPROVED_VOID_ORE_MINER;
@@ -454,6 +456,7 @@ public class Items {
 	public static CustomBlockItem TRASHCAN;
 	public static CustomItem STORAGE_CASING;
 	public static CustomBlockItem STORAGE_CONNECTOR;
+	public static CustomBlockItem STORAGE_MAIN_COMPONENT;
 	public static CustomBlockItem STORAGE_IMPORTER;
 	public static CustomBlockItem STORAGE_EXPORTER;
 	public static CustomBlockItem STORAGE_READER;
@@ -477,9 +480,11 @@ public class Items {
 
 	// Energy
 	public static BatteryItem BATTERY_RED;
+	public static BatteryItem BATTERY_ORANGE;
 	public static BatteryItem BATTERY_YELLOW;
 	public static BatteryItem BATTERY_GREEN;
 	public static BatteryItem BATTERY_CYAN;
+	public static BatteryItem BATTERY_BLUE;
 	public static BatteryItem BATTERY_PURPLE;
 	public static BatteryItem BATTERY_BLACK;
 	public static CustomBlockItem LED_PURPLE;
@@ -691,6 +696,7 @@ public class Items {
 		COMPRESSED_CARBON = ITEMS.register(new CustomItem("§fCompressed Carbon", HeadTextures.COMPRESSED_CARBON));
 		CARBON_CHUNK = ITEMS.register(new CustomItem("§fCarbon Chunk", HeadTextures.CARBON_CHUNK));
 		CARBONADO = ITEMS.register(new CustomItem("§fCarbonado", HeadTextures.CARBONADO));
+		BEDROCK_DUST = ITEMS.register(new CustomItem("§eBedrock Dust", Material.GUNPOWDER));
 		STICKY_BALL = ITEMS.register(new CustomItem("§fSticky Ball", HeadTextures.STICKY_BALL));
 		RUBBER = ITEMS.register(new CustomItem("§fRubber", HeadTextures.RUBBER));
 		RUBBER_SHEETS = ITEMS.register(new CustomItem("§fRubber Sheets", Material.DRIED_KELP));
@@ -822,6 +828,7 @@ public class Items {
 		MOB_GRINDER = ITEMS.register(new MachineItem(Blocks.MOB_GRINDER));
 		BLOCK_BREAKER = ITEMS.register(new MachineItem(Blocks.BLOCK_BREAKER).setDescription("§7Breaks the block in front."));
 		QUARRY = ITEMS.register(new MachineItem(Blocks.QUARRY));
+		BEDROCK_BREAKER = ITEMS.register(new MachineItem(Blocks.BEDROCK_BREAKER));
 		BASIC_VOID_ORE_MINER = ITEMS.register(new MachineItem(Blocks.BASIC_VOID_ORE_MINER));
 		ADVANCED_VOID_ORE_MINER = ITEMS.register(new MachineItem(Blocks.ADVANCED_VOID_ORE_MINER));
 		IMPROVED_VOID_ORE_MINER = ITEMS.register(new MachineItem(Blocks.IMPROVED_VOID_ORE_MINER));
@@ -935,11 +942,12 @@ public class Items {
 		TRASHCAN = ITEMS.register(new CustomBlockItem(Blocks.TRASHCAN, "§fTrashcan"));
 		STORAGE_CASING = ITEMS.register(new CustomItem("§fStorage Casing", HeadTextures.STORAGE_CASING));
 		STORAGE_CONNECTOR = ITEMS.register(new CustomBlockItem(Blocks.STORAGE_CONNECTOR, "§fStorage Connector"));
+		STORAGE_MAIN_COMPONENT = ITEMS.register(new CustomBlockItem(Blocks.STORAGE_MAIN_COMPONENT, "§fStorage Main Component").setDescription("§7Required for each network."));
 		STORAGE_IMPORTER = ITEMS.register(new CustomBlockItem(Blocks.STORAGE_IMPORTER, "§eStorage Importer").setDescription("§7Import items from adjacent inventory holders and storage blocks."));
 		STORAGE_EXPORTER = ITEMS.register(new CustomBlockItem(Blocks.STORAGE_EXPORTER, "§eStorage Exporter").setDescription("§7Exports items to adjacent inventory holders and storage blocks."));
 		STORAGE_READER = ITEMS.register(new CustomBlockItem(Blocks.STORAGE_READER, "§eStorage Reader").setDescription("§7Emits an redstone signal if the filter matches any item in the facing storage."));
 		ENDER_ACCESSOR = ITEMS.register(new CustomBlockItem(Blocks.ENDER_ACCESSOR, "§bEnder Accessor").setDescription("§7Acts as a port to the enderchest of the owner of this block."));
-		STORAGE_MONITOR = ITEMS.register(new CustomBlockItem(Blocks.STORAGE_MONITOR, "§bStorage Monitor").setDescription("§7The main component of item networks.", "§7Lists all items in the network and lets the user interact with them."));
+		STORAGE_MONITOR = ITEMS.register(new CustomBlockItem(Blocks.STORAGE_MONITOR, "§bStorage Monitor").setDescription("§7Lists all items in the network and lets the user interact with them."));
 		NONSTACKABLE_FILTER = ITEMS.register(ItemFilterItem.of("§fNon-Stackable Filter", "§7Filters items that cannot be stacked.", m -> m.getMaxStackSize() == 1));
 		DAMAGEABLE_FILTER = ITEMS.register(ItemFilterItem.of("§fDamageable Filter", "§7Filters items that can be damaged.", m -> m.getMaxDurability() > 0));
 		NBT_FILTER = ITEMS.register(new ItemFilterItem("§fNBT Filter", "§7Filters items that store currently nbt data.", stack -> MinecraftItemHelper.getNumberComponents(stack) > 0));
@@ -958,9 +966,11 @@ public class Items {
 
 		// Energy
 		BATTERY_RED = ITEMS.register(new BatteryItem(Blocks.BATTERY_RED, "§fRed Battery"));
+		BATTERY_ORANGE = ITEMS.register(new BatteryItem(Blocks.BATTERY_ORANGE, "§fOrange Battery"));
 		BATTERY_YELLOW = ITEMS.register(new BatteryItem(Blocks.BATTERY_YELLOW, "§fYellow Battery"));
 		BATTERY_GREEN = ITEMS.register(new BatteryItem(Blocks.BATTERY_GREEN, "§fGreen Battery"));
 		BATTERY_CYAN = ITEMS.register(new BatteryItem(Blocks.BATTERY_CYAN, "§fCyan Battery"));
+		BATTERY_BLUE = ITEMS.register(new BatteryItem(Blocks.BATTERY_BLUE, "§fBlue Battery"));
 		BATTERY_PURPLE = ITEMS.register(new BatteryItem(Blocks.BATTERY_PURPLE, "§fPurple Battery"));
 		BATTERY_BLACK = ITEMS.register(new BatteryItem(Blocks.BATTERY_BLACK, "§fBlack Battery"));
 		LED_PURPLE = ITEMS.register(new CustomBlockItem(Blocks.LED_PURPLE, "§5LED"));
