@@ -2,33 +2,30 @@
 package me.gamma.cookies.util;
 
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.TileState;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.Cable;
-import me.gamma.cookies.object.Provider;
-import me.gamma.cookies.object.block.AbstractCustomBlock;
+import me.gamma.cookies.object.item.AbstractCustomItem;
+import me.gamma.cookies.object.item.CustomItemData;
 import me.gamma.cookies.object.item.ItemConsumer;
 import me.gamma.cookies.object.property.AbstractProperty;
-import me.gamma.cookies.object.property.Properties;
 import me.gamma.cookies.util.core.MinecraftItemHelper;
 
 
@@ -59,13 +56,46 @@ public class ItemUtils {
 
 
 	/**
+	 * Returns the item rarity of the given item.
+	 * 
+	 * @param stack the item stack
+	 * @return the rarity
+	 */
+	public static ItemRarity getItemRarity(ItemStack stack) {
+		if(ItemUtils.isEmpty(stack))
+			return null;
+
+		ItemMeta meta = stack.getItemMeta();
+		if(meta == null)
+			return ItemRarity.COMMON;
+
+		return meta.getRarity();
+	}
+
+
+	/**
+	 * Returns the color of the rarity of the given item.
+	 * 
+	 * @param stack the item stack
+	 * @return the color
+	 */
+	public static Color getItemRarityColor(ItemStack stack) {
+		ItemRarity rarity = getItemRarity(stack);
+		if(rarity == null)
+			return null;
+
+		return MinecraftItemHelper.getItemRarityColor(rarity);
+	}
+
+
+	/**
 	 * Checks if the given stack is a custom item from this plugin.
 	 * 
 	 * @param stack the stack to be checked
 	 * @return if the stack is custom
 	 */
 	public static boolean isCustomItem(ItemStack stack) {
-		return !isEmpty(stack) && Properties.IDENTIFIER.isPropertyOf(stack.getItemMeta());
+		return AbstractCustomItem.getCustomData(stack) != null;
 	}
 
 
@@ -97,6 +127,26 @@ public class ItemUtils {
 			return;
 
 		stack.setAmount(stack.getAmount() + amount);
+	}
+
+
+	/**
+	 * Removes amount of the given stack and returns it as a new one.
+	 * 
+	 * @param stack  the source stack
+	 * @param amount the amount to remove
+	 * @return the removed item stack
+	 */
+	public static ItemStack removeItem(ItemStack stack, int amount) {
+		if(ItemUtils.isEmpty(stack))
+			return null;
+
+		int remove = Math.min(amount, stack.getAmount());
+		ItemStack removed = stack.clone();
+		removed.setAmount(remove);
+		stack.setAmount(stack.getAmount() - remove);
+
+		return removed;
 	}
 
 
@@ -191,28 +241,6 @@ public class ItemUtils {
 
 
 	/**
-	 * Returns the material that remains after one crafting operation.
-	 * 
-	 * @param type the crafting material
-	 * @return the remaining material
-	 */
-	public static Material getCraftingRemainingItem(Material type) {
-		switch (type) {
-			case WATER_BUCKET:
-			case LAVA_BUCKET:
-			case MILK_BUCKET:
-				return Material.BUCKET;
-			case DRAGON_BREATH:
-			case HONEY_BOTTLE:
-			case POTION:
-				return Material.GLASS_BOTTLE;
-			default:
-				return null;
-		}
-	}
-
-
-	/**
 	 * Checks if the two stacks are from the same type.
 	 * 
 	 * @param stack1 first stack
@@ -230,13 +258,16 @@ public class ItemUtils {
 		if(stack1.getType() != stack2.getType())
 			return false;
 
-		final boolean custom1 = isCustomItem(stack1);
-		final boolean custom2 = isCustomItem(stack2);
+		final CustomItemData custom1 = AbstractCustomItem.getCustomData(stack1);
+		final CustomItemData custom2 = AbstractCustomItem.getCustomData(stack2);
 
-		if(custom1 != custom2)
+		if(custom1 == null)
+			return custom2 == null;
+
+		if(custom2 == null)
 			return false;
 
-		return !custom1 || Properties.IDENTIFIER.isSame(stack1.getItemMeta(), stack2.getItemMeta());
+		return AbstractCustomItem.getIdentifier(custom1).equals(AbstractCustomItem.getIdentifier(custom2));
 	}
 
 
@@ -353,17 +384,6 @@ public class ItemUtils {
 
 
 	/**
-	 * Returns the chance the given material increases the composter level. Returns -1 if the material cannot be composted.
-	 * 
-	 * @param material the material
-	 * @return the composting chance
-	 */
-	public static float getCompostChance(Material material) {
-		return MinecraftItemHelper.getCompostChance(material);
-	}
-
-
-	/**
 	 * Subtracts the amount of the subtrahend from the amount of the minuend if the stacks are similar.
 	 * 
 	 * @param minuend    the stack from that items should be subtracted
@@ -431,34 +451,10 @@ public class ItemUtils {
 		for(BlockFace face : directions) {
 			if(face != null) {
 				Block relative = block.getRelative(face);
-				BlockState state = relative.getState();
-				boolean isCustom = false;
-				if(state instanceof TileState) {
-					TileState tile = (TileState) state;
-					AbstractCustomBlock custom = Blocks.getCustomBlockFromBlock(tile);
-					if(custom != null) {
-						isCustom = true;
-						if(custom instanceof ItemConsumer consumer) {
-							int amount = stack.getAmount();
-							for(Provider<ItemStack> provider : consumer.getItemInputs(tile)) {
-								amount = Cable.distribute(Cable.TransferMode.ORDERED, stack, amount, Arrays.asList(provider));
-								if(amount <= 0)
-									return null;
-							}
-							stack.setAmount(amount);
-						}
-					}
-				}
-				if(!isCustom && relative.getState() instanceof BlockInventoryHolder holder) {
-					Map<Integer, ItemStack> rest = holder.getInventory().addItem(stack);
-					if(rest.isEmpty())
-						return null;
-					for(ItemStack restStack : rest.values()) {
-						if(restStack != null) {
-							stack = restStack;
-							continue;
-						}
-					}
+				ItemConsumer consumer = ItemConsumer.getItemConsumer(relative);
+				if(consumer != null) {
+					int amount = Cable.distribute(Cable.TransferMode.ORDERED, stack, stack.getAmount(), consumer.getItemInputs());
+					stack.setAmount(amount);
 				}
 			}
 		}

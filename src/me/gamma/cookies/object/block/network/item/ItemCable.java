@@ -83,8 +83,8 @@ public interface ItemCable {
 				if(!(state instanceof TileState tile))
 					continue;
 
-				ItemSupplier supplier = ItemSupplier.getItemSupplier(tile);
-				ItemConsumer consumer = ItemConsumer.getItemConsumer(tile);
+				ItemSupplier supplier = ItemSupplier.getItemSupplier(state.getBlock());
+				ItemConsumer consumer = ItemConsumer.getItemConsumer(state.getBlock());
 				if(supplier != null) {
 					if(supplier instanceof ItemStorage storage) {
 						storages.put(storage, tile);
@@ -113,11 +113,11 @@ public interface ItemCable {
 	 */
 	default void transmitItems(TileState block, Map<ItemSupplier, TileState> supplier, Map<ItemConsumer, TileState> consumer, Map<ItemStorage, TileState> storage) {
 		LinkedList<Provider<ItemStack>> supplierlist = new LinkedList<>();
-		supplier.forEach((sup, state) -> supplierlist.addAll(sup.getItemOutputs(state)));
+		supplier.forEach((sup, _) -> supplierlist.addAll(sup.getItemOutputs()));
 		LinkedList<Provider<ItemStack>> consumerlist = new LinkedList<>();
-		consumer.forEach((con, state) -> consumerlist.addAll(con.getItemInputs(state)));
+		consumer.forEach((con, _) -> consumerlist.addAll(con.getItemInputs()));
 		LinkedList<Provider<ItemStack>> storagelist = new LinkedList<>();
-		storage.forEach((sto, state) -> storagelist.addAll(sto.getItemProviders(state)));
+		storage.forEach((sto, _) -> storagelist.addAll(sto.getItemProviders()));
 		Cable.transfer(this.getTransferMode(block), this.getBuffer(block), this.getFilter(block), this.getTransferRate(block), supplierlist, consumerlist, storagelist);
 	}
 

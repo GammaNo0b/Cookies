@@ -37,7 +37,7 @@ public class CustomItemListener implements Listener {
 	}
 
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
 	public void onBlockBreak(BlockBreakEvent event) {
 		ItemStack stack = event.getPlayer().getInventory().getItemInMainHand();
 		AbstractCustomItem item = Items.getCustomItemFromStack(stack);

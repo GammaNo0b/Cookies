@@ -12,6 +12,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import me.gamma.cookies.util.collection.PersistentDataObject;
+
 
 
 public class BerryPants extends AbstractCustomArmorItem {
@@ -41,7 +43,7 @@ public class BerryPants extends AbstractCustomArmorItem {
 
 
 	@Override
-	protected void editItemMeta(ItemMeta meta) {
+	protected void editItemMeta(ItemMeta meta, PersistentDataObject data) {
 		((LeatherArmorMeta) meta).setColor(Color.fromRGB(128, 8, 8));
 	}
 

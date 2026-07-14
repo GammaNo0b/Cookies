@@ -38,16 +38,7 @@ public class AngelBlockItem extends AbstractCustomItem {
 	public boolean onAirRightClick(Player player, ItemStack stack, PlayerInteractEvent event) {
 		Block block = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(4)).toLocation(player.getWorld()).getBlock();
 		if(BlockUtils.isReplaceable(block.getState()))
-			Blocks.ANGEL_BLOCK.place(block);
-		return true;
-	}
-
-
-	@Override
-	public boolean onBlockRightClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {
-		Block target = BlockUtils.getBlockToPlace(block, event.getBlockFace());
-		if(target != null)
-			Blocks.ANGEL_BLOCK.place(player, stack, target);
+			Blocks.ANGEL_BLOCK.placeBlock(block);
 		return true;
 	}
 

@@ -14,6 +14,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import me.gamma.cookies.Cookies;
 import me.gamma.cookies.object.WorldPersistentDataStorage;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 import me.gamma.cookies.util.core.MinecraftPersistentDataHelper;
 import me.gamma.cookies.util.math.IDGen;
 
@@ -101,9 +102,9 @@ public class HologramManager implements WorldPersistentDataStorage {
 
 
 	@Override
-	public void load(World world, PersistentDataContainer container) {
+	public void load(World world, PersistentDataObject object) {
 		this.idgen.reset();
-		List<PersistentDataContainer> containers = container.getOrDefault(new NamespacedKey(Cookies.INSTANCE, TAG_HOLOGRAMS), PersistentDataType.LIST.dataContainers(), new ArrayList<>());
+		List<PersistentDataContainer> containers = object.getContainer().getOrDefault(new NamespacedKey(Cookies.INSTANCE, TAG_HOLOGRAMS), PersistentDataType.LIST.dataContainers(), new ArrayList<>());
 		for(PersistentDataContainer c : containers) {
 			int id = this.idgen.generate();
 			Hologram hologram = Hologram.load(id, world, c);
@@ -116,17 +117,17 @@ public class HologramManager implements WorldPersistentDataStorage {
 
 
 	@Override
-	public void save(World world, PersistentDataContainer container) {
+	public void save(World world, PersistentDataObject object) {
 		List<PersistentDataContainer> containers = new ArrayList<>(this.holograms.size());
 		for(Hologram hologram : this.holograms.values()) {
 			if(!hologram.isIn(world))
 				continue;
 
-			PersistentDataContainer c = MinecraftPersistentDataHelper.createNewPersistentDataContainer(container);
+			PersistentDataContainer c = MinecraftPersistentDataHelper.createNewPersistentDataContainer(object.getContainer());
 			hologram.save(c);
 			containers.add(c);
 		}
-		container.set(new NamespacedKey(Cookies.INSTANCE, TAG_HOLOGRAMS), PersistentDataType.LIST.dataContainers(), containers);
+		object.getContainer().set(new NamespacedKey(Cookies.INSTANCE, TAG_HOLOGRAMS), PersistentDataType.LIST.dataContainers(), containers);
 	}
 
 }

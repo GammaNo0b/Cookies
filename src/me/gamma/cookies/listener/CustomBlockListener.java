@@ -4,10 +4,9 @@ package me.gamma.cookies.listener;
 
 import java.util.Iterator;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,17 +14,20 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.inventory.HopperInventorySearchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.block.AbstractCustomBlock;
-import me.gamma.cookies.util.BlockUtils;
+import me.gamma.cookies.object.block.CustomBlockStorage;
 import me.gamma.cookies.util.ItemUtils;
 
 
@@ -50,16 +52,12 @@ public class CustomBlockListener implements Listener {
 			return;
 
 		Block placed = event.getBlockPlaced();
-		if(!(placed.getState() instanceof TileState state))
-			return;
-
-		ItemMeta meta = stack.getItemMeta();
-		AbstractCustomBlock block = Blocks.getCustomBlockFromHolder(meta);
+		AbstractCustomBlock block = Blocks.getCustomBlockFromStack(stack);
 		if(block == null)
 			return;
 
 		Player player = event.getPlayer();
-		if(!block.canPlace(player, placed) || block.onBlockPlace(player, meta, state))
+		if(!block.place(placed, player, event))
 			event.setCancelled(true);
 	}
 
@@ -77,15 +75,14 @@ public class CustomBlockListener implements Listener {
 		Player player = event.getPlayer();
 		Block broken = event.getBlock();
 
-		// check if placed block is a skull
-		if(broken.getState() instanceof TileState state) {
-			AbstractCustomBlock block = Blocks.getCustomBlockFromBlock(state);
-			if(block != null) {
-				// fire Block Break Event for Skull Block and receive the loot
-				event.setCancelled(true);
-				if(!block.onBlockBreak(player, state, event))
-					broken.setType(Material.AIR);
-			}
+		// check for custom block
+		AbstractCustomBlock block = CustomBlockStorage.BLOCK_STORAGE.getCustomBlock(broken);
+		if(block != null) {
+			// fire Block Break Event for Skull Block and receive the loot
+			event.setCancelled(true);
+			if(block.onBlockBreak(player, broken, event))
+				// break block
+				block.breakBlock(broken);
 		}
 	}
 
@@ -101,14 +98,14 @@ public class CustomBlockListener implements Listener {
 		Iterator<Block> iterator = event.blockList().iterator();
 		while(iterator.hasNext()) {
 			Block exploded = iterator.next();
-			if(exploded.getState() instanceof TileState state) {
-				// exploded block is custom block
-				AbstractCustomBlock block = Blocks.getCustomBlockFromBlock(state);
-				if(block != null) {
-					if(block.onBlockExplodesBlock(state, event))
-						// remove block from exploding if custom block
-						iterator.remove();
-				}
+			// check for custom block
+			AbstractCustomBlock block = CustomBlockStorage.BLOCK_STORAGE.getCustomBlock(exploded);
+			if(block != null) {
+				// cancel explosion of custom blocks
+				iterator.remove();
+				if(block.onBlockExplodesBlock(exploded, event))
+					// break block
+					block.breakBlock(exploded);
 			}
 		}
 	}
@@ -125,14 +122,14 @@ public class CustomBlockListener implements Listener {
 		Iterator<Block> iterator = event.blockList().iterator();
 		while(iterator.hasNext()) {
 			Block exploded = iterator.next();
-			if(exploded.getState() instanceof TileState state) {
-				// exploded block is custom block
-				AbstractCustomBlock block = Blocks.getCustomBlockFromBlock(state);
-				if(block != null) {
-					if(block.onEntityExplodesBlock(state, event))
-						// remove block from exploding if custom block
-						iterator.remove();
-				}
+			// check for custom block
+			AbstractCustomBlock block = CustomBlockStorage.BLOCK_STORAGE.getCustomBlock(exploded);
+			if(block != null) {
+				// cancel explosion of custom blocks
+				iterator.remove();
+				if(block.onEntityExplodesBlock(exploded, event))
+					// break block
+					block.breakBlock(exploded);
 			}
 		}
 	}
@@ -155,22 +152,21 @@ public class CustomBlockListener implements Listener {
 
 		// clicked at block
 		if(clicked != null) {
-			if(clicked.getState() instanceof TileState state) {
-				AbstractCustomBlock block = Blocks.getCustomBlockFromBlock(state);
-				if(block != null) {
-					if(action == Action.RIGHT_CLICK_BLOCK) {
-						// fire Right Click Block Event
-						if(block.onBlockRightClick(player, state, stack, event))
-							event.setCancelled(true);
-					} else if(action == Action.LEFT_CLICK_BLOCK) {
-						// fire Left Click Block Event
-						if(block.onBlockLeftClick(player, state, stack, event))
-							event.setCancelled(true);
-					} else if(action == Action.PHYSICAL) {
-						// fire Interact Block Event
-						if(block.onBlockInteract(player, state, event))
-							event.setCancelled(true);
-					}
+			// check for custom block
+			AbstractCustomBlock block = CustomBlockStorage.BLOCK_STORAGE.getCustomBlock(clicked);
+			if(block != null) {
+				if(action == Action.RIGHT_CLICK_BLOCK) {
+					// fire Right Click Block Event
+					if(block.onBlockRightClick(player, clicked, stack, event))
+						event.setCancelled(true);
+				} else if(action == Action.LEFT_CLICK_BLOCK) {
+					// fire Left Click Block Event
+					if(block.onBlockLeftClick(player, clicked, stack, event))
+						event.setCancelled(true);
+				} else if(action == Action.PHYSICAL) {
+					// fire Interact Block Event
+					if(block.onBlockInteract(player, clicked, event))
+						event.setCancelled(true);
 				}
 			}
 		}
@@ -186,14 +182,51 @@ public class CustomBlockListener implements Listener {
 	 */
 	@Deprecated
 	@EventHandler
-	public void onBlockRedstoneEvent(BlockRedstoneEvent event) {
+	private void onBlockRedstoneEvent(BlockRedstoneEvent event) {
 		Block block = event.getBlock();
-		if(!(block.getState() instanceof TileState state))
-			return;
-
-		AbstractCustomBlock custom = Blocks.getCustomBlockFromBlock(state);
+		AbstractCustomBlock custom = CustomBlockStorage.BLOCK_STORAGE.getCustomBlock(block);
 		if(custom != null)
-			custom.onRedstoneChange(state, event.getOldCurrent(), event.getNewCurrent(), event);
+			custom.onRedstoneChange(block, event.getOldCurrent(), event.getNewCurrent(), event);
+	}
+
+
+	/**
+	 * Fires when a block grows.
+	 * 
+	 * @param event the {@link BlockGrowEvent}
+	 */
+	@EventHandler
+	private void onBlockGrow(BlockGrowEvent event) {
+		Block block = event.getBlock();
+		AbstractCustomBlock custom = CustomBlockStorage.BLOCK_STORAGE.getCustomBlock(block);
+		if(custom != null)
+			if(!custom.onBlockGrow(block, event.getNewState(), event))
+				event.setCancelled(true);
+	}
+
+
+	/**
+	 * Fires when a structure grows.
+	 * 
+	 * @param event the {@link StructureGrowEvent}
+	 */
+	@EventHandler
+	private void onStructureGrow(StructureGrowEvent event) {
+		Block block = event.getLocation().getBlock();
+		AbstractCustomBlock custom = CustomBlockStorage.BLOCK_STORAGE.getCustomBlock(block);
+		if(custom != null)
+			if(!custom.onBlockStructureGrow(block, event))
+				event.setCancelled(true);
+	}
+
+
+	@EventHandler
+	private void onLeavesDecay(LeavesDecayEvent event) {
+		Block block = event.getBlock();
+		AbstractCustomBlock custom = CustomBlockStorage.BLOCK_STORAGE.getCustomBlock(block);
+		if(custom != null)
+			if(!custom.onLeavesDecay(block, event))
+				event.setCancelled(true);
 	}
 
 
@@ -203,9 +236,27 @@ public class CustomBlockListener implements Listener {
 	 * @param event {@link BlockFromToEvent}
 	 */
 	@EventHandler
-	public void onBlockChange(BlockFromToEvent event) {
-		if(BlockUtils.isCustomBlock(event.getToBlock()))
+	private void onBlockChange(BlockFromToEvent event) {
+		if(CustomBlockStorage.BLOCK_STORAGE.isCustomBlock(event.getToBlock()))
 			event.setCancelled(true);
 	}
 
+
+	/**
+	 * Fires when a hopper searches for a inventory to extract or insert items from or to.
+	 * 
+	 * @param event the {@link HopperInventorySearchEvent}
+	 */
+	@EventHandler
+	private void onHopperInventorySearch(HopperInventorySearchEvent event) {
+		// TODO redirect to gui providers
+		if(CustomBlockStorage.BLOCK_STORAGE.isCustomBlock(event.getSearchBlock()))
+			event.setInventory(null);
+	}
+
+	@EventHandler
+	private void onBlockPick(PickEve e) {
+		
+	}
+	
 }

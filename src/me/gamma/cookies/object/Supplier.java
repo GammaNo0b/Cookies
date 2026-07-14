@@ -96,7 +96,7 @@ public interface Supplier {
 	 * @return the pair containing the type of resource and the amount that got collected from the supplier
 	 */
 	static <T, P extends Provider<T>> Pair<T, Integer> supply(Function<T, Integer> maxFunc, List<P> outputs) {
-		return supply(maxFunc, Filter.empty(), outputs);
+		return supply(maxFunc, Filter.any(), outputs);
 	}
 
 

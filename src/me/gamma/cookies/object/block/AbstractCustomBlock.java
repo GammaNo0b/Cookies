@@ -2,35 +2,29 @@
 package me.gamma.cookies.object.block;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
 import org.bukkit.block.TileState;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.Rotatable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Config;
+import me.gamma.cookies.object.ChunkPersistentDataStorage;
 import me.gamma.cookies.object.Configurable;
 import me.gamma.cookies.object.IItemSupplier;
 import me.gamma.cookies.object.WorldPersistentDataStorage;
 import me.gamma.cookies.object.list.HeadTextures;
 import me.gamma.cookies.object.property.Properties;
-import me.gamma.cookies.object.property.PropertyBuilder;
 import me.gamma.cookies.object.property.StringProperty;
 import me.gamma.cookies.util.GameProfileHelper;
 import me.gamma.cookies.util.ItemUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -42,6 +36,9 @@ public abstract class AbstractCustomBlock implements CustomBlockHandler, Configu
 
 	public AbstractCustomBlock() {
 		if(this instanceof WorldPersistentDataStorage storage)
+			storage.register();
+
+		if(this instanceof ChunkPersistentDataStorage storage)
 			storage.register();
 	}
 
@@ -81,17 +78,6 @@ public abstract class AbstractCustomBlock implements CustomBlockHandler, Configu
 
 
 	/**
-	 * Returns the list of items this block drops when destroyed.
-	 * 
-	 * @param block the block to be broken
-	 * @return the list of drops
-	 */
-	public List<ItemStack> getDrops(TileState block) {
-		return new ArrayList<>();
-	}
-
-
-	/**
 	 * Sets the {@link IItemSupplier} that should be dropped when this block is broken. Set to null for no main drop.
 	 * 
 	 * @param mainDrop the main drop
@@ -102,104 +88,97 @@ public abstract class AbstractCustomBlock implements CustomBlockHandler, Configu
 
 
 	/**
-	 * Builds a set containing all properties that are stored inside the block when placed but not the original item.
+	 * Returns the item this block drops when broken.
 	 * 
-	 * @param builder the property builder
-	 * @return the same property builder
+	 * @param block the block brokent
+	 * @return the item to drop
 	 */
-	protected PropertyBuilder buildBlockProperties(PropertyBuilder builder) {
-		return builder.add(IDENTIFIER, this.getIdentifier());
+	protected ItemStack getMainDrop(Block block) {
+		if(this.mainDrop == null)
+			return null;
+
+		return this.mainDrop.get(data -> this.getCustomDropData(block, data));
 	}
 
 
 	/**
-	 * Builds a set containing all properties that gets transferred from the original item to the block when placed.
+	 * Checks if the given block has the material of this custom block.
 	 * 
-	 * @param builder the property builder
-	 * @return the same property builder
+	 * @param block the block
+	 * @return if the block has the correct material
 	 */
-	public PropertyBuilder buildBlockItemProperties(PropertyBuilder builder) {
-		return builder;
+	public boolean checkMaterial(Block block) {
+		Material type = this.getMaterial();
+		if(type == Material.PLAYER_HEAD || type == Material.PLAYER_WALL_HEAD) {
+			return block.getType() == Material.PLAYER_HEAD || block.getType() == Material.PLAYER_WALL_HEAD;
+		} else {
+			return block.getType() == type;
+		}
 	}
 
 
+	/**
+	 * Stores the custom data to put on the drop of this block.
+	 * 
+	 * @param block the block param the custom data
+	 */
+	protected void getCustomDropData(Block block, PersistentDataObject data) {}
+
+
 	@Override
-	public boolean place(Player player, ItemStack stack, Block block) {
-		// check for placing permission
-		if(!this.canPlace(player, block))
-			return false;
+	public boolean placeBlock(Block block, Material type) {
+		// set correct material
+		if(!this.checkMaterial(block))
+			block.setType(type);
 
-		// set block material and texture
-		block.setType(this.getMaterial());
+		// set texture
 		String texture = this.getBlockTexture();
-		if(texture != null && block.getState() instanceof Skull skull)
+		if(texture != null && block.getLocation().getBlock().getState() instanceof Skull skull)
 			GameProfileHelper.setSkullTexture(skull, texture);
-
-		// rotate rotational blocks
-		if(player != null) {
-			BlockData data = block.getBlockData();
-			if(data instanceof Rotatable rotatable) {
-				int x = (int) Math.floor((player.getLocation().getYaw() + 225.0F) / 90.0F);
-				rotatable.setRotation(BlockFace.values()[x & 3]);
-				block.setBlockData(data);
-			} else if(data instanceof Directional directional) {
-				int x = (int) Math.floor((player.getLocation().getYaw() + 45.0F) / 90.0F);
-				directional.setFacing(BlockFace.values()[x & 3]);
-				block.setBlockData(data);
-			}
-		}
-
-		// IMPORTANT
-		if(this.onBlockPlace(player, stack == null ? null : stack.getItemMeta(), (TileState) block.getState()))
-			return false;
-
-		// decrease stack size
-		if(player != null && player.getGameMode() == GameMode.SURVIVAL)
-			stack.setAmount(stack.getAmount() - 1);
 
 		return true;
 	}
 
 
 	@Override
-	public boolean onBlockPlace(Player player, PersistentDataHolder holder, TileState block) {
-		this.buildBlockItemProperties(new PropertyBuilder()).buildAndTransfer(holder, block);
-		this.buildBlockProperties(new PropertyBuilder()).buildAndStore(block);
-
-		if(this instanceof Ownable ownable) {
-			if(player == null)
-				return true;
-
-			ownable.setOwner(block, player.getUniqueId());
-		}
-
-		block.update();
-
-		if(this instanceof BlockRegister register)
-			register.getLocations().add(block.getLocation());
-
-		if(this instanceof Cartesian cartesian && cartesian.shouldCorrectFacing(block))
-			cartesian.correctFacing(block);
-
-		return false;
+	public boolean placeBlock(Block block) {
+		return this.placeBlock(block, this.getMaterial());
 	}
 
 
 	@Override
-	public boolean onBlockBreak(Player player, TileState block, BlockBreakEvent event) {
-		if(this instanceof Ownable ownable && !ownable.canAccess(block, player))
-			return true;
+	public boolean onBlockPlace(Block block, PersistentDataObject data, Player player, BlockPlaceEvent event) {
+		if(!CustomBlockHandler.super.onBlockPlace(block, data, player, event))
+			return false;
 
-		if(this.mainDrop != null)
-			ItemUtils.dropItem(this.mainDrop.get(block), block);
+		if(this instanceof Cartesian cartesian && cartesian.shouldCorrectFacing(block))
+			cartesian.correctFacing(block);
 
-		if(this instanceof BlockRegister register)
-			register.getLocations().remove(block.getLocation());
+		return true;
+	}
 
-		for(ItemStack stack : this.getDrops(block))
-			ItemUtils.dropItem(stack, block);
 
-		return false;
+	@Override
+	public void blockPlaced(Block block) {
+		CustomBlockHandler.super.blockPlaced(block);
+
+		CustomBlockStorage.BLOCK_STORAGE.addCustomBlock(this, block);
+	}
+
+
+	@Override
+	public void blockBroken(Block block) {
+		ItemUtils.dropItem(this.getMainDrop(block), block);
+
+		CustomBlockStorage.BLOCK_STORAGE.removeCustomBlock(block);
+	}
+
+
+	@Override
+	public boolean onLeavesDecay(Block block, LeavesDecayEvent event) {
+		CustomBlockStorage.BLOCK_STORAGE.removeCustomBlock(block);
+
+		return true;
 	}
 
 

@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import me.gamma.cookies.Cookies;
 import me.gamma.cookies.event.PlayerArmorEquipEvent;
 import me.gamma.cookies.object.item.PlayerRegister;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -51,7 +52,7 @@ public class InvisibilityHat extends AbstractCustomArmorItem implements PlayerRe
 
 
 	@Override
-	protected void editItemMeta(ItemMeta meta) {
+	protected void editItemMeta(ItemMeta meta, PersistentDataObject data) {
 		((LeatherArmorMeta) meta).setColor(Color.fromRGB(120, 255, 226));
 	}
 

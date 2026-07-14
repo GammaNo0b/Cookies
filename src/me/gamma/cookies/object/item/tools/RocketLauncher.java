@@ -15,12 +15,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.util.Vector;
 
 import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.object.item.Cooldownable;
-import me.gamma.cookies.object.property.PropertyBuilder;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -45,15 +44,17 @@ public class RocketLauncher extends AbstractCustomItem implements Cooldownable {
 
 
 	@Override
-	public long getCooldown(PersistentDataHolder holder) {
+	public long getCooldown(ItemStack stack) {
 		// TODO change back to 100
 		return 0;
 	}
 
 
 	@Override
-	protected PropertyBuilder buildItemProperties(PropertyBuilder builder) {
-		return super.buildItemProperties(builder).add(LAST_USED);
+	protected void createData(PersistentDataObject customData) {
+		super.createData(customData);
+
+		customData.setLong(KEY_LAST_USED, 0);
 	}
 
 
@@ -80,7 +81,7 @@ public class RocketLauncher extends AbstractCustomItem implements Cooldownable {
 		if(this.isOnCooldown(world, stack))
 			return;
 
-		this.initCooldown(world, stack);
+		this.setLastUsed(world, stack);
 
 		double speed = 2.0D;
 		Vector velocity = player.getLocation().getDirection().multiply(speed);

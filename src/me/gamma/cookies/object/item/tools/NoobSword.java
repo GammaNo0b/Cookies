@@ -10,10 +10,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.item.AbstractCustomItem;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -40,7 +41,7 @@ public class NoobSword extends AbstractCustomItem {
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		builder.createSection(null, true).add("Only the biggest noobs are worthy of holding this sword.");
 	}
 

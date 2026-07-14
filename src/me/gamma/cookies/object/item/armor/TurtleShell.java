@@ -10,6 +10,8 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import me.gamma.cookies.util.collection.PersistentDataObject;
+
 
 
 public class TurtleShell extends AbstractCustomArmorItem {
@@ -39,7 +41,7 @@ public class TurtleShell extends AbstractCustomArmorItem {
 
 
 	@Override
-	protected void editItemMeta(ItemMeta meta) {
+	protected void editItemMeta(ItemMeta meta, PersistentDataObject data) {
 		meta.addEnchant(Enchantment.UNBREAKING, 5, true);
 		((LeatherArmorMeta) meta).setColor(Color.fromRGB(20, 200, 0));
 	}

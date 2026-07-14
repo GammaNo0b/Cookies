@@ -22,6 +22,7 @@ import me.gamma.cookies.object.list.HeadTextures;
 import me.gamma.cookies.util.InventoryUtils;
 import me.gamma.cookies.util.ItemBuilder;
 import me.gamma.cookies.util.ItemUtils;
+import me.gamma.cookies.util.math.MathHelper;
 
 
 
@@ -45,7 +46,6 @@ public interface Book<D> extends InventoryProvider<BookData<D>> {
 		return slots;
 	}
 
-	String KEY_PAGE = "book_page";
 	String KEY_ITEM = "book_item";
 
 	/**
@@ -76,38 +76,6 @@ public interface Book<D> extends InventoryProvider<BookData<D>> {
 	@Override
 	default Sound getSound() {
 		return Sound.ITEM_BOOK_PAGE_TURN;
-	}
-
-
-	/**
-	 * Loads the data from the given inventory.
-	 * 
-	 * @param inventory the inventory
-	 * @return the loaded dat
-	 */
-	D loadData(Inventory inventory);
-
-	/**
-	 * Saves the given data in the given inventory.
-	 * 
-	 * @param inventory the inventory
-	 * @param data      the data
-	 */
-	void saveData(Inventory inventory, D data);
-
-
-	@Override
-	default void storeData(Inventory inventory, BookData<D> data) {
-		this.saveData(inventory, data.data);
-		InventoryUtils.storeIntInStack(this.getIdentifierStack(inventory), KEY_PAGE, data.page);
-	}
-
-
-	@Override
-	default BookData<D> fetchData(Inventory inventory) {
-		D data = this.loadData(inventory);
-		int page = InventoryUtils.getIntFromStack(this.getIdentifierStack(inventory), KEY_PAGE, 0);
-		return new BookData<>(page, data);
 	}
 
 
@@ -265,9 +233,6 @@ public interface Book<D> extends InventoryProvider<BookData<D>> {
 		if(!this.updateItems())
 			this.fillItems(page, gui, 0, data.data);
 
-		ItemStack identifier = this.getIdentifierStack(gui);
-		InventoryUtils.storeIntInStack(identifier, KEY_PAGE, page);
-
 		return gui;
 	}
 
@@ -292,19 +257,20 @@ public interface Book<D> extends InventoryProvider<BookData<D>> {
 	 * @param data   the data
 	 */
 	default void open(HumanEntity player, D data) {
-		this.open(player, 0, data);
+		this.open(player, 0, data, true);
 	}
 
 
 	/**
 	 * Opens the book at the given page with the given data.
 	 * 
-	 * @param player the player
-	 * @param page   the page
-	 * @param data   the data
+	 * @param player  the player
+	 * @param page    the page
+	 * @param data    the data
+	 * @param history if the history should be extended
 	 */
-	default void open(HumanEntity player, int page, D data) {
-		this.openGui(player, new BookData<>(page, data));
+	default void open(HumanEntity player, int page, D data, boolean history) {
+		this.openGui(player, new BookData<>(page, data), history, true);
 	}
 
 
@@ -380,51 +346,38 @@ public interface Book<D> extends InventoryProvider<BookData<D>> {
 	}
 
 
-	/**
-	 * Returns the page number for the given inventory page.
-	 * 
-	 * @param inventory the inventory page
-	 * @return the page number
-	 */
-	default int getPage(Inventory inventory) {
-		return InventoryUtils.getIntFromStack(inventory.getItem(this.getSlot(this.getIdentifierSlot(), inventory.getSize())), Book.KEY_PAGE);
-	}
-
-
 	@Override
-	default boolean onMainInventoryInteract(Player player, Inventory gui, InventoryClickEvent event) {
-		Inventory inventory = event.getInventory();
-		int size = inventory.getSize();
+	default boolean onMainInventoryInteract(Player player, BookData<D> data, Inventory gui, InventoryClickEvent event) {
+		int size = gui.getSize();
 		int slot = event.getSlot();
-		int page = this.getPage(inventory);
 		ItemStack stack = event.getCurrentItem();
 
-		this.onInventoryClick(player, inventory, stack, slot, event, page);
+		this.onInventoryClick(player, gui, stack, slot, data.page, data.data, event);
 
 		if(slot == this.getSlot(this.getTurnLeftSlot(), size)) {
-			this.turnLeftOver(player, inventory);
+			this.turnPage(player, data.page, data.data, -1);
 		} else if(slot == this.getSlot(this.getTurnRightSlot(), size)) {
-			this.turnRightOver(player, inventory);
+			this.turnPage(player, data.page, data.data, 1);
 		} else if(slot == this.getSlot(this.getCloseSlot(), size)) {
-			this.close(player, inventory);
+			this.close(player, gui);
 		} else if(InventoryUtils.isMarked(stack, Book.KEY_ITEM)) {
-			this.onItemClick(player, inventory, stack, event, page);
+			this.onItemClick(player, gui, stack, data.page, data.data, event);
 		}
 		return true;
 	}
 
 
 	@Override
-	default boolean onPlayerInventoryInteract(Player player, PlayerInventory gui, InventoryClickEvent event) {
-		this.onPlayerInventoryClick(player, gui, event.getCurrentItem(), event.getSlot(), event, this.getPage(event.getInventory()));
+	default boolean onPlayerInventoryInteract(Player player, BookData<D> data, PlayerInventory gui, InventoryClickEvent event) {
+		this.onPlayerInventoryClick(player, gui, event.getCurrentItem(), event.getSlot(), data.page, data.data, event);
 		return true;
 	}
 
 
 	@Override
-	default boolean onInventoryClose(Player player, Inventory gui, InventoryCloseEvent event) {
-		this.onPageClose(player, gui, event, this.getIdentifierSlot());
-		return false;
+	public default boolean onInventoryClose(Player player, BookData<D> data, Inventory gui, InventoryCloseEvent event) {
+		this.onPageClose(player, gui, data.page, data.data, event);
+		return true;
 	}
 
 
@@ -435,10 +388,11 @@ public interface Book<D> extends InventoryProvider<BookData<D>> {
 	 * @param gui    the clicked inventory
 	 * @param stack  the clicked item
 	 * @param slot   the clicked slot
-	 * @param event  the fired event
 	 * @param page   the page number
+	 * @param data   the data
+	 * @param event  the fired event
 	 */
-	default void onInventoryClick(HumanEntity player, Inventory gui, ItemStack stack, int slot, InventoryClickEvent event, int page) {}
+	default void onInventoryClick(HumanEntity player, Inventory gui, ItemStack stack, int slot, int page, D data, InventoryClickEvent event) {}
 
 
 	/**
@@ -448,10 +402,11 @@ public interface Book<D> extends InventoryProvider<BookData<D>> {
 	 * @param inventory the clicked inventory
 	 * @param stack     the clicked item
 	 * @param slot      the clicked slot
-	 * @param event     the fired event
 	 * @param page      the page number
+	 * @param data      the data
+	 * @param event     the fired event
 	 */
-	default void onPlayerInventoryClick(HumanEntity player, PlayerInventory inventory, ItemStack stack, int slot, InventoryClickEvent event, int page) {}
+	default void onPlayerInventoryClick(HumanEntity player, PlayerInventory inventory, ItemStack stack, int slot, int page, D data, InventoryClickEvent event) {}
 
 
 	/**
@@ -460,10 +415,11 @@ public interface Book<D> extends InventoryProvider<BookData<D>> {
 	 * @param player the player
 	 * @param gui    the clicked inventory
 	 * @param stack  the clicked item
-	 * @param event  the fired event
 	 * @param page   the page number
+	 * @param data   the data
+	 * @param event  the fired event
 	 */
-	default void onItemClick(HumanEntity player, Inventory gui, ItemStack stack, InventoryClickEvent event, int page) {}
+	default void onItemClick(HumanEntity player, Inventory gui, ItemStack stack, int page, D data, InventoryClickEvent event) {}
 
 
 	/**
@@ -471,51 +427,27 @@ public interface Book<D> extends InventoryProvider<BookData<D>> {
 	 * 
 	 * @param player the player
 	 * @param gui    the closed inventory
-	 * @param event  the fired event
 	 * @param page   the page number
+	 * @param data   the data
+	 * @param event  the fired event
 	 */
-	default void onPageClose(HumanEntity player, Inventory gui, InventoryCloseEvent event, int page) {}
+	default void onPageClose(HumanEntity player, Inventory gui, int page, D data, InventoryCloseEvent event) {}
 
 
 	/**
-	 * Turns the current page left over for the given player.
+	 * Turns the current page by the given amount for the given player.
 	 * 
-	 * @param player    the player
-	 * @param inventory the old inventory page
+	 * @param player the player
+	 * @param page   the current page
+	 * @param data   the book data
+	 * @param amount the number of pages turned
 	 */
-	default void turnLeftOver(HumanEntity player, Inventory inventory) {
-		BookData<D> bookdata = this.fetchData(inventory);
-		D data = bookdata.data;
+	default void turnPage(HumanEntity player, int page, D data, int amount) {
 		int pages = this.pages(data);
 		if(pages <= 1)
 			return;
 
-		int page = this.getPage(inventory) - 1;
-		if(page < 0)
-			page = pages - 1;
-
-		this.openGui(player, new BookData<>(page, data), false, true);
-	}
-
-
-	/**
-	 * Turns the current page right over for the given player.
-	 * 
-	 * @param player    the player
-	 * @param inventory the old inventory page
-	 */
-	default void turnRightOver(HumanEntity player, Inventory inventory) {
-		BookData<D> bookdata = this.fetchData(inventory);
-		D data = bookdata.data;
-		int pages = this.pages(data);
-		if(pages <= 1)
-			return;
-
-		int page = this.getPage(inventory) + 1;
-		if(page >= pages)
-			page = 0;
-
-		this.openGui(player, new BookData<>(page, data), false, true);
+		this.open(player, MathHelper.mod(page + amount, pages), data, false);
 	}
 
 

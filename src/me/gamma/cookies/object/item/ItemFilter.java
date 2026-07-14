@@ -84,6 +84,11 @@ public class ItemFilter implements Filter<ItemStack> {
 	}
 
 
+	public int filter(ItemStack type) {
+		return this.filter(type, type.getAmount());
+	}
+
+
 	@Override
 	public int filter(ItemStack type, int amount) {
 		if(ItemUtils.isEmpty(type))
@@ -136,7 +141,7 @@ public class ItemFilter implements Filter<ItemStack> {
 	public static enum CountComparison implements CountComparator, Supplier<ItemStack> {
 
 		IGNORE((n, _) -> n, new ItemBuilder(Material.PLAYER_HEAD).setHeadTexture(HeadTextures.WOODEN_MINUS).build()),
-		EXACT((n, x) -> n < x ? 0 : x, new ItemBuilder(Material.PLAYER_HEAD).setHeadTexture(HeadTextures.WOODEN_EQUAL).build()),
+		EXACT((n, x) -> n >= x ? x : 0, new ItemBuilder(Material.PLAYER_HEAD).setHeadTexture(HeadTextures.WOODEN_EQUAL).build()),
 		LESS((n, x) -> n < x ? n : 0, new ItemBuilder(Material.PLAYER_HEAD).setHeadTexture(HeadTextures.WOODEN_LESS_THAN).build()),
 		MORE((n, x) -> n > x ? n : 0, new ItemBuilder(Material.PLAYER_HEAD).setHeadTexture(HeadTextures.WOODEN_GREATER_THAN).build());
 

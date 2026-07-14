@@ -23,6 +23,9 @@ public class SuspiciousHiding extends SimpleCookieListener {
 
 	@EventHandler
 	public void onSuspiciousBlockClick(PlayerInteractEvent event) {
+		if(!this.isEnabled())
+			return;
+
 		Player player = event.getPlayer();
 		if(!player.isSneaking())
 			return;

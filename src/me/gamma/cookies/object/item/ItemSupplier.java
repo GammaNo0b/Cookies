@@ -6,25 +6,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.TileState;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataHolder;
 
-import me.gamma.cookies.init.Blocks;
+import me.gamma.cookies.object.DataStorage;
 import me.gamma.cookies.object.Filter;
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.Supplier;
-import me.gamma.cookies.object.block.AbstractCustomBlock;
 import me.gamma.cookies.object.block.BlockFaceConfigurable;
-import me.gamma.cookies.object.block.Cartesian;
 import me.gamma.cookies.object.block.machine.MachineConstants;
+import me.gamma.cookies.object.fluid.FluidSupplier;
 import me.gamma.cookies.object.gui.BlockFaceConfig;
-import me.gamma.cookies.object.property.ByteProperty;
+import me.gamma.cookies.object.tile.AbstractCustomTileEntity;
+import me.gamma.cookies.object.tile.TileEntityStorage;
 import me.gamma.cookies.util.BlockUtils;
 import me.gamma.cookies.util.ItemUtils;
+import me.gamma.cookies.util.collection.Holder;
 import me.gamma.cookies.util.collection.Pair;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -34,20 +35,42 @@ import me.gamma.cookies.util.collection.Pair;
  * @author gamma
  *
  */
-public interface ItemSupplier extends Cartesian {
+public interface ItemSupplier extends DataStorage {
+
+	String KEY_ITEM_OUTPUT_ACCESS_FLAGS = "itemoutputaccessflags";
+
+	@Override
+	default boolean load(Chunk chunk, PersistentDataObject data) {
+		Byte b = data.getByte(KEY_ITEM_OUTPUT_ACCESS_FLAGS);
+		if(b == null)
+			return false;
+
+		this.setItemOutputAccessFlags(b);
+		return true;
+	}
+
+
+	@Override
+	default boolean save(Chunk chunk, PersistentDataObject data) {
+		data.setByte(KEY_ITEM_OUTPUT_ACCESS_FLAGS, this.getItemOutputAccessFlags());
+
+		return true;
+	}
+
 
 	/**
-	 * Property to store the item output access flags in a block.
-	 */
-	ByteProperty ITEM_OUTPUT_ACCESS_FLAGS = new ByteProperty("itemoutputaccessflags");
-
-	/**
-	 * Returns the list of {@link ItemProvider} of the given data holder to supply items.
+	 * Returns the block of this item supplier.
 	 * 
-	 * @param holder the data holder
+	 * @return the block
+	 */
+	Block getBlock();
+
+	/**
+	 * Returns the list of {@link ItemProvider} to supply items.
+	 * 
 	 * @return the list of item providers
 	 */
-	List<Provider<ItemStack>> getItemOutputs(PersistentDataHolder holder);
+	List<Provider<ItemStack>> getItemOutputs();
 
 
 	/**
@@ -57,8 +80,8 @@ public interface ItemSupplier extends Cartesian {
 	 * @param face  the block face
 	 * @return the list of item providers
 	 */
-	default List<Provider<ItemStack>> getItemOutputs(TileState block, BlockFace face) {
-		return this.canAccessItemOutputs(block, face) ? this.getItemOutputs(block) : new ArrayList<>();
+	default List<Provider<ItemStack>> getItemOutputs(BlockFace face) {
+		return this.canAccessItemOutputs(face) ? this.getItemOutputs() : new ArrayList<>();
 	}
 
 
@@ -66,12 +89,17 @@ public interface ItemSupplier extends Cartesian {
 	 * Returns the flags for each side of the block to be able to yield items from that side. The first six bits correspond to the six different sides in
 	 * {@link BlockUtils#cartesian}. The seventh bit controlls automatic item transfer.
 	 * 
-	 * @param holder the data holder
 	 * @return the access flags
 	 */
-	default byte getItemOutputAccessFlags(PersistentDataHolder holder) {
-		return ITEM_OUTPUT_ACCESS_FLAGS.fetch(holder);
-	}
+	byte getItemOutputAccessFlags();
+
+	/**
+	 * Sets the new block face flags.
+	 * 
+	 * @param flags the flags
+	 * @see FluidSupplier#getFluidOutputAccessFlags()
+	 */
+	void setItemOutputAccessFlags(byte flags);
 
 
 	/**
@@ -81,8 +109,8 @@ public interface ItemSupplier extends Cartesian {
 	 * @param face  the block face
 	 * @return if it can accept items
 	 */
-	default boolean canAccessItemOutputs(TileState block, BlockFace face) {
-		return BlockFaceConfigurable.isFaceEnabled(this.getItemOutputAccessFlags(block), block, face);
+	default boolean canAccessItemOutputs(BlockFace face) {
+		return BlockFaceConfigurable.isFaceEnabled(this.getItemOutputAccessFlags(), this.getBlock(), face);
 	}
 
 
@@ -92,18 +120,17 @@ public interface ItemSupplier extends Cartesian {
 	 * @return the config
 	 */
 	default BlockFaceConfig.Config createItemOutputBlockFaceConfig() {
-		return new BlockFaceConfig.Config("§6Item Output Configuration", ITEM_OUTPUT_ACCESS_FLAGS, true, MachineConstants.OUTPUT_BORDER_MATERIAL.getType());
+		return new BlockFaceConfig.Config("§6Item Output Configuration", Holder.create(this::getItemOutputAccessFlags, this::setItemOutputAccessFlags), true, MachineConstants.OUTPUT_BORDER_MATERIAL.getType());
 	}
 
 
 	/**
-	 * Checks if the given data holder can push items into adjacent item consumer.
+	 * Checks if this supllier can push items into adjacent item consumer.
 	 * 
-	 * @param holder the data holder
 	 * @return if automation is enabled
 	 */
-	default boolean isAutoPushingItems(PersistentDataHolder holder) {
-		return (this.getItemOutputAccessFlags(holder) & 0x40) != 0;
+	default boolean isAutoPushingItems() {
+		return (this.getItemOutputAccessFlags() & 0x40) != 0;
 	}
 
 
@@ -113,23 +140,20 @@ public interface ItemSupplier extends Cartesian {
 	 * @param block the block
 	 * @return whether an item got successfully pushed
 	 */
-	default boolean tryPushItems(TileState block) {
-		if(!this.isAutoPushingItems(block))
+	default boolean tryPushItems() {
+		if(!this.isAutoPushingItems())
 			return false;
 
 		for(BlockFace face : BlockUtils.cartesian) {
-			if(!this.canAccessItemOutputs(block, face))
+			if(!this.canAccessItemOutputs(face))
 				continue;
 
-			Block target = block.getBlock().getRelative(face);
-			if(!(target.getState() instanceof TileState tile))
+			Block target = this.getBlock().getRelative(face);
+			ItemConsumer consumer = ItemConsumer.getItemConsumer(target);
+			if(consumer == null || !consumer.canAccessItemInputs(face.getOppositeFace()))
 				continue;
 
-			ItemConsumer consumer = ItemConsumer.getItemConsumer(tile);
-			if(consumer == null || !consumer.canAccessItemInputs(tile, face.getOppositeFace()))
-				continue;
-
-			if(this.removeItem(block, Filter.empty(), stack -> consumer.addStack(tile, stack)))
+			if(this.removeItem(Filter.any(), stack -> consumer.addStack(stack)))
 				return true;
 		}
 
@@ -138,14 +162,13 @@ public interface ItemSupplier extends Cartesian {
 
 
 	/**
-	 * Removes an {@link ItemStack} from the given block.
+	 * Removes an {@link ItemStack} from this block.
 	 * 
-	 * @param block the block
 	 * @return the removed item stack
 	 */
-	default ItemStack removeItem(TileState block) {
+	default ItemStack removeItem() {
 		for(BlockFace face : BlockUtils.cartesian) {
-			List<Provider<ItemStack>> outputs = this.getItemOutputs(block, face);
+			List<Provider<ItemStack>> outputs = this.getItemOutputs(face);
 			if(!outputs.isEmpty()) {
 				Pair<ItemStack, Integer> result = Supplier.supply(ItemStack::getMaxStackSize, outputs);
 				if(ItemUtils.isEmpty(result.left))
@@ -161,17 +184,16 @@ public interface ItemSupplier extends Cartesian {
 
 
 	/**
-	 * Removes an {@link ItemStack} of the given {@code type} from the given block.
+	 * Removes an {@link ItemStack} of the given {@code type} from this block.
 	 * 
-	 * @param block the block
-	 * @param type  the type of the item stack
+	 * @param type the type of the item stack
 	 * @return the removed item stack
 	 */
-	default ItemStack removeItem(TileState block, ItemStack type) {
+	default ItemStack removeItem(ItemStack type) {
 		for(BlockFace face : BlockUtils.cartesian) {
-			List<Provider<ItemStack>> outputs = this.getItemOutputs(block, face);
+			List<Provider<ItemStack>> outputs = this.getItemOutputs(face);
 			if(!outputs.isEmpty()) {
-				int amount = Supplier.supply(type, type.getMaxStackSize(), this.getItemOutputs(block));
+				int amount = Supplier.supply(type, type.getMaxStackSize(), outputs);
 				if(amount == 0)
 					return null;
 
@@ -185,14 +207,13 @@ public interface ItemSupplier extends Cartesian {
 
 
 	/**
-	 * Removes an {@link ItemStack} from the given data holder with the filter.
+	 * Removes an {@link ItemStack} from this block with the filter.
 	 * 
-	 * @param holder the data holder
 	 * @param filter the filter
 	 * @return the item stack that got removed
 	 */
-	default ItemStack removeItem(PersistentDataHolder holder, ItemFilter filter) {
-		Pair<ItemStack, Integer> result = Supplier.supply(ItemStack::getMaxStackSize, filter, this.getItemOutputs(holder));
+	default ItemStack removeItem(ItemFilter filter) {
+		Pair<ItemStack, Integer> result = Supplier.supply(ItemStack::getMaxStackSize, filter, this.getItemOutputs());
 		ItemStack stack = result.left.clone();
 		stack.setAmount(result.right);
 		return stack;
@@ -200,16 +221,15 @@ public interface ItemSupplier extends Cartesian {
 
 
 	/**
-	 * Removes an {@link ItemStack} from the given data holder with the filter and passes it to the given consumer. The stack that get's returned by the
-	 * consumer will be passed back to the supplier.
+	 * Removes an {@link ItemStack} from this block with the filter and passes it to the given consumer. The stack that get's returned by the consumer
+	 * will be passed back to the supplier.
 	 * 
-	 * @param holder   the data holder
 	 * @param filter   the filter
 	 * @param consumer the consumer
 	 * @return if any items got transfered
 	 */
-	default boolean removeItem(PersistentDataHolder holder, Filter<ItemStack> filter, UnaryOperator<ItemStack> consumer) {
-		return removeItem(filter, this.getItemOutputs(holder), consumer);
+	default boolean removeItem(Filter<ItemStack> filter, UnaryOperator<ItemStack> consumer) {
+		return removeItem(filter, this.getItemOutputs(), consumer);
 	}
 
 
@@ -233,14 +253,14 @@ public interface ItemSupplier extends Cartesian {
 
 
 	/**
-	 * Returns the item supplier of the given block or null if the block has no item supplier.
+	 * Returns the {@link ItemSupplier} from the given block.
 	 * 
-	 * @param holder the block
-	 * @return the supplier or null
+	 * @param block the block
+	 * @return the item supplier or null
 	 */
-	static ItemSupplier getItemSupplier(PersistentDataHolder holder) {
-		AbstractCustomBlock custom = Blocks.getCustomBlockFromHolder(holder);
-		return custom instanceof ItemSupplier supplier ? supplier : ItemStorage.fromVanillaStorage(holder);
+	public static ItemSupplier getItemSupplier(Block block) {
+		AbstractCustomTileEntity<?, ?> tileEntity = TileEntityStorage.TILE_ENTITY_STORAGE.getTileEntity(block);
+		return tileEntity instanceof ItemSupplier supplier ? supplier : ItemStorage.fromVanillaStorage(block);
 	}
 
 }

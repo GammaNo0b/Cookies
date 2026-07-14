@@ -253,7 +253,6 @@ experience_absorber:
   internalCapacity: 10000
   upgradeSlots: 4
   baseSpeed: 1.0
-  frequency: 10           # number of ticks between each absorption attempt
   range: 5                # range in which experience can be absorbed
 
 farmer:
@@ -454,6 +453,21 @@ obsidian_generator:
   capacity: 4000              # millibuckets of lava the generator can store
   obsidianCoolingTime: 600    # number of ticks for lava to cool down to become obsidian
 
+oil_pump:
+  energyConsuption: 10
+  internalCapacity: 10000
+  upgradeSlots: 3
+  baseSpeed: 1.0
+  waterConsumption: 10		# millibuckets of water consumed per attempt of pumping oil
+  oilAttempts: 20			# number of attempts to pump one mb oil on average
+
+oil_refinery:
+  energyConsumption: 20
+  internalCapacity: 10000
+  upgradeSlots: 3
+  baseSpeed: 1.0
+  refiningEfficiency: 0.8	# The percentage of crude oil that get's refined
+
 packing_machine:
   basic:
     energyConsumption: 1
@@ -538,6 +552,12 @@ star_maker:
   energyConsumption: 5
   internalCapacity: 5000
   upgradeSlots: 2
+  baseSpeed: 1.0
+
+trading_machine:
+  energyConsumption: 10
+  internalCapacity: 10000
+  upgradeSlots: 4
   baseSpeed: 1.0
 
 void_ore_miner:

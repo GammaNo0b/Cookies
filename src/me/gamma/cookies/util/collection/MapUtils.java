@@ -27,6 +27,7 @@ public class MapUtils {
 		return map.get(key);
 	}
 
+
 	/**
 	 * Returns the value under the given key or stores def under the key and returns it. In each case there will be something stored under key after this
 	 * operation.

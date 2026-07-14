@@ -15,7 +15,7 @@ public class KnockDoorFeature extends SimpleCookieListener {
 
 	@EventHandler
 	public void onDoorKnock(PlayerInteractEvent event) {
-		if(!this.enabled)
+		if(!this.isEnabled())
 			return;
 
 		if(event.getAction() != Action.LEFT_CLICK_BLOCK)

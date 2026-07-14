@@ -3,7 +3,7 @@ package me.gamma.cookies.util.core;
 
 
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_21_R3.CraftWorld;
+import org.bukkit.craftbukkit.CraftWorld;
 
 import net.minecraft.util.RandomSource;
 
@@ -24,7 +24,7 @@ public class MinecraftWorldHelper {
 	 * @return the random source
 	 */
 	public static RandomSource getRandom(World world) {
-		return ((CraftWorld) world).getHandle().H_();
+		return ((CraftWorld) world).getHandle().getRandom();
 	}
 
 }

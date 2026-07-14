@@ -36,7 +36,7 @@ public class CustomRecipe implements CookieRecipe {
 
 
 	public CustomRecipe(ItemStack result, RecipeType type, RecipeShape recipeshape) {
-		this(result, 1, type, RecipeShape.SHAPED);
+		this(result, 1, type, recipeshape);
 	}
 
 

@@ -2,16 +2,13 @@
 package me.gamma.cookies.object.gui.book;
 
 
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.TileState;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.init.BookInit;
 import me.gamma.cookies.object.block.FilterBlock;
 import me.gamma.cookies.object.gui.book.ItemFilterBook.ItemFilterInformation;
@@ -154,33 +151,8 @@ public class ItemFilterBook implements Book<ItemFilterInformation> {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public ItemFilterInformation loadData(Inventory inventory) {
-		Location location = InventoryUtils.getLocationFromStack(inventory.getItem(LOCATION_SLOT), LOCATION_KEY, WORLD_KEY);
-		if(!(location.getBlock().getState() instanceof TileState state))
-			return null;
-
-		try {
-			return new ItemFilterInformation(state, (FilterBlock<ItemStack, ItemFilter>) Blocks.getCustomBlockFromBlock(state));
-		} catch(ClassCastException e) {
-			return null;
-		}
-	}
-
-
-	@Override
-	public void saveData(Inventory inventory, ItemFilterInformation data) {
-		InventoryUtils.storeLocationInStack(inventory.getItem(LOCATION_SLOT), LOCATION_KEY, WORLD_KEY, data.block.getLocation());
-	}
-
-
-	@Override
-	public void onInventoryClick(HumanEntity player, Inventory gui, ItemStack stack, int slot, InventoryClickEvent event, int page) {
-		ItemFilterInformation data = this.loadData(gui);
-		if(data == null)
-			return;
-
+	public void onInventoryClick(HumanEntity player, Inventory gui, ItemStack stack, int slot, int page, ItemFilterInformation data, InventoryClickEvent event) {
 		if(slot == LISTTYPE_SLOT) {
 			ItemFilter filter = data.getFilter();
 			filter.setWhitelisted(stack.getType() != WHITELIST_ICON.getType());
@@ -209,11 +181,7 @@ public class ItemFilterBook implements Book<ItemFilterInformation> {
 
 
 	@Override
-	public void onPlayerInventoryClick(HumanEntity player, PlayerInventory inventory, ItemStack stack, int slot, InventoryClickEvent event, int page) {
-		ItemFilterInformation data = this.loadData(event.getInventory());
-		if(data == null)
-			return;
-
+	public void onPlayerInventoryClick(HumanEntity player, PlayerInventory inventory, ItemStack stack, int slot, int page, ItemFilterInformation data, InventoryClickEvent event) {
 		if(ItemUtils.isEmpty(stack))
 			return;
 
@@ -231,29 +199,26 @@ public class ItemFilterBook implements Book<ItemFilterInformation> {
 	}
 
 
-	public static void openBook(HumanEntity player, TileState block, FilterBlock<ItemStack, ItemFilter> filter) {
-		BookInit.ITEM_FILTER_BOOK.open(player, new ItemFilterInformation(block, filter));
+	public static void openBook(HumanEntity player, FilterBlock<ItemStack, ItemFilter> filter) {
+		BookInit.ITEM_FILTER_BOOK.open(player, new ItemFilterInformation(filter));
 	}
 
 	public static class ItemFilterInformation {
 
-		private final TileState block;
 		private final FilterBlock<ItemStack, ItemFilter> filter;
 
-		public ItemFilterInformation(TileState block, FilterBlock<ItemStack, ItemFilter> filter) {
-			this.block = block;
+		public ItemFilterInformation(FilterBlock<ItemStack, ItemFilter> filter) {
 			this.filter = filter;
 		}
 
 
 		private ItemFilter getFilter() {
-			return this.filter.getFilter(this.block);
+			return this.filter.getFilter();
 		}
 
 
 		private void setFilter(ItemFilter filter) {
-			this.filter.setFilter(this.block, filter);
-			this.block.update();
+			this.filter.setFilter(filter);
 		}
 
 	}

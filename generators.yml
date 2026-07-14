@@ -32,10 +32,25 @@ bio_generator:
     fluidConsumed: 100
     duration: 100
 
+diesel_generator:
+  energyGeneration: 100
+  internalCapacity: 100000
+  upgradeSlots: 3
+  baseSpeed: 1.0
+  capacity: 4000
+  fluidConsumed: 1
+  duration: 10
+
 furnace_generator:
   energyGeneration: 1
   internalCapacity: 1000
   upgradeSlots: 2
+  baseSpeed: 1.0
+
+lightning_generator:
+  energyGeneration: 10000
+  internalCapacity: 1000000
+  upgradeSlots: 6
   baseSpeed: 1.0
 
 solar_panel:
@@ -68,4 +83,4 @@ thermo_generator:
     baseSpeed: 1.0
     capacity: 4000
     fluidConsumed: 100
-    duration: 10
+    duration: 100

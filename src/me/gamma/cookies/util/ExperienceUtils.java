@@ -23,7 +23,7 @@ public class ExperienceUtils {
 
 
 	/**
-	 * Returns the amount of experience required to get from the given level to the enxt one.
+	 * Returns the amount of experience required to get from the given level to the next one.
 	 * 
 	 * @param level the current experience level
 	 * @return the amount of experience needed for the next level

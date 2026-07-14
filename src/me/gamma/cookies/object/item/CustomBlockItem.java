@@ -2,11 +2,12 @@
 package me.gamma.cookies.object.item;
 
 
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.LoreBuilder.Section;
 import me.gamma.cookies.object.block.AbstractCustomBlock;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -34,7 +35,7 @@ public class CustomBlockItem extends AbstractBlockItem<AbstractCustomBlock> {
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		if(description != null) {
 			Section section = builder.createSection(null, true);
 			for(String line : this.description)

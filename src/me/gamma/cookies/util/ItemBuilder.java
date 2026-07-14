@@ -38,19 +38,19 @@ public class ItemBuilder {
 	private List<String> lore;
 
 	public ItemBuilder(Material material) {
-		this(() -> new ItemStack(material));
+		this(new ItemStack(material));
 	}
 
 
 	public ItemBuilder(ItemStack itemStack) {
-		this(itemStack::clone);
+		this.stack = itemStack.clone();
+		this.meta = this.stack.getItemMeta();
+		this.lore = this.stack.getItemMeta() == null || this.stack.getItemMeta().getLore() == null ? new ArrayList<>() : this.stack.getItemMeta().getLore();
 	}
 
 
 	public ItemBuilder(IItemSupplier supplier) {
-		this.stack = supplier.get();
-		this.meta = this.stack.getItemMeta();
-		this.lore = this.stack.getItemMeta() == null || this.stack.getItemMeta().getLore() == null ? new ArrayList<>() : this.stack.getItemMeta().getLore();
+		this(supplier.get());
 	}
 
 
@@ -80,6 +80,7 @@ public class ItemBuilder {
 	}
 
 
+	@Deprecated
 	public ItemBuilder setCustomModelData(int customModelData) {
 		this.meta.setCustomModelData(customModelData);
 		return this;

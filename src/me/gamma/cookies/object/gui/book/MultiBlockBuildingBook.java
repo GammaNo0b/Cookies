@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import me.gamma.cookies.init.BookInit;
-import me.gamma.cookies.init.MultiBlockInit;
 import me.gamma.cookies.object.gui.History;
 import me.gamma.cookies.object.multiblock.MultiBlock;
 import me.gamma.cookies.util.InventoryUtils;
@@ -95,18 +94,6 @@ public class MultiBlockBuildingBook implements Book<MultiBlock> {
 	@Override
 	public ItemStack[] getItems(int page, Inventory inventory, int cycle, MultiBlock data) {
 		return new ItemStack[0];
-	}
-
-
-	@Override
-	public MultiBlock loadData(Inventory inventory) {
-		return MultiBlockInit.getMultiBlockByName(InventoryUtils.getStringFromStack(inventory.getItem(this.getSlot(this.getIdentifierSlot(), inventory.getSize())), KEY_MULTIBLOCK));
-	}
-
-
-	@Override
-	public void saveData(Inventory inventory, MultiBlock data) {
-		InventoryUtils.storeStringInStack(inventory.getItem(this.getSlot(this.getIdentifierSlot(), inventory.getSize())), KEY_MULTIBLOCK, data.getName());
 	}
 
 

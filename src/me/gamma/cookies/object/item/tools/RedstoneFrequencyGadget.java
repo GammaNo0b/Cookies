@@ -8,19 +8,20 @@ import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.object.property.ByteProperty;
 import me.gamma.cookies.object.property.Properties;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
 public class RedstoneFrequencyGadget extends AbstractCustomItem {
 
-	public static final ByteProperty REDSTONE_FREQUENCY = Properties.REDSTONE_FREQUENCY;
+	public static final String KEY_REDSTONE_FREQUENCY = "redstonefrequency";
 
 	@Override
 	public String getIdentifier() {
@@ -35,7 +36,7 @@ public class RedstoneFrequencyGadget extends AbstractCustomItem {
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		builder.createSection(null, true).add("§7Click a redstone transmitter or receiver").add("§7to change it's frequency or sneak").add("§7to display it's current value.");
 	}
 

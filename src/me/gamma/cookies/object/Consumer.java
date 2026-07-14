@@ -2,6 +2,7 @@
 package me.gamma.cookies.object;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.gamma.cookies.object.item.ItemProvider;
@@ -27,10 +28,14 @@ public interface Consumer {
 	 * @return the amount that could not be consumed
 	 */
 	static <T, P extends Provider<T>> int consume(T type, int amount, List<P> inputs) {
+		List<P> empty = new ArrayList<>();
+
 		// store in non-empty provider
 		for(P provider : inputs) {
-			if(provider.isEmpty())
+			if(provider.isEmpty()) {
+				empty.add(provider);
 				continue;
+			}
 
 			if(provider.match(type))
 				if((amount = provider.set(amount)) == 0)
@@ -38,10 +43,7 @@ public interface Consumer {
 		}
 
 		// store in empty provider
-		for(P provider : inputs) {
-			if(!provider.isEmpty())
-				continue;
-
+		for(P provider : empty) {
 			if(!provider.match(type)) {
 				if(!provider.canChangeType(type))
 					continue;
@@ -69,6 +71,7 @@ public interface Consumer {
 		for(TypelessProvider provider : inputs)
 			if((amount = provider.set(amount)) == 0)
 				return 0;
+
 		return amount;
 	}
 

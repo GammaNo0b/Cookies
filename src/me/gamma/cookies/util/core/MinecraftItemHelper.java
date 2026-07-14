@@ -3,17 +3,20 @@ package me.gamma.cookies.util.core;
 
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_21_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R3.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.item.EnumColor;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDye;
-import net.minecraft.world.level.block.BlockComposter;
+import net.minecraft.world.item.Rarity;
 
 
 
@@ -26,41 +29,71 @@ import net.minecraft.world.level.block.BlockComposter;
 public class MinecraftItemHelper {
 
 	/**
+	 * Returns the rarity of the given item.
+	 * 
+	 * @param stack the item
+	 * @return the rarity
+	 */
+	public static Rarity getItemRarity(ItemStack stack) {
+		return CraftItemStack.asNMSCopy(stack).getRarity();
+	}
+
+
+	/**
+	 * Returns the color of the given rarity.
+	 * 
+	 * @param rarity the rarity
+	 * @return the color
+	 */
+	public static Color getItemRarityColor(ItemRarity rarity) {
+		return getItemRarityColor(switch (rarity) {
+			case COMMON -> Rarity.COMMON;
+			case UNCOMMON -> Rarity.UNCOMMON;
+			case RARE -> Rarity.RARE;
+			case EPIC -> Rarity.EPIC;
+		});
+	}
+
+
+	/**
+	 * Returns the color of the given rarity.
+	 * 
+	 * @param rarity the rarity
+	 * @return the color
+	 */
+	public static Color getItemRarityColor(Rarity rarity) {
+		Integer i = rarity.color().getColor();
+		if(i == null)
+			return null;
+
+		return Color.fromRGB(i);
+	}
+
+
+	/**
 	 * Returns the number of ticks the given stack takes to burn in a furnace.
 	 * 
 	 * @param stack the stack
 	 * @return the burntime
 	 */
 	public static int getFuel(ItemStack stack) {
-		return ((MinecraftServer) ((CraftServer) Bukkit.getServer()).getServer()).bo().b(CraftItemStack.asNMSCopy(stack));
-	}
-
-
-	/**
-	 * Returns the chance the given material increases the composter level. Returns -1 if the material cannot be composted.
-	 * 
-	 * @param material the material
-	 * @return the composting chance
-	 */
-	public static float getCompostChance(Material material) {
-		// BlockComposter#COMPOSTABLES
-		return BlockComposter.f.getFloat(CraftMagicNumbers.getItem(material));
+		return ((MinecraftServer) ((CraftServer) Bukkit.getServer()).getServer()).fuelValues().burnDuration(CraftItemStack.asNMSCopy(stack));
 	}
 
 
 	/**
 	 * Returns the color in RGB format of the given dye.
 	 * 
-	 * @param material the dye material
+	 * @param stack the dye stack
 	 * @return the color
 	 */
-	public static int getDyeColor(Material material) {
-		Item item = CraftMagicNumbers.getItem(material);
-		if(!(item instanceof ItemDye dye))
+	public static int getDyeColor(ItemStack stack) {
+		net.minecraft.world.item.ItemStack nmsstack = CraftItemStack.asNMSCopy(stack);
+		if(!(nmsstack.getItem() instanceof DyeItem))
 			return -1;
 
-		EnumColor color = dye.b();
-		return color.g();
+		DyeColor color = nmsstack.get(DataComponents.DYE);
+		return color.getTextColor();
 	}
 
 
@@ -91,8 +124,7 @@ public class MinecraftItemHelper {
 	 * @return the number of components
 	 */
 	public static int getNumberComponents(ItemStack stack) {
-		// ItemStack#getComponents()
-		return CraftItemStack.asNMSCopy(stack).a().d();
+		return CraftItemStack.asNMSCopy(stack).getComponents().size();
 	}
 
 }

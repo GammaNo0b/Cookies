@@ -5,21 +5,21 @@ package me.gamma.cookies.object.fluid;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.TileState;
-import org.bukkit.persistence.PersistentDataHolder;
 
-import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.Consumer;
+import me.gamma.cookies.object.DataStorage;
 import me.gamma.cookies.object.Filter;
-import me.gamma.cookies.object.block.AbstractCustomBlock;
 import me.gamma.cookies.object.block.BlockFaceConfigurable;
-import me.gamma.cookies.object.block.Cartesian;
 import me.gamma.cookies.object.gui.BlockFaceConfig;
-import me.gamma.cookies.object.property.ByteProperty;
+import me.gamma.cookies.object.tile.AbstractCustomTileEntity;
+import me.gamma.cookies.object.tile.TileEntityStorage;
 import me.gamma.cookies.util.BlockUtils;
+import me.gamma.cookies.util.collection.Holder;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -29,31 +29,53 @@ import me.gamma.cookies.util.BlockUtils;
  * @author gamma
  *
  */
-public interface FluidConsumer extends Cartesian {
+public interface FluidConsumer extends DataStorage {
+
+	String KEY_FLUID_INPUT_ACCESS_FLAGS = "fluidinputaccessflags";
+
+	@Override
+	default boolean load(Chunk chunk, PersistentDataObject data) {
+		Byte b = data.getByte(KEY_FLUID_INPUT_ACCESS_FLAGS);
+		if(b == null)
+			return false;
+
+		this.setFluidInputAccessFlags(b);
+		return true;
+	}
+
+
+	@Override
+	default boolean save(Chunk chunk, PersistentDataObject data) {
+		data.setByte(KEY_FLUID_INPUT_ACCESS_FLAGS, this.getFluidInputAccessFlags());
+
+		return true;
+	}
+
 
 	/**
-	 * Property to store the fluid input access flags in a block.
+	 * Returns the block of this fluid consumer.
+	 * 
+	 * @return the block
 	 */
-	ByteProperty FLUID_INPUT_ACCESS_FLAGS = new ByteProperty("fluidinputaccessflags");
+	Block getBlock();
 
 	/**
-	 * Returns the list of {@link FluidProvider} of the given data holder to consume fluids.
+	 * Returns the list of {@link FluidProvider} of this fluid consumer to consume fluids.
 	 * 
 	 * @param holder the data holder
 	 * @return the list of fluid providers
 	 */
-	List<FluidProvider> getFluidInputs(PersistentDataHolder holder);
+	List<FluidProvider> getFluidInputs();
 
 
 	/**
-	 * Returns the list of {@link FluidProvider} of the given block on the given face to consume fluids.
+	 * Returns the list of {@link FluidProvider} of this fluid consumer on the given face to consume fluids.
 	 * 
-	 * @param block the block
-	 * @param face  the block face
+	 * @param face the block face
 	 * @return the list of fluid providers
 	 */
-	default List<FluidProvider> getFluidInputs(TileState block, BlockFace face) {
-		return this.canAccessFluidInputs(block, face) ? this.getFluidInputs(block) : new ArrayList<>();
+	default List<FluidProvider> getFluidInputs(BlockFace face) {
+		return this.canAccessFluidInputs(face) ? this.getFluidInputs() : new ArrayList<>();
 	}
 
 
@@ -61,23 +83,27 @@ public interface FluidConsumer extends Cartesian {
 	 * Returns the flags for each side of the block to be able to accept fluids from that side. The first six bits correspond to the six different sides
 	 * in {@link BlockUtils#cartesian}. The seventh bit controlls automatic fluid transfer.
 	 * 
-	 * @param holder the data holder
 	 * @return the access flags
 	 */
-	default byte getFluidInputAccessFlags(PersistentDataHolder holder) {
-		return FLUID_INPUT_ACCESS_FLAGS.fetch(holder);
-	}
+	byte getFluidInputAccessFlags();
+
+	/**
+	 * Sets the new block face flags.
+	 * 
+	 * @param flags the flags
+	 * @see FluidSupplier#getFluidOutputAccessFlags()
+	 */
+	void setFluidInputAccessFlags(byte flags);
 
 
 	/**
-	 * Checks if the given block can accept fluids from the given block face.
+	 * Checks if this fluid consumer can accept fluids from the given block face.
 	 * 
-	 * @param block the block
-	 * @param face  the block face
+	 * @param face the block face
 	 * @return if it can accept fluids
 	 */
-	default boolean canAccessFluidInputs(TileState block, BlockFace face) {
-		return BlockFaceConfigurable.isFaceEnabled(this.getFluidInputAccessFlags(block), block, face);
+	default boolean canAccessFluidInputs(BlockFace face) {
+		return BlockFaceConfigurable.isFaceEnabled(this.getFluidInputAccessFlags(), this.getBlock(), face);
 	}
 
 
@@ -87,44 +113,39 @@ public interface FluidConsumer extends Cartesian {
 	 * @return the config
 	 */
 	default BlockFaceConfig.Config createFluidInputBlockFaceConfig() {
-		return new BlockFaceConfig.Config("§dFluid Input Configuration", FLUID_INPUT_ACCESS_FLAGS, true, Material.MAGENTA_STAINED_GLASS_PANE);
+		return new BlockFaceConfig.Config("§dFluid Input Configuration", Holder.create(this::getFluidInputAccessFlags, this::setFluidInputAccessFlags), true, Material.MAGENTA_STAINED_GLASS_PANE);
 	}
 
 
 	/**
-	 * Checks if the given data holder can pull fluids from adjacent fluid providers.
+	 * Checks if this fluid consumer can pull fluids from adjacent fluid providers.
 	 * 
-	 * @param holder the data holder
 	 * @return if automation is enabled
 	 */
-	default boolean isAutoPullingFluids(PersistentDataHolder holder) {
-		return (this.getFluidInputAccessFlags(holder) & 0x40) != 0;
+	default boolean isAutoPullingFluids() {
+		return (this.getFluidInputAccessFlags() & 0x40) != 0;
 	}
 
 
 	/**
 	 * Tries to pull fluids from adjacent blocks. Checks first whether automated pulling is enabled.
 	 * 
-	 * @param block the block
 	 * @return whether some fluid got successfully pulled
 	 */
-	default boolean tryPullFluid(TileState block) {
-		if(!this.isAutoPullingFluids(block))
+	default boolean tryPullFluid() {
+		if(!this.isAutoPullingFluids())
 			return false;
 
 		for(BlockFace face : BlockUtils.cartesian) {
-			if(!this.canAccessFluidInputs(block, face))
+			if(!this.canAccessFluidInputs(face))
 				continue;
 
-			Block target = block.getBlock().getRelative(face);
-			if(!(target.getState() instanceof TileState tile))
+			Block target = this.getBlock().getRelative(face);
+			FluidSupplier supplier = FluidSupplier.getFluidSupplier(target);
+			if(supplier == null || !supplier.canAccessFluidOutputs(face.getOppositeFace()))
 				continue;
 
-			FluidSupplier supplier = FluidSupplier.getFluidSupplier(tile);
-			if(supplier == null || !supplier.canAccessFluidOutputs(tile, face.getOppositeFace()))
-				continue;
-
-			if(supplier.removeFluid(tile, Filter.empty(), 100, fluid -> FluidConsumer.this.addFluid(block, fluid)))
+			if(supplier.removeFluid(Filter.any(), 100, fluid -> FluidConsumer.this.addFluid(fluid)))
 				return true;
 		}
 
@@ -146,42 +167,40 @@ public interface FluidConsumer extends Cartesian {
 
 
 	/**
-	 * Adds the given stack to the given data holder.
+	 * Adds the given stack to tthis fluid consumer.
 	 * 
-	 * @param holder the data holder
-	 * @param fluid  the fluid to be consumed
+	 * @param fluid the fluid to be consumed
 	 * @return if the fluid that couldn't be consumed
 	 */
-	default Fluid addFluid(PersistentDataHolder holder, Fluid fluid) {
-		return addFluid(fluid, this.getFluidInputs(holder));
+	default Fluid addFluid(Fluid fluid) {
+		return addFluid(fluid, this.getFluidInputs());
 	}
 
 
 	/**
-	 * Adds the given fluid to the given block on the given facce.
+	 * Adds the given fluid to this fluid consumer on the given facce.
 	 * 
-	 * @param block the block
 	 * @param face  the block face
 	 * @param fluid the fluid
 	 * @return the fluid that couldn't be consumed
 	 */
-	default Fluid addFluid(TileState block, BlockFace face, Fluid fluid) {
-		if(!this.canAccessFluidInputs(block, face))
+	default Fluid addFluid(BlockFace face, Fluid fluid) {
+		if(!this.canAccessFluidInputs(face))
 			return fluid;
 
-		return this.addFluid(block, fluid);
+		return this.addFluid(fluid);
 	}
 
 
 	/**
-	 * Returns the {@link FluidConsumer} from the given data holder.
+	 * Returns the {@link FluidConsumer} from the given block.
 	 * 
-	 * @param holder the data holder
+	 * @param block the block
 	 * @return the fluid consumer or null
 	 */
-	public static FluidConsumer getFluidConsumer(PersistentDataHolder holder) {
-		AbstractCustomBlock custom = Blocks.getCustomBlockFromHolder(holder);
-		return custom instanceof FluidConsumer ? (FluidConsumer) custom : null;
+	public static FluidConsumer getFluidSupplier(Block block) {
+		AbstractCustomTileEntity<?, ?> tileEntity = TileEntityStorage.TILE_ENTITY_STORAGE.getTileEntity(block);
+		return tileEntity instanceof FluidConsumer consumer ? consumer : null;
 	}
 
 }

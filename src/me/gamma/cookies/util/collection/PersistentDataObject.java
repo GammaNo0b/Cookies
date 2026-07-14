@@ -5,6 +5,7 @@ package me.gamma.cookies.util.collection;
 import java.util.List;
 
 import org.bukkit.NamespacedKey;
+import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -23,8 +24,28 @@ public class PersistentDataObject {
 	}
 
 
+	public PersistentDataObject(PersistentDataAdapterContext context) {
+		this(context.newPersistentDataContainer());
+	}
+
+
 	public PersistentDataContainer getContainer() {
 		return this.container;
+	}
+
+
+	public PersistentDataAdapterContext getAdapterContext() {
+		return this.container.getAdapterContext();
+	}
+
+
+	public void copyTo(PersistentDataObject object) {
+		this.copyTo(object.getContainer());
+	}
+
+
+	public void copyTo(PersistentDataContainer container) {
+		this.container.copyTo(container, false);
 	}
 
 
@@ -55,6 +76,11 @@ public class PersistentDataObject {
 
 	public <T, Z> boolean has(String name, PersistentDataType<T, Z> type) {
 		return this.container.has(new NamespacedKey(Cookies.INSTANCE, name), type);
+	}
+
+
+	public void remove(String name) {
+		this.container.remove(new NamespacedKey(Cookies.INSTANCE, name));
 	}
 
 
@@ -234,35 +260,37 @@ public class PersistentDataObject {
 	}
 
 
-	public PersistentDataContainer getContainer(String name) {
-		return this.get(name, PersistentDataType.TAG_CONTAINER);
+	public PersistentDataObject getObject(String name) {
+		PersistentDataContainer o = this.get(name, PersistentDataType.TAG_CONTAINER);
+		return o == null ? null : new PersistentDataObject(o);
 	}
 
 
-	public PersistentDataContainer getContainer(String name, PersistentDataContainer defaultValue) {
-		PersistentDataContainer c = this.getContainer();
+	public PersistentDataObject getObject(String name, PersistentDataObject defaultValue) {
+		PersistentDataObject c = this.getObject(name);
 		return c == null ? defaultValue : c;
 	}
 
 
-	public void setContainer(String name, PersistentDataContainer container) {
-		this.set(name, PersistentDataType.TAG_CONTAINER, container);
+	public void setObject(String name, PersistentDataObject object) {
+		this.set(name, PersistentDataType.TAG_CONTAINER, object.getContainer());
 	}
 
 
-	public List<PersistentDataContainer> getContainers(String name) {
-		return this.get(name, PersistentDataType.LIST.dataContainers());
+	public List<PersistentDataObject> getObjectList(String name) {
+		List<PersistentDataContainer> a = this.get(name, PersistentDataType.LIST.dataContainers());
+		return a == null ? null : a.stream().map(PersistentDataObject::new).toList();
 	}
 
 
-	public List<PersistentDataContainer> getContainers(String name, List<PersistentDataContainer> defaultValue) {
-		List<PersistentDataContainer> a = this.getContainers(name);
+	public List<PersistentDataObject> getObjectList(String name, List<PersistentDataObject> defaultValue) {
+		List<PersistentDataObject> a = this.getObjectList(name);
 		return a == null ? defaultValue : a;
 	}
 
 
-	public void setContainers(String name, List<PersistentDataContainer> containers) {
-		this.set(name, PersistentDataType.LIST.dataContainers(), containers);
+	public void setObjectList(String name, List<PersistentDataObject> containers) {
+		this.set(name, PersistentDataType.LIST.dataContainers(), containers.stream().map(PersistentDataObject::getContainer).toList());
 	}
 
 }

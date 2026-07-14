@@ -4,30 +4,29 @@ package me.gamma.cookies.object.item.resources;
 
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.util.Vector;
 
-import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.block.network.Wire;
 import me.gamma.cookies.object.block.network.WireHolder;
 import me.gamma.cookies.object.item.AbstractCustomItem;
-import me.gamma.cookies.object.property.Properties;
-import me.gamma.cookies.object.property.PropertyBuilder;
-import me.gamma.cookies.object.property.VectorProperty;
+import me.gamma.cookies.object.item.CustomItemData;
+import me.gamma.cookies.object.tile.AbstractCustomTileEntity;
+import me.gamma.cookies.object.tile.TileEntityStorage;
 import me.gamma.cookies.util.ItemUtils;
+import me.gamma.cookies.util.PersistentDataUtils;
 import me.gamma.cookies.util.Utils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
 public class WireItem extends AbstractCustomItem {
 
-	public static final VectorProperty HOOK_POS = Properties.POS;
+	public static final String KEY_HOOK_POS = "hookpos";
 
 	private final String name;
 	private final String identifier;
@@ -67,30 +66,29 @@ public class WireItem extends AbstractCustomItem {
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		builder.createSection("", false).add("§7Transfers §b" + this.transfer + " §cCC/t").build().createSection("", false).add("§7Shift-Right click to set first position.").add("§7Right click to connect wire.");
 	}
 
 
 	@Override
-	protected PropertyBuilder buildItemProperties(PropertyBuilder builder) {
-		return super.buildItemProperties(builder).add(HOOK_POS);
-	}
-
-
-	@Override
 	public boolean onBlockRightClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {
-		if(block.getState() instanceof TileState state && Blocks.getCustomBlockFromBlock(state) instanceof WireHolder holder) {
-			ItemMeta meta = stack.getItemMeta();
-			if(player.isSneaking()) {
-				HOOK_POS.store(meta, block.getLocation().toVector());
-			} else {
-				Vector pos = HOOK_POS.fetch(meta);
-				if(pos != null && !block.getLocation().toVector().equals(pos) && holder.createWire(state, pos.toLocation(block.getWorld()), this))
-					if(player.getGameMode() == GameMode.SURVIVAL)
-						stack.setAmount(stack.getAmount() - 1);
-			}
-			stack.setItemMeta(meta);
+		CustomItemData data = getCustomData(stack);
+		if(data == null)
+			return true;
+
+		AbstractCustomTileEntity<?, ?> tileEntity = TileEntityStorage.TILE_ENTITY_STORAGE.getTileEntity(block);
+		if(tileEntity == null || !(tileEntity instanceof WireHolder holder))
+			return true;
+
+		if(player.isSneaking()) {
+			PersistentDataUtils.setVector(data.getData(), KEY_HOOK_POS, block.getLocation().toVector());
+			data.save();
+		} else {
+			Vector pos = PersistentDataUtils.getVector(data.getData(), KEY_HOOK_POS);
+			if(pos != null && !block.getLocation().toVector().equals(pos) && holder.createWire(pos.toLocation(block.getWorld()), this))
+				if(player.getGameMode() == GameMode.SURVIVAL)
+					ItemUtils.increaseItem(stack, -1);
 		}
 
 		return super.onBlockRightClick(player, stack, block, event);
@@ -99,22 +97,28 @@ public class WireItem extends AbstractCustomItem {
 
 	@Override
 	public boolean onAirLeftClick(Player player, ItemStack stack, PlayerInteractEvent event) {
-		ItemMeta meta = stack.getItemMeta();
-		HOOK_POS.storeEmpty(meta);
-		stack.setItemMeta(meta);
-		return super.onAirLeftClick(player, stack, event);
+		CustomItemData data = getCustomData(stack);
+		if(data == null)
+			return true;
+
+		data.getData().remove(KEY_HOOK_POS);
+		data.save();
+
+		return true;
 	}
 
 
 	@Override
 	public boolean onBlockLeftClick(Player player, ItemStack stack, Block block, PlayerInteractEvent event) {
-		if(block.getState() instanceof TileState state && Blocks.getCustomBlockFromBlock(state) instanceof WireHolder<?> holder) {
-			Wire<?> wire = holder.removeWire(state);
-			if(wire != null)
-				ItemUtils.dropItem(wire.getWireItem().get(), block);
-		}
+		AbstractCustomTileEntity<?, ?> tileEntity = TileEntityStorage.TILE_ENTITY_STORAGE.getTileEntity(block);
+		if(tileEntity == null || !(tileEntity instanceof WireHolder holder))
+			return true;
 
-		return super.onBlockLeftClick(player, stack, block, event);
+		Wire<?> wire = holder.removeWire();
+		if(wire != null)
+			ItemUtils.giveItemToPlayer(player, wire.getWireItem().get());
+
+		return true;
 	}
 
 }

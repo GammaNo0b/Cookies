@@ -7,13 +7,14 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.Cookies;
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.util.ItemUtils;
 import me.gamma.cookies.util.ReflectionUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -32,7 +33,7 @@ public class MiniaturizingWand extends AbstractCustomItem {
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		builder.createSection(null, true).add("§7Turns blocks into small cubes.");
 	}
 

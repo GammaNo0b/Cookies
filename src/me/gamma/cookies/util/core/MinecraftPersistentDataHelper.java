@@ -2,10 +2,10 @@
 package me.gamma.cookies.util.core;
 
 
-import org.bukkit.craftbukkit.v1_21_R3.CraftRegistry;
+import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.persistence.PersistentDataContainer;
 
-import net.minecraft.core.IRegistryCustom;
+import net.minecraft.core.RegistryAccess;
 
 
 
@@ -16,7 +16,7 @@ public class MinecraftPersistentDataHelper {
 	}
 
 
-	public static IRegistryCustom getRegistryAccess() {
+	public static RegistryAccess getRegistryAccess() {
 		return CraftRegistry.getMinecraftRegistry();
 	}
 

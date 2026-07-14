@@ -25,13 +25,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.item.AbstractCustomItem;
+import me.gamma.cookies.object.item.CustomItemData;
 import me.gamma.cookies.object.item.ItemTicker;
-import me.gamma.cookies.object.property.UUIDProperty;
 import me.gamma.cookies.util.ItemBuilder;
+import me.gamma.cookies.util.PersistentDataUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -39,7 +40,7 @@ public class PlayerTracker extends AbstractCustomItem implements ItemTicker {
 
 	private static final String TITLE = "§2Select Tracking Player";
 
-	private static final UUIDProperty TRACKED = new UUIDProperty("tracked");
+	private static final String KEY_TRACKED = "tracked";
 
 	private final Set<UUID> players = new HashSet<>();
 	private Map<ItemStack, UUID> tracked = new HashMap<>();
@@ -62,7 +63,7 @@ public class PlayerTracker extends AbstractCustomItem implements ItemTicker {
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		builder.createSection(null, true).add("Trackes the selected player.");
 	}
 
@@ -70,12 +71,6 @@ public class PlayerTracker extends AbstractCustomItem implements ItemTicker {
 	@Override
 	public Material getMaterial() {
 		return Material.COMPASS;
-	}
-
-
-	@Override
-	protected void editItemMeta(ItemMeta meta) {
-		meta.setUnbreakable(false);
 	}
 
 
@@ -133,17 +128,23 @@ public class PlayerTracker extends AbstractCustomItem implements ItemTicker {
 
 	@Override
 	public void tick(Player player, ItemStack stack) {
-		UUID uuid = TRACKED.fetch(stack.getItemMeta());
-		if(uuid != null) {
-			Player tracked = Bukkit.getPlayer(uuid);
-			if(tracked != null && tracked.isOnline()) {
-				CompassMeta meta = (CompassMeta) stack.getItemMeta();
-				if(meta.isUnbreakable()) {
-					meta.setLodestone(player.getLocation());
-					meta.setLodestoneTracked(false);
-					stack.setItemMeta(meta);
-				}
-			}
+		CustomItemData data = getCustomData(stack);
+		if(data == null)
+			return;
+
+		UUID uuid = PersistentDataUtils.getUUID(data.getData(), KEY_TRACKED);
+		if(uuid == null)
+			return;
+
+		Player tracked = Bukkit.getPlayer(uuid);
+		if(tracked == null || !tracked.isOnline())
+			return;
+
+		CompassMeta meta = (CompassMeta) stack.getItemMeta();
+		if(meta.isUnbreakable()) {
+			meta.setLodestone(player.getLocation());
+			meta.setLodestoneTracked(false);
+			stack.setItemMeta(meta);
 		}
 	}
 
@@ -165,8 +166,9 @@ public class PlayerTracker extends AbstractCustomItem implements ItemTicker {
 							if(stack != null && stack.getType() == Material.PLAYER_HEAD) {
 								OfflinePlayer track = ((SkullMeta) stack.getItemMeta()).getOwningPlayer();
 								if(track.isOnline() && track instanceof Player) {
-									ItemMeta meta = stack.getItemMeta();
-									TRACKED.store(meta, track.getUniqueId());
+									CustomItemData data = getCustomData(stack);
+									PersistentDataUtils.setUUID(data.getData(), KEY_TRACKED, track.getUniqueId());
+									data.save();
 								}
 							}
 						}

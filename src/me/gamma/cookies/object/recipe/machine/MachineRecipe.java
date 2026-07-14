@@ -5,13 +5,14 @@ package me.gamma.cookies.object.recipe.machine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 
 import com.google.gson.JsonObject;
 
-import me.gamma.cookies.object.block.machine.AbstractMachine;
+import me.gamma.cookies.object.block.machine.AbstractMachineBlock;
 import me.gamma.cookies.object.recipe.CookieRecipe;
 import me.gamma.cookies.object.recipe.RecipeType;
 import me.gamma.cookies.util.ArrayUtils;
@@ -39,7 +40,7 @@ public interface MachineRecipe extends CookieRecipe {
 	 * 
 	 * @return the machine
 	 */
-	AbstractMachine getMachine();
+	AbstractMachineBlock<?, ?> getMachine();
 
 	/**
 	 * Returns the number of ticks this recipe needs to finish.
@@ -77,28 +78,15 @@ public interface MachineRecipe extends CookieRecipe {
 	}
 
 
-	default HashMap<RecipeChoice, Integer> matches(ItemStack[] input) {
+	default Map<RecipeChoice, Integer> matches(Map<ItemStack, Integer> input) {
 		if(this.getIngredients() == null)
 			return null;
 
-		HashMap<ItemStack, Integer> map = new HashMap<>();
-		for(ItemStack stack : input) {
-			if(!ItemUtils.isEmpty(stack)) {
-				stack = stack.clone();
-				int amount = stack.getAmount();
-				stack.setAmount(1);
-				if(!map.containsKey(stack))
-					map.put(stack, amount);
-				else
-					map.put(stack, amount + map.get(stack));
-			}
-		}
-
-		return this.checkIngredients(ArrayUtils.asList(this.getIngredients()), 0, map);
+		return this.checkIngredients(ArrayUtils.asList(this.getIngredients()), 0, input);
 	}
 
 
-	private HashMap<RecipeChoice, Integer> checkIngredients(ArrayList<RecipeChoice> ingredients, int index, HashMap<ItemStack, Integer> map) {
+	private Map<RecipeChoice, Integer> checkIngredients(List<RecipeChoice> ingredients, int index, Map<ItemStack, Integer> map) {
 		if(index >= ingredients.size())
 			return new HashMap<>();
 
@@ -119,7 +107,7 @@ public interface MachineRecipe extends CookieRecipe {
 				continue;
 
 			map.put(stack, available);
-			HashMap<RecipeChoice, Integer> uses = this.checkIngredients(ingredients, index + 1, new HashMap<>(map));
+			Map<RecipeChoice, Integer> uses = this.checkIngredients(ingredients, index + 1, new HashMap<>(map));
 			if(uses != null) {
 				uses.put(ingredient, i);
 				return uses;
@@ -163,11 +151,13 @@ public interface MachineRecipe extends CookieRecipe {
 			copy.setAmount(amount - full);
 			results.add(copy);
 		}
-		
+
 		return results;
 	}
 
+
 	JsonObject saveRecipe();
+
 
 	/**
 	 * Reads and returns a machine recipe from the given json object and given machine.
@@ -176,7 +166,7 @@ public interface MachineRecipe extends CookieRecipe {
 	 * @param machine the machine
 	 * @return the read recipe
 	 */
-	public static MachineRecipe loadRecipe(JsonObject object, AbstractMachine machine) {
+	public static MachineRecipe loadRecipe(JsonObject object, AbstractMachineBlock<?, ?> machine) {
 		String machinetype = object.get("type").getAsString();
 		if("advanced".equals(machinetype)) {
 			return AdvancedMachineRecipe.loadRecipe(object, machine);

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -103,22 +104,25 @@ public class Computer extends AbstractCustomBlock implements BlockInventoryProvi
 
 
 	@Override
-	public boolean onBlockBreak(Player player, TileState block, BlockBreakEvent event) {
-		if(super.onBlockBreak(player, block, event))
-			return true;
-		
+	public boolean onBlockBreak(Player player, Block block, BlockBreakEvent event) {
+		if(!super.onBlockBreak(player, block, event))
+			return false;
+
 		int id = TASKID.fetch(block);
 		if(id > 0)
 			Bukkit.getScheduler().cancelTask(id);
 		ItemUtils.dropItem(SCRIPT_ITEM.fetch(block), block);
 		ItemUtils.dropItem(LOG_ITEM.fetch(block), block);
-		
+
 		return false;
 	}
 
 
 	@Override
-	public boolean onBlockRightClick(Player player, TileState block, ItemStack stack, PlayerInteractEvent event) {
+	public boolean onBlockRightClick(Player player, Block block, ItemStack stack, PlayerInteractEvent event) {
+		if(!super.onBlockRightClick(player, block, stack, event))
+			return false;
+
 		this.openGui(player, block);
 		return true;
 	}

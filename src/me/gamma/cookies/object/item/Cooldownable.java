@@ -4,37 +4,51 @@ package me.gamma.cookies.object.item;
 
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataHolder;
-
-import me.gamma.cookies.object.property.LongProperty;
-import me.gamma.cookies.object.property.Properties;
 
 
 
 public interface Cooldownable {
 
-	LongProperty LAST_USED = Properties.LAST_USED;
+	String KEY_LAST_USED = "lastused";
 
 	/**
-	 * Returns the amount of ticks this item is on cooldown.
+	 * Returns the number of ticks the given item requires to cool down.
 	 * 
-	 * @param holder the item
-	 * @return the number of ticks
+	 * @param stack the item stack
+	 * @return the cool down ticks
 	 */
-	long getCooldown(PersistentDataHolder holder);
+	long getCooldown(ItemStack stack);
 
 
 	/**
-	 * Sets the item on cooldown for the number of ticks specified by {@link Cooldownable#getCooldown(PersistentDataHolder)}.
+	 * Returns the time the given item was last used.
+	 * 
+	 * @param stack the item
+	 * @return the time of the last usage
+	 */
+	default long getLastUsed(ItemStack stack) {
+		CustomItemData data = AbstractCustomItem.getCustomData(stack);
+		if(data == null)
+			return 0;
+
+		return data.getData().getLong(KEY_LAST_USED, 0);
+	}
+
+
+	/**
+	 * Sets the item on cooldown for the number of ticks specified by {@link Cooldownable#getLastUsed(PersistentDataHolder)}.
 	 * 
 	 * @param world the world in which the cooldown is set
 	 * @param stack the item
 	 */
-	default void initCooldown(World world, ItemStack stack) {
-		ItemMeta meta = stack.getItemMeta();
-		LAST_USED.store(meta, world.getGameTime() + this.getCooldown(meta));
-		stack.setItemMeta(meta);
+	default void setLastUsed(World world, ItemStack stack) {
+		CustomItemData data = AbstractCustomItem.getCustomData(stack);
+		if(data == null)
+			return;
+
+		data.getData().setLong(KEY_LAST_USED, world.getGameTime());
+		data.save();
 	}
 
 
@@ -46,7 +60,7 @@ public interface Cooldownable {
 	 * @return if it is on cooldown
 	 */
 	default boolean isOnCooldown(World world, ItemStack stack) {
-		return world.getGameTime() < LAST_USED.fetchEmpty(stack.getItemMeta());
+		return world.getGameTime() < this.getLastUsed(stack) + this.getCooldown(stack);
 	}
 
 }

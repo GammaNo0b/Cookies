@@ -3,7 +3,7 @@ package me.gamma.cookies.object.block.machine;
 
 
 import org.bukkit.Material;
-import org.bukkit.block.TileState;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -45,7 +45,7 @@ public class MachineConstants {
 	}
 
 
-	public static Inventory createGui(AbstractGuiMachine machine, TileState block) {
+	public static Inventory createGui(AbstractGuiMachineBlock<?, ?> machine, Block block) {
 		Inventory gui = InventoryUtils.createBasicInventoryProviderGui(machine, block);
 		setupInventory(gui, machine.getTier());
 		return gui;

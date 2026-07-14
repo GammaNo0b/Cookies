@@ -67,11 +67,11 @@ public interface FluidCable {
 	 */
 	default void transmitFluids(TileState block, Map<FluidSupplier, TileState> supplier, Map<FluidConsumer, TileState> consumer, Map<FluidStorage, TileState> storage) {
 		LinkedList<FluidProvider> supplierlist = new LinkedList<>();
-		supplier.forEach((sup, state) -> supplierlist.addAll(sup.getFluidOutputs(state)));
+		supplier.forEach((sup, _) -> supplierlist.addAll(sup.getFluidOutputs()));
 		LinkedList<FluidProvider> consumerlist = new LinkedList<>();
-		consumer.forEach((con, state) -> consumerlist.addAll(con.getFluidInputs(state)));
+		consumer.forEach((con, _) -> consumerlist.addAll(con.getFluidInputs()));
 		LinkedList<FluidProvider> storagelist = new LinkedList<>();
-		storage.forEach((sto, state) -> storagelist.addAll(sto.getFluidProviders(state)));
+		storage.forEach((sto, _) -> storagelist.addAll(sto.getFluidProviders()));
 		Cable.transfer(this.getTransferMode(block), this.getBuffer(block), this.getFilter(block), this.getTransferRate(block), supplierlist, consumerlist, storagelist);
 	}
 

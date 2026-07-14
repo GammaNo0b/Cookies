@@ -61,16 +61,6 @@ public class MultiBlockBook implements Book<Void> {
 
 
 	@Override
-	public Void loadData(Inventory inventory) {
-		return null;
-	}
-
-
-	@Override
-	public void saveData(Inventory inventory, Void data) {}
-
-
-	@Override
 	public int[] getItemSlots() {
 		return BASIC_THREE_ROW_SLOT_LAYOUT;
 	}
@@ -83,7 +73,7 @@ public class MultiBlockBook implements Book<Void> {
 
 
 	@Override
-	public void onItemClick(HumanEntity player, Inventory gui, ItemStack stack, InventoryClickEvent event, int page) {
+	public void onItemClick(HumanEntity player, Inventory gui, ItemStack stack, int page, Void data, InventoryClickEvent event) {
 		MultiBlock multiBlock = MultiBlockInit.getMultiBlockByName(stack.getItemMeta().getDisplayName());
 		if(multiBlock != null)
 			MultiBlockBuildingBook.openBook(player, multiBlock);

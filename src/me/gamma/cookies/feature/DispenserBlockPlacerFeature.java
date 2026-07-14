@@ -22,14 +22,17 @@ public class DispenserBlockPlacerFeature extends SimpleCookieListener {
 
 	@EventHandler
 	public void onDispense(BlockDispenseEvent event) {
-		if(!this.enabled)
+		if(!this.isEnabled())
+			return;
+
+		Block block = event.getBlock();
+		if(block.getType() != Material.DISPENSER)
 			return;
 
 		ItemStack stack = event.getItem();
 		if(ItemUtils.isEmpty(stack) || !stack.getType().isBlock() || Items.getCustomItemFromStack(stack) instanceof AbstractBlockItem)
 			return;
 
-		Block block = event.getBlock();
 		Directional dispenser = (Directional) block.getBlockData();
 		BlockFace facing = dispenser.getFacing();
 		Block target = block.getRelative(facing);

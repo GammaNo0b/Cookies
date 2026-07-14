@@ -10,14 +10,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.gamma.cookies.object.item.AbstractCustomItem;
-import me.gamma.cookies.object.property.IntegerProperty;
-import me.gamma.cookies.object.property.PropertyBuilder;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
 public class Airgun extends AbstractCustomItem {
 
-	private static final IntegerProperty AMMUNITION = new IntegerProperty("ammunition");
+	private static final String KEY_AMMUNITION = "ammunition";
 
 	@Override
 	public String getIdentifier() {
@@ -38,8 +37,10 @@ public class Airgun extends AbstractCustomItem {
 
 
 	@Override
-	protected PropertyBuilder buildItemProperties(PropertyBuilder builder) {
-		return super.buildItemProperties(builder).add(AMMUNITION);
+	protected void createData(PersistentDataObject customData) {
+		super.createData(customData);
+
+		customData.setInteger(KEY_AMMUNITION, 0);
 	}
 
 

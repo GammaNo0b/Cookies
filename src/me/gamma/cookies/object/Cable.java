@@ -246,10 +246,10 @@ public interface Cable {
 			while(amount > 0 && index < consumer.size()) {
 				P provider = consumer.get(index++);
 				if(provider.match(type)) {
-					amount = provider.set(amount);
+					amount = provider.set(type, amount);
 				} else if(provider.isEmpty() && provider.canChangeType(type)) {
 					provider.setType(type);
-					amount = provider.set(amount);
+					amount = provider.set(type, amount);
 				}
 			}
 
@@ -388,7 +388,7 @@ public interface Cable {
 							continue;
 
 					provider.setType(type);
-					amount += provider.set(transmit) - transmit;
+					amount += provider.set(type, transmit) - transmit;
 
 					if(provider.isFull())
 						iterator.remove();

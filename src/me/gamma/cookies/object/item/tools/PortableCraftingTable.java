@@ -7,13 +7,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MenuType;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.init.Items;
 import me.gamma.cookies.init.MultiBlockInit;
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.list.HeadTextures;
 import me.gamma.cookies.util.ItemUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -44,7 +45,7 @@ public class PortableCraftingTable extends PortableInventoryOpener {
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		builder.createSection(null, true).add("§7Right click custom multiblock structures to turn them into their portable version.");
 	}
 

@@ -7,17 +7,26 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.RayTraceResult;
 
 import me.gamma.cookies.init.Registries;
+import me.gamma.cookies.object.block.AbstractCustomBlock;
+import me.gamma.cookies.object.block.CustomBlockStorage;
 import me.gamma.cookies.object.gui.book.CookieMenuBook;
 import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.object.team.Team;
+import me.gamma.cookies.object.tile.AbstractCustomTileEntity;
+import me.gamma.cookies.object.tile.TileEntityStorage;
 import me.gamma.cookies.util.ItemUtils;
+import me.gamma.cookies.util.NBTUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -38,9 +47,8 @@ public class CookieCommand implements TabExecutor {
 		}
 
 		if(parameters[0].equals("cheat")) {
-
 			if(!player.hasPermission("cookies.cheat")) {
-				player.sendMessage("§cYou don't have the required Permission to do that!");
+				player.sendMessage("§cYou don't have the required permission to do that!");
 				return false;
 			}
 
@@ -51,9 +59,52 @@ public class CookieCommand implements TabExecutor {
 
 			CookieMenuBook.openBook(player, true);
 			return true;
+		} else if(parameters[0].equals("data")) {
+			if(!player.hasPermission("cookies.data")) {
+				player.sendMessage("$cYou don't have the required permission to do that!");
+				return false;
+			}
+
+			Block block = null;
+			if(parameters.length == 1) {
+				RayTraceResult result = player.rayTraceBlocks(4.0D);
+				block = result == null ? null : result.getHitBlock();
+			} else if(parameters.length == 4) {
+				try {
+					int x = Integer.parseInt(parameters[1]);
+					int y = Integer.parseInt(parameters[2]);
+					int z = Integer.parseInt(parameters[3]);
+
+					block = player.getWorld().getBlockAt(x, y, z);
+				} catch(NumberFormatException _) {}
+			}
+
+			if(block == null) {
+				player.sendMessage("§cSyntax: §e/cookies §6data <X> <Y> <Z>");
+				return false;
+			}
+
+			AbstractCustomBlock custom = CustomBlockStorage.BLOCK_STORAGE.getCustomBlock(block);
+			if(custom == null) {
+				player.sendMessage("§cThis block is not a custom block.");
+				return true;
+			}
+
+			player.sendMessage("§7Custom Block: §6" + custom.getClass().getSimpleName() + " §8[§7" + custom.getIdentifier() + "§8]");
+
+			AbstractCustomTileEntity<?, ?> tile = TileEntityStorage.TILE_ENTITY_STORAGE.getTileEntity(block);
+			if(tile == null) {
+				player.sendMessage("§cThis block does not have a custom tile entity.");
+				return true;
+			}
+
+			PersistentDataObject object = new PersistentDataObject(player.getPersistentDataContainer().getAdapterContext());
+			tile.save(null, object);
+			String nbt = NBTUtils.convertPersistentDataToNBT(object.getContainer()).toString();
+			player.sendMessage(nbt);
 		} else if(parameters[0].equals("give")) {
 			if(!player.hasPermission("cookies.cheat")) {
-				player.sendMessage("§cYou don't have the required Permission to do that!");
+				player.sendMessage("§cYou don't have the required permission to do that!");
 				return false;
 			}
 
@@ -70,7 +121,7 @@ public class CookieCommand implements TabExecutor {
 					int amount = 1;
 					try {
 						amount = Integer.parseInt(parameters[2]);
-					} catch(NumberFormatException e) {}
+					} catch(NumberFormatException _) {}
 					stack.setAmount(amount);
 				}
 				ItemUtils.giveItemToPlayer(player, stack);
@@ -150,13 +201,44 @@ public class CookieCommand implements TabExecutor {
 		List<String> values = new ArrayList<>();
 
 		if(parameters.length == 1) {
-			Arrays.asList("cheat", "give", "team").stream().filter(val -> val.contains(parameters[0])).forEach(values::add);
+			Arrays.asList("cheat", "data", "give", "team").stream().filter(val -> val.contains(parameters[0])).forEach(values::add);
 		} else if(parameters.length == 2) {
-			if(parameters[0].equals("give")) {
+			if(parameters[0].equals("data")) {
+				if(sender instanceof LivingEntity entity) {
+					RayTraceResult result = entity.rayTraceBlocks(10.0D);
+					if(result != null) {
+						String s = String.valueOf(result.getHitBlock().getX());
+						if(s.startsWith(parameters[1]))
+							values.add(s);
+					}
+				}
+			} else if(parameters[0].equals("give")) {
 				Registries.ITEMS.stream().map(AbstractCustomItem::getIdentifier).filter(id -> id.contains(parameters[1])).forEach(values::add);
 				values.sort(String::compareTo);
 			} else if(parameters[0].equals("team")) {
 				Arrays.asList("accept", "add", "create", "delete", "deny", "leave", "list", "members", "remove").stream().filter(val -> val.contains(parameters[1])).forEach(values::add);
+			}
+		} else if(parameters.length == 3) {
+			if(parameters[0].equals("data")) {
+				if(sender instanceof LivingEntity entity) {
+					RayTraceResult result = entity.rayTraceBlocks(10.0D);
+					if(result != null) {
+						String s = String.valueOf(result.getHitBlock().getY());
+						if(s.startsWith(parameters[2]))
+							values.add(s);
+					}
+				}
+			}
+		} else if(parameters.length == 4) {
+			if(parameters[0].equals("data")) {
+				if(sender instanceof LivingEntity entity) {
+					RayTraceResult result = entity.rayTraceBlocks(10.0D);
+					if(result != null) {
+						String s = String.valueOf(result.getHitBlock().getZ());
+						if(s.startsWith(parameters[3]))
+							values.add(s);
+					}
+				}
 			}
 		}
 

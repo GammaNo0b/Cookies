@@ -7,7 +7,7 @@ import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.property.FluidProperty;
-import me.gamma.cookies.object.property.IntegerProperty;
+import me.gamma.cookies.util.collection.Holder;
 
 
 
@@ -183,12 +183,12 @@ public interface FluidProvider extends Provider<FluidType> {
 	}
 
 
-	static FluidProvider fromProperty(final FluidType type, final IntegerProperty property, final PersistentDataHolder holder, final int capacity) {
+	static FluidProvider fromHolder(final FluidType type, final Holder<Integer> holder, final int capacity) {
 		return new FluidProvider() {
 
 			@Override
 			public int amount() {
-				return property.fetch(holder);
+				return holder.get();
 			}
 
 
@@ -200,17 +200,13 @@ public interface FluidProvider extends Provider<FluidType> {
 
 			@Override
 			public void add(FluidType type, int amount) {
-				property.increase(holder, amount);
-				if(holder instanceof TileState block)
-					block.update();
+				holder.set(holder.get() + amount);
 			}
 
 
 			@Override
 			public void remove(int amount) {
-				property.decrease(holder, amount);
-				if(holder instanceof TileState block)
-					block.update();
+				holder.set(holder.get() - amount);
 			}
 
 

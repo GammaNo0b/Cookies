@@ -14,20 +14,19 @@ import org.bukkit.inventory.Recipe;
 import me.gamma.cookies.init.BookInit;
 import me.gamma.cookies.init.Items;
 import me.gamma.cookies.init.RecipeInit;
-import me.gamma.cookies.object.block.machine.AbstractCraftingMachine;
+import me.gamma.cookies.object.block.machine.AbstractCraftingMachineBlock;
 import me.gamma.cookies.object.gui.History;
 import me.gamma.cookies.object.gui.book.RecipeBook.RecipeInformation;
 import me.gamma.cookies.object.gui.task.InventoryTask;
 import me.gamma.cookies.object.gui.task.RecipeInventoryTask;
 import me.gamma.cookies.object.gui.task.RecipeInventoryTask.ResultChoice;
+import me.gamma.cookies.object.item.AbstractBlockItem;
 import me.gamma.cookies.object.item.AbstractCustomItem;
-import me.gamma.cookies.object.item.MachineItem;
 import me.gamma.cookies.util.EnumUtils;
 import me.gamma.cookies.util.InventoryUtils;
 import me.gamma.cookies.util.ItemBuilder;
 import me.gamma.cookies.util.ItemUtils;
 import me.gamma.cookies.util.RecipeUtils;
-import me.gamma.cookies.util.collection.Pair;
 
 
 
@@ -92,16 +91,6 @@ public class RecipeBook implements Book<RecipeInformation> {
 
 
 	@Override
-	public RecipeInformation loadData(Inventory inventory) {
-		return new RecipeInformation(inventory.getItem(RESULT_SLOT), ResultChoice.byId(InventoryUtils.getStringFromStack(inventory.getItem(RESULT_CHOICE_SLOT), KEY_RESULT_CHOICE)));
-	}
-
-
-	@Override
-	public void saveData(Inventory inventory, RecipeInformation data) {}
-
-
-	@Override
 	public Inventory createGui(BookData<RecipeInformation> data) {
 		Inventory gui = Book.super.createGui(data);
 		RecipeUtils.initializeRecipeInventory(gui);
@@ -120,7 +109,7 @@ public class RecipeBook implements Book<RecipeInformation> {
 		gui.setItem(RESULT_CHOICE_SLOT, resultchoiceicon);
 		gui.setItem(31, RecipeUtils.getIconForRecipe(recipe));
 
-		if(AbstractCraftingMachine.isCraftingMachine(data.result.getItemMeta()))
+		if(data.machine != null)
 			gui.setItem(6, new ItemBuilder(Material.KNOWLEDGE_BOOK).setName("§6Show Machine Recipes").build());
 	}
 
@@ -132,19 +121,18 @@ public class RecipeBook implements Book<RecipeInformation> {
 
 
 	@Override
-	public void onInventoryClick(HumanEntity player, Inventory gui, ItemStack stack, int slot, InventoryClickEvent event, int page) {
+	public void onInventoryClick(HumanEntity player, Inventory gui, ItemStack stack, int slot, int page, RecipeInformation data, InventoryClickEvent event) {
 		int row = slot / 9;
 		int column = slot - row * 9;
 		if(1 <= row && row <= 3 && 1 <= column && column <= 3)
 			if(!ItemUtils.isEmpty(stack) && !InventoryUtils.isFiller(stack))
-				openBook(player, stack, this.loadData(gui).resultchoice);
+				openBook(player, stack, data.resultchoice);
 
 		if(slot == RESULT_CHOICE_SLOT) {
-			this.openGui(player, new BookData<>(page, new RecipeInformation(gui.getItem(RESULT_SLOT), EnumUtils.cycle(this.loadData(gui).resultchoice))), false, true);
+			this.openGui(player, new BookData<>(page, new RecipeInformation(data.result, EnumUtils.cycle(data.resultchoice))), false, true);
 		} else if(slot == 6) {
-			AbstractCustomItem item = Items.getCustomItemFromStack(gui.getItem(RESULT_SLOT));
-			if(item != null && item instanceof MachineItem machine)
-				MachineRecipeBook.openBook(player, new Pair<>(null, machine));
+			if(data.machine != null)
+				MachineRecipeBook.openBook(player, data.machine);
 		}
 	}
 
@@ -167,12 +155,16 @@ public class RecipeBook implements Book<RecipeInformation> {
 		private final ItemStack result;
 		private final List<Recipe> recipes;
 		private final int variations;
+		private final AbstractCraftingMachineBlock<?, ?> machine;
 
 		public RecipeInformation(ItemStack result, ResultChoice resultchoice) {
 			this.result = result;
 			this.resultchoice = resultchoice;
 			this.recipes = RecipeInit.getAllRecipesFor(result);
 			this.variations = this.recipes.size();
+
+			AbstractCustomItem item = Items.getCustomItemFromStack(result);
+			this.machine = item instanceof AbstractBlockItem<?> blockItem && blockItem.getBlock() instanceof AbstractCraftingMachineBlock<?, ?> machine ? machine : null;
 		}
 
 

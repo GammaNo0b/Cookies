@@ -10,6 +10,7 @@ import me.gamma.cookies.util.collection.TertiaryOperator;
 
 
 
+@Deprecated
 public class TripleInputRedstoneGate extends AbstractRedstoneGate {
 
 	private final String identifier;

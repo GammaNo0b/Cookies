@@ -21,7 +21,8 @@ public enum MachineTier {
 	public String getName() {
 		return this.name;
 	}
-	
+
+
 	public char getColorcode() {
 		return this.colorcode;
 	}
@@ -34,21 +35,6 @@ public enum MachineTier {
 
 	public int getTier() {
 		return this.ordinal() + 1;
-	}
-
-
-	public MachineTier increase() {
-		return byTier(this.getTier() + 1);
-	}
-
-
-	public MachineTier decrease() {
-		return byTier(this.getTier() + values().length - 1);
-	}
-
-
-	public static MachineTier byTier(int tier) {
-		return values()[(tier - 1) % values().length];
 	}
 
 }

@@ -147,6 +147,7 @@ public class HeadTextures {
 	public static final String DISENCHANTMENT_TABLE = "42c8e76fcdde9a15ae3929b84bf6ffa4c1777b1e26b7d6d8938f0ef04e84874c";
 	public static final String ENCHANTMENT_COMBINER = "abb84e348ab58be0435f61e027fa6dfe557bee8893f1c10c3c2bebd2025da";
 	public static final String TOASTER = "84486da2c932a79fd920f36bfcb554f601f2f1065befaa68bdf7fcd361397704";
+	public static final String TRADING_MACHINE = "d600f0d2b2ab524b219e0fa808c80b26e7236780681867a0617f73ce3671cd2f";
 	public static final String COMPUTER = "47d977e2889a1f50bbb23d422275ab9daa3c150c89831e7984b49b409db067";
 	public static final String CHUNK_LOADER = "5b78e55e3ea6b3682bd7cead43eb1c91b2527a81aa2894f095801f6ee47a3";
 	public static final String CONSOLE_SCREEN = "a78295e8ec10f9fba3f0c7b114d334992b03f4e23f8064766ee434ddcda127f1";
@@ -170,16 +171,16 @@ public class HeadTextures {
 
 	// Generators
 	public static final String FURNACE_GENERATOR = "938d67d7b85b89a89a5ad4b168ec67dbddb1e58c648acb1d2d602cde3d9fb82";
+	public static final String THERMO_GENERATOR = "7eb364d34a18bef974a81f8cc0756e4280b865b5bdacaa2a59e407ca1958c32f";
 	public static final String CREATIVE_GENERATOR = "71c8042527f81c8e293e2810113489f4394cc6efe15d1afac431571c73b62dc4";
-	public static final String SOLAR_PANEL_1 = "3a74bc7cf415bde271f043321ce05b5c573e25c8767abe43e07d5c4d5216f34";
-	public static final String SOLAR_PANEL_2 = "a748db918aa866dfba4abbbd7f1ab72bdc5871d3b13df8e31f4ef304415587ae";
-	public static final String SOLAR_PANEL_3 = "c386797d048e9953c3807ca7d856f7a95857f06f602f67259c7bd2dcb79d27b4";
-	public static final String SOLAR_PANEL_4 = "9d2fcdf07f99f19b6acf759c7c982f9ce8eed8f167889436f0cc3712cfc4fbe2";
-	public static final String SOLAR_PANEL_5 = "c05584469c13350b2c125d19795b0ba9d071b8212e371f1a7275a8c26d935e00";
-	public static final String SOLAR_PANEL_6 = "32c4c79208f3e5b1f08aa1490b7861f4000b2f3bee7eae21b58b5addda2c65b5";
-	public static final String SOLAR_PANEL_7 = "6a3ee2943520b6ea6b101129607a68f469d5284674f3bc8c16faad57ccbd09e2";
-	public static final String SOLAR_PANEL_8 = "58fdd2864ff3e11655a0be169ff34d51ab9e0091c68d68cfd1ae51bbeeb94ffa";
+	public static final String SOLAR_PANEL_WHITE = "f9e4adffca843bc4771f6808c5d617c970cab0a101bf5781036ad27bc9605b27";
+	public static final String SOLAR_PANEL_YELLOW = "110133269a807f1c6271d9324006036359ee182ae6a95e96b19bfc559b8fe042";
+	public static final String SOLAR_PANEL_AQUA = "5d9a6a0b8554e09cadff307f0aceaae3822c6860386f75cd1fec6265c17cb46";
+	public static final String SOLAR_PANEL_MAGENTA = "60ab5e0434391ffe5bc88c25a94ec06603dd81a87b86f5fa56633aed6f692485";
+	public static final String SOLAR_PANEL_GREEN = "8eb46047a2bd7f02edf9b07ee0cd6b7628f7fd8fc86aa849a75c1379583494fa";
 	public static final String BIO_GENERATOR = "7f9f356f5fe7d1bc92cddfaeba3ee773ac9df1cc4d1c2f8fe5f47013032c551d";
+	public static final String DIESEL_GENERATOR = "5d3ffada60324832a9017aa5c6b989dcf2d9df2c6e0a188ab853e7465be9686a";
+	public static final String LIGHTNING_GENERATOR = "464c4da62c79529928c1820b5a203bbeddf14f9dfabcd4e1588079ceb0ab703e";
 
 	// Item
 	public static final String BROWN_BACKPACK = "40b1b53674918391a07a9d00582c058f9280bc526a716c796ee5eab4be10a760";
@@ -208,6 +209,14 @@ public class HeadTextures {
 	public static final String CLOWNFISH_CHEST = "99f795f21f47f4c2310cc5f4c6e3b04ceb07bd5b0352c228f343cab2157f4cbe";
 	public static final String TRASHCAN = "f32c1472a7bc6975ded7c0c51696959b89af61b75ae954cc4036bc384b3b8301";
 	public static final String STORAGE_CASING = "3dbbf5ef39cfe42775915a2494e1814ca123966c2b74bf5debc07195bc213795";
+	public static final String ITEM_PIPE = "f1111acf49d2d1bd1a665397bfa38a8c958e18b21cd27f9b0481769fee86126c";
+	public static final String ITEM_EXTRACTION_PIPE = "4af26400108b6ffa74f8b7b8aace6884de5d8bf18cd460bdd75cdca115cb068c";
+	public static final String ITEM_INSERTION_PIPE = "d7eb737e5be7123c5293a92605f922ffd0117696ec2385ade0fae790da1de1d9";
+	public static final String ITEM_SPEED_PIPE = "ea55df70b0903c4b89474405380062cc7c41b1e1bbba00a8274e084951fde537";
+	public static final String ITEM_DIRECTIONAL_PIPE = "5a28dec127c23c57cd3c2cad6964b353f66ab6c0bf5be39d55d69da79e428c50";
+	public static final String ITEM_VACUUM_PIPE = "18e7048d67fbc00180cc4d82a271a6efb4f20dc45c9d0d3fe67e0d630af640ca";
+	public static final String ITEM_VOID_PIPE = "ed640445cabf213d12ed7301f2624f2be378f819ca1cae84d97ff3c46fe00d8";
+	public static final String ITEM_FILTER_PIPE = "44bc74ccb9c79b0e68352048378aa3cc832b0a9ad2ea14ede38a8fbf66f4c163";
 	public static final String STORAGE_CONNECTOR = "a483db09f5a4a7de91434cd75c650c1269d060dcd4b663f5fcc6f80e852dba93";
 	public static final String STORAGE_MAIN_COMPONENT = "f4dd90fb167789355a9550f1441c1f3f24c9d828311f5469feb4bc7501638963";
 	public static final String STORAGE_IMPORTER = "aee47d246d7d374f1fe3dcd0a1fd225a88a15a015de3f0de74b1b3bff3c7f3c9";
@@ -219,6 +228,8 @@ public class HeadTextures {
 	// Fluid
 	public static final String COPPER_TANK = "91f437bd9754f386e27687dab7f761fd23f14bf3a5835365d6b938c95310b145";
 	public static final String FLUID_PUMP = "722c0ddd17ce1d41c833596a895ad3963c1adcaf44b67a405df47f0eaaf52c16";
+	public static final String OIL_PUMP = "722c0ddd17ce1d41c833596a895ad3963c1adcaf44b67a405df47f0eaaf52c16";
+	public static final String REFINERY = "add2cc6cab9bb9a64f80d486ae63be8cb36a88f1bc3c2f07f65cdbacd0720c1c";
 	public static final String ENDER_TANK = "9e62a317f2e8f349a27e296ce225b9e8b127d88be61aaebf16604bfa2ad81308";
 	public static final String WASTE_BARREL = "77fd8118f07828cf7d9391c5a0214aa25af24c98e4503e0b2fcc8efdd3189bb0";
 
@@ -265,6 +276,8 @@ public class HeadTextures {
 	public static final String BASEBALL = "7902a503f9c37cc6c5b17317588d03e1c83a665132583ed9c67154d16b7885";
 
 	// Plants
+	public static final String RED_APPLE = "e2b35bda5ebdf135f4e71ce49726fbec5739f0adedf01c519e2aea7f51951ea2";
+	public static final String GREEN_APPLE = "8564797cd62664448ed028e487acd95d57075dce49a356fcc65655b2b525ddb";
 	public static final String PINECONE = "94e28890e865c7d950b15131a43d76c94de38995d609fefb4f297362fed1218";
 	public static final String ORANGE = "9fd0e330a688d8bb9519befe1bfc34337b371ac75150216fdd03959eb7b44";
 	public static final String LEMON = "4378b582d19ccc55b023eb82eda271bac4744fa2006cf5e190246e2b4d5d";
@@ -351,6 +364,9 @@ public class HeadTextures {
 	public static final String WOODEN_ARROW_FORWARDS = "2a3b8f681daad8bf436cae8da3fe8131f62a162ab81af639c3e0644aa6abac2f";
 	public static final String WOODEN_ARROW_BACKWARDS = "8652e2b936ca8026bd28651d7c9f2819d2e923697734d18dfdb13550f8fdad5f";
 	public static final String WOODEN_ARROW_LEFT = "bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9";
+	public static final String WOODEN_ARROW_RIGHT = "19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf";
+	public static final String WOODEN_ARROW_UP = "3040fe836a6c2fbd2c7a9c8ec6be5174fddf1ac20f55e366156fa5f712e10";
+	public static final String WOODEN_ARROW_DOWN = "7437346d8bda78d525d19f540a95e4e79daeda795cbc5a13256236312cf";
 	public static final String WOODEN_MINUS = "bd8a99db2c37ec71d7199cd52639981a7513ce9cca9626a3936f965b131193";
 	public static final String WOODEN_EQUAL = "787689f833436aa711abbd45168856775a2b114656cdf4dc5a6c6f1afae520";
 	public static final String WOODEN_LESS_THAN = "83b13ff8e7a3fab5ff1e98e8fd939cc097b6b45c85240d32450994f7671439d";

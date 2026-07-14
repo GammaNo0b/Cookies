@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import me.gamma.cookies.object.item.ItemTicker;
 import me.gamma.cookies.object.property.IntegerProperty;
 import me.gamma.cookies.util.Utils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -84,7 +85,7 @@ public class ColoredArmorPiece extends AbstractCustomArmorItem implements ItemTi
 
 
 	@Override
-	protected void editItemMeta(ItemMeta meta) {
+	protected void editItemMeta(ItemMeta meta, PersistentDataObject data) {
 		((LeatherArmorMeta) meta).setColor(Color.OLIVE);
 		Random r = new Random();
 		TARGET_RED.store(meta, r.nextInt(256));

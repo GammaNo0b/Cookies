@@ -83,11 +83,11 @@ public class History {
 	 * @param player the player
 	 * @param task   the new inventory task
 	 */
-	public static void update(HumanEntity player, InventoryTask task) {
+	public static void replace(HumanEntity player, InventoryTask task) {
 		LinkedList<InventoryTask> history = getHistory(player.getUniqueId());
-		if(history.isEmpty())
-			return;
-		history.removeLast().stop();
+		if(!history.isEmpty())
+			history.removeLast().stop();
+
 		history.add(task);
 		task.open(player);
 		task.start();
@@ -112,7 +112,10 @@ public class History {
 			InventoryTask task = history.getLast();
 			task.open(player);
 			task.start();
+		} else {
+			player.closeInventory();
 		}
+
 		return last;
 	}
 

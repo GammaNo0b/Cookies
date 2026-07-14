@@ -4,6 +4,7 @@ package me.gamma.cookies.object.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.bukkit.Material;
 import org.bukkit.block.TileState;
@@ -19,6 +20,7 @@ import me.gamma.cookies.object.property.BigItemStackProperty;
 import me.gamma.cookies.object.property.ItemStackProperty;
 import me.gamma.cookies.util.ItemUtils;
 import me.gamma.cookies.util.RecipeUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -32,6 +34,12 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 	@Override
 	default ItemStack get() {
 		return get(this);
+	}
+
+
+	@Override
+	default ItemStack get(Consumer<PersistentDataObject> dataConsumer) {
+		return this.get();
 	}
 
 
@@ -211,7 +219,7 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 
 			@Override
 			public int capacity() {
-				return Integer.MAX_VALUE;
+				return stack.getMaxStackSize() * stack.getType().getMaxStackSize();
 			}
 
 
@@ -235,19 +243,19 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 
 			@Override
 			public ItemStack getType() {
-				return stack.getStack().clone();
+				return stack.getType().clone();
 			}
 
 
 			@Override
 			public void setType(ItemStack type) {
-				stack.setStack(type);
+				stack.setType(type);
 			}
 
 
 			@Override
 			public boolean canChangeType(ItemStack type) {
-				return true;
+				return !stack.isLocked();
 			}
 
 		};
@@ -317,14 +325,14 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 
 			@Override
 			public ItemStack getType() {
-				return property.fetch(holder).getStack();
+				return property.fetch(holder).getType();
 			}
 
 
 			@Override
 			public void setType(ItemStack type) {
 				BigItemStack stack = property.fetch(holder);
-				stack.setStack(type);
+				stack.setType(type);
 				property.store(holder, stack);
 				if(holder instanceof TileState block)
 					block.update();
@@ -348,7 +356,7 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 	 * @return the created item provider
 	 */
 	public static ItemProvider fromInventory(final Inventory inventory, final int slot) {
-		return fromInventory(inventory, slot, Filter.empty());
+		return fromInventory(inventory, slot, Filter.any());
 	}
 
 
@@ -376,16 +384,26 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 	public static ItemProvider fromInventory(final Inventory inventory, final int slot, final Filter<ItemStack> filter) {
 		return new ItemProvider() {
 
+			private ItemStack getItem() {
+				return inventory.getItem(slot);
+			}
+
+
+			private void setItem(ItemStack stack) {
+				inventory.setItem(slot, stack);
+			}
+
+
 			@Override
 			public int amount() {
-				ItemStack stack = inventory.getItem(slot);
+				ItemStack stack = this.getItem();
 				return ItemUtils.isEmpty(stack) ? 0 : stack.getAmount();
 			}
 
 
 			@Override
 			public int capacity() {
-				ItemStack stack = inventory.getItem(slot);
+				ItemStack stack = this.getItem();
 				if(ItemUtils.isEmpty(stack))
 					return 64;
 				return stack.getMaxStackSize();
@@ -400,7 +418,7 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 				int size = this.amount();
 				ItemStack stack = type.clone();
 				stack.setAmount(size + amount);
-				inventory.setItem(slot, stack);
+				this.setItem(stack);
 			}
 
 
@@ -408,7 +426,7 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 				if(amount <= 0)
 					return;
 
-				ItemStack stack = inventory.getItem(slot);
+				ItemStack stack = this.getItem();
 				if(!ItemUtils.isEmpty(stack))
 					stack.setAmount(stack.getAmount() - amount);
 			}
@@ -416,13 +434,13 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 
 			@Override
 			public boolean isEmpty() {
-				return ItemUtils.isEmpty(inventory.getItem(slot));
+				return ItemUtils.isEmpty(this.getItem());
 			}
 
 
 			@Override
 			public ItemStack getType() {
-				ItemStack type = inventory.getItem(slot);
+				ItemStack type = this.getItem();
 				return ItemUtils.isEmpty(type) ? null : type.clone();
 			}
 
@@ -431,7 +449,7 @@ public interface ItemProvider extends Provider<ItemStack>, IItemSupplier {
 			public void setType(ItemStack type) {
 				ItemStack stack = type.clone();
 				stack.setAmount(this.amount());
-				inventory.setItem(slot, stack);
+				this.setItem(stack);
 			}
 
 

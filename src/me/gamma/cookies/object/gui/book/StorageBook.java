@@ -30,8 +30,6 @@ import me.gamma.cookies.util.collection.Pair;
 
 public class StorageBook implements Book<NetworkInfo> {
 
-	private static final String ID_KEY = "networkid";
-
 	@Override
 	public String getIdentifier() {
 		return "storage_book";
@@ -118,17 +116,16 @@ public class StorageBook implements Book<NetworkInfo> {
 
 
 	@Override
-	public void onItemClick(HumanEntity player, Inventory gui, ItemStack stack, InventoryClickEvent event, int page) {
+	public void onItemClick(HumanEntity player, Inventory gui, ItemStack stack, int page, NetworkInfo data, InventoryClickEvent event) {
 		int slot = event.getSlot();
 		int row = slot / 9;
 		int column = slot - row * 9;
 		int index = page * 28 + row * 7 + column - 8;
-		NetworkInfo data = this.loadData(gui);
 		ItemStack request = data.resources.keySet().stream().skip(index).findFirst().get();
 		if(ItemUtils.isEmpty(request))
 			return;
 
-		Pair<ItemStack, Integer> result = data.network.fetch(request, request.getMaxStackSize(), Filter.empty());
+		Pair<ItemStack, Integer> result = data.network.fetch(request, request.getMaxStackSize(), Filter.any());
 		ItemStack item = result.left.clone();
 		item.setAmount(result.right);
 		ItemUtils.giveItemToPlayer(player, item);
@@ -137,25 +134,12 @@ public class StorageBook implements Book<NetworkInfo> {
 
 
 	@Override
-	public void onPlayerInventoryClick(HumanEntity player, PlayerInventory inventory, ItemStack stack, int slot, InventoryClickEvent event, int page) {
+	public void onPlayerInventoryClick(HumanEntity player, PlayerInventory inventory, ItemStack stack, int slot, int page, NetworkInfo data, InventoryClickEvent event) {
 		if(ItemUtils.isEmpty(stack))
 			return;
 
-		NetworkInfo data = this.loadData(event.getInventory());
 		stack.setAmount(data.network.store(stack, stack.getAmount()));
 		this.openGui(player, new BookData<>(page, data), false, false);
-	}
-
-
-	@Override
-	public NetworkInfo loadData(Inventory inventory) {
-		return new NetworkInfo(InventoryUtils.getIntFromStack(this.getIdentifierStack(inventory), ID_KEY));
-	}
-
-
-	@Override
-	public void saveData(Inventory inventory, NetworkInfo data) {
-		InventoryUtils.storeIntInStack(this.getIdentifierStack(inventory), ID_KEY, data.id);
 	}
 
 
@@ -185,7 +169,7 @@ public class StorageBook implements Book<NetworkInfo> {
 
 		NetworkInfo(int id) {
 			this.id = id;
-			this.network = NetworkManager.getNetwork(id, ItemStack.class);
+			this.network = NetworkManager.NETWORK_MANAGER.getNetwork(id, ItemStack.class);
 			this.refreshResources();
 		}
 

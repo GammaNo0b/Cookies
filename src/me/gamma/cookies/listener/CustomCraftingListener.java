@@ -125,7 +125,7 @@ public class CustomCraftingListener implements Listener {
 			for(int j = 0; j < type.getWidth(); j++) {
 				ItemStack current = inventory.getItem((i + type.getStartY()) * 9 + j + type.getStartX());
 				if(current != null) {
-					Material remaining = ItemUtils.getCraftingRemainingItem(current.getType());
+					Material remaining = current.getType().getCraftingRemainingItem();
 					current.setAmount(current.getAmount() - amount);
 					if(remaining != null)
 						ItemUtils.giveItemToPlayer(player, new ItemStack(remaining, amount));

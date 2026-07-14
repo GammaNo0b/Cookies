@@ -12,13 +12,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.object.list.HeadTextures;
 import me.gamma.cookies.object.property.BooleanProperty;
 import me.gamma.cookies.util.GameProfileHelper;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -45,7 +45,7 @@ public class PortableEndPortal extends AbstractCustomItem {
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		builder.createSection(null, true).add("§7Right click the dragon egg with this item to activate the portal.");
 	}
 

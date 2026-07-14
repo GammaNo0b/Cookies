@@ -7,12 +7,12 @@ import java.util.Set;
 
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 import me.gamma.cookies.object.list.HeadTextures;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -49,21 +49,21 @@ public class ChunkLoader extends AbstractCustomBlock {
 
 
 	@Override
-	public boolean onBlockPlace(Player player, PersistentDataHolder holder, TileState block) {
-		if(super.onBlockPlace(player, holder, block))
-			return true;
+	public boolean onBlockPlace(Block block, PersistentDataObject data, Player player, BlockPlaceEvent event) {
+		if(!super.onBlockPlace(block, data, player, event))
+			return false;
 
 		block.getChunk().setForceLoaded(true);
 		player.sendMessage("§aChunkloader activated!");
 
-		return false;
+		return true;
 	}
 
 
 	@Override
-	public boolean onBlockBreak(Player player, TileState block, BlockBreakEvent event) {
-		if(super.onBlockBreak(player, block, event))
-			return true;
+	public boolean onBlockBreak(Player player, Block block, BlockBreakEvent event) {
+		if(!super.onBlockBreak(player, block, event))
+			return false;
 
 		Chunk chunk = block.getChunk();
 		if(loadedChunks.remove(chunk)) {
@@ -71,7 +71,7 @@ public class ChunkLoader extends AbstractCustomBlock {
 			event.getPlayer().sendMessage("§cChunkloader deactivated!");
 		}
 
-		return false;
+		return true;
 	}
 
 }

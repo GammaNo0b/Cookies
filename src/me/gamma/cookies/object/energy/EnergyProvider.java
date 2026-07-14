@@ -108,7 +108,7 @@ public interface EnergyProvider extends TypelessProvider {
 
 			@Override
 			public int amount() {
-				return holder.value;
+				return holder.get();
 			}
 
 
@@ -120,13 +120,13 @@ public interface EnergyProvider extends TypelessProvider {
 
 			@Override
 			public void add(Void type, int amount) {
-				holder.value += amount;
+				holder.set(holder.get() + amount);
 			}
 
 
 			@Override
 			public void remove(int amount) {
-				holder.value += amount;
+				holder.set(holder.get() - amount);
 			}
 
 		};

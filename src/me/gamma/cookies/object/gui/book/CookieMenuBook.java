@@ -65,23 +65,10 @@ public class CookieMenuBook implements Book<Boolean> {
 
 
 	@Override
-	public Boolean loadData(Inventory inventory) {
-		return InventoryUtils.isMarked(this.getIdentifierStack(inventory), CHEATING_KEY);
-	}
-
-
-	@Override
-	public void saveData(Inventory inventory, Boolean data) {
-		if(data)
-			InventoryUtils.markItem(this.getIdentifierStack(inventory), CHEATING_KEY);
-	}
-
-
-	@Override
-	public void onItemClick(HumanEntity player, Inventory inventory, ItemStack stack, InventoryClickEvent event, int page) {
+	public void onItemClick(HumanEntity player, Inventory inventory, ItemStack stack, int page, Boolean data, InventoryClickEvent event) {
 		RecipeCategory category = RecipeCategory.getCategoryFromIconStack(stack);
 		if(category != null)
-			CookieCategoryBook.openBook(player, category, this.loadData(inventory));
+			CookieCategoryBook.openBook(player, category, data);
 	}
 
 

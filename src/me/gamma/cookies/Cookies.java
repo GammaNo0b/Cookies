@@ -11,10 +11,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+
+import com.mojang.logging.LogUtils;
 
 import me.gamma.cookies.command.Commands;
 import me.gamma.cookies.command.GodCommand;
@@ -23,6 +25,7 @@ import me.gamma.cookies.feature.ChangeRepeaterDelayFeature;
 import me.gamma.cookies.feature.ColorEntityFeature;
 import me.gamma.cookies.feature.CookieFeature;
 import me.gamma.cookies.feature.DispenserBlockPlacerFeature;
+import me.gamma.cookies.feature.DispenserBucketCauldronFeature;
 import me.gamma.cookies.feature.DispenserMilkFeature;
 import me.gamma.cookies.feature.EggBounceFeature;
 import me.gamma.cookies.feature.FlameArrowIngniteFeature;
@@ -34,7 +37,6 @@ import me.gamma.cookies.feature.SuspiciousHiding;
 import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.init.BookInit;
 import me.gamma.cookies.init.Config;
-import me.gamma.cookies.init.DropInit;
 import me.gamma.cookies.init.Inventories;
 import me.gamma.cookies.init.Items;
 import me.gamma.cookies.init.MultiBlockInit;
@@ -51,19 +53,24 @@ import me.gamma.cookies.listener.TeamQueueListener;
 import me.gamma.cookies.listener.TutorialListener;
 import me.gamma.cookies.manager.HologramManager;
 import me.gamma.cookies.manager.WireManager;
+import me.gamma.cookies.object.ChunkPersistentDataStorage;
 import me.gamma.cookies.object.Configurable;
 import me.gamma.cookies.object.Ticker;
 import me.gamma.cookies.object.WorldPersistentDataStorage;
-import me.gamma.cookies.object.gui.BlockFaceConfig;
+import me.gamma.cookies.object.block.CustomBlockStorage;
+import me.gamma.cookies.object.block.RandomTicker;
 import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.object.item.PlayerRegister;
 import me.gamma.cookies.object.network.NetworkManager;
 import me.gamma.cookies.object.team.Team;
+import me.gamma.cookies.object.tile.TileEntityStorage;
 import me.gamma.cookies.util.Debug;
 
 
 
 public class Cookies extends JavaPlugin {
+
+	public static final Logger LOGGER = LogUtils.getLogger();
 
 	private static final List<Initializer> initializers = new ArrayList<>();
 	static {
@@ -71,7 +78,6 @@ public class Cookies extends JavaPlugin {
 		initializers.add(new Initializer("blocks", Blocks::init));
 		initializers.add(new Initializer("items", Items::init));
 		initializers.add(new Initializer("blockconfig", () -> Registries.BLOCKS.forEach(Configurable::configure)));
-		initializers.add(new Initializer("drops", DropInit::init));
 		initializers.add(new Initializer("multiblocks", MultiBlockInit::init));
 		initializers.add(new Initializer("books", BookInit::init));
 		initializers.add(new Initializer("inventories", Inventories::init));
@@ -93,15 +99,23 @@ public class Cookies extends JavaPlugin {
 
 		initializers.forEach(Initializer::init);
 
+		ChunkPersistentDataStorage.STORAGES.register(CustomBlockStorage.BLOCK_STORAGE);
+		ChunkPersistentDataStorage.STORAGES.register(TileEntityStorage.TILE_ENTITY_STORAGE);
+		ChunkPersistentDataStorage.STORAGES.register(WireManager.WIRE_MANAGER);
+		ChunkPersistentDataStorage.STORAGES.register(NetworkManager.NETWORK_MANAGER);
+
 		Commands.registerCommands();
 		this.registerEvents();
 		this.registerFeatures();
 
 		Team.TEAM_REGISTRY.register();
-		NetworkManager.registerTicker();
-		WireManager.registerTicker();
 
-		WorldPersistentDataStorage.loadStorages();
+		RandomTicker.RANDOM_TICKER.registerTicker();
+		WireManager.WIRE_MANAGER.registerTicker();
+		NetworkManager.NETWORK_MANAGER.registerTicker();
+
+		ChunkPersistentDataStorage.loadAllChunks();
+		WorldPersistentDataStorage.loadAllWorlds();
 		Ticker.startTicking();
 
 		BiConsumer<AttributeInstance, Double> attrsizer = (attrinst, factor) -> { attrinst.setBaseValue(attrinst.getBaseValue() * factor); };
@@ -133,7 +147,9 @@ public class Cookies extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		Ticker.stopTicking();
-		WorldPersistentDataStorage.saveStorages();
+
+		ChunkPersistentDataStorage.saveAllChunks();
+		WorldPersistentDataStorage.saveAllWorlds();
 	}
 
 
@@ -143,7 +159,8 @@ public class Cookies extends JavaPlugin {
 	 * @param listener the listener
 	 */
 	public void registerEvent(Listener listener) {
-		this.pmanager.registerEvents(listener, this);
+		if(listener != null)
+			this.pmanager.registerEvents(listener, this);
 	}
 
 
@@ -158,15 +175,11 @@ public class Cookies extends JavaPlugin {
 		this.registerEvent(new PlayerArmorEquipEventListener());
 		this.registerEvent(new TeamQueueListener());
 		this.registerEvent(new TutorialListener());
-		this.registerEvent(BlockFaceConfig.getListener());
+		this.registerEvent(ChunkPersistentDataStorage.getChunkListener());
+		this.registerEvent(WorldPersistentDataStorage.getWorldListener());
 
 		Blocks.getCustomListeners().forEach(this::registerEvent);
 		Registries.ITEMS.stream().filter(AbstractCustomItem::hasListener).forEach(item -> this.registerEvent(item.getListener()));
-	}
-
-
-	public void callEvent(Event event) {
-		this.pmanager.callEvent(event);
 	}
 
 
@@ -185,6 +198,7 @@ public class Cookies extends JavaPlugin {
 		this.registerFeature(new ChangeRepeaterDelayFeature());
 		this.registerFeature(new ColorEntityFeature());
 		this.registerFeature(new DispenserBlockPlacerFeature());
+		this.registerFeature(new DispenserBucketCauldronFeature());
 		this.registerFeature(new DispenserMilkFeature());
 		this.registerFeature(new EggBounceFeature());
 		this.registerFeature(new FlameArrowIngniteFeature());

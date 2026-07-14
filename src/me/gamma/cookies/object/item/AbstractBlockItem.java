@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.gamma.cookies.object.block.AbstractCustomBlock;
-import me.gamma.cookies.object.property.PropertyBuilder;
 
 
 
@@ -49,12 +48,6 @@ public abstract class AbstractBlockItem<B extends AbstractCustomBlock> extends A
 	@Override
 	protected String getBlockTexture() {
 		return this.block.getBlockTexture();
-	}
-
-
-	@Override
-	protected PropertyBuilder buildItemProperties(PropertyBuilder builder) {
-		return this.block.buildBlockItemProperties(super.buildItemProperties(builder));
 	}
 
 

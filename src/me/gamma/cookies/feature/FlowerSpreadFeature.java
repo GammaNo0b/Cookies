@@ -26,7 +26,7 @@ public class FlowerSpreadFeature extends SimpleCookieListener {
 
 	@EventHandler
 	public void onBoneMeal(PlayerInteractEvent event) {
-		if(!this.enabled)
+		if(!this.isEnabled())
 			return;
 
 		if(event.getAction() != Action.RIGHT_CLICK_BLOCK)
@@ -42,14 +42,14 @@ public class FlowerSpreadFeature extends SimpleCookieListener {
 			return;
 
 		this.spreadFlowers(block);
-		stack.setAmount(stack.getAmount() - 1);
+		ItemUtils.increaseItem(stack, -1);
 		event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ITEM_BONE_MEAL_USE, 10.0F, 1.0F);
 	}
 
 
 	@EventHandler
 	public void onDispenserFertilize(BlockDispenseEvent event) {
-		if(!this.enabled)
+		if(!this.isEnabled())
 			return;
 
 		ItemStack stack = event.getItem();
@@ -72,11 +72,11 @@ public class FlowerSpreadFeature extends SimpleCookieListener {
 
 	private void spreadFlowers(Block origin) {
 		RandomSource r = MinecraftWorldHelper.getRandom(origin.getWorld());
-		int flowers = r.a(4) + 4;
+		int flowers = r.nextInt(4, 8);
 		Location[] locations = new Location[flowers];
 		for(int i = 0; i < flowers; i++) {
-			int x = r.a(9) - 4 + origin.getX();
-			int z = r.a(9) - 4 + origin.getZ();
+			int x = r.nextInt(-4, 5) + origin.getX();
+			int z = r.nextInt(-4, 5) + origin.getZ();
 			int y = origin.getY() - 1;
 			for(int j = 0; j < 2; j++, y++) {
 				Block block = origin.getWorld().getBlockAt(x, y, z);

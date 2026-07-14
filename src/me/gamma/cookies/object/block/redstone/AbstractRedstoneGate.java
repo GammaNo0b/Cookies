@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
@@ -27,6 +28,7 @@ import me.gamma.cookies.object.property.PropertyBuilder;
 
 
 
+@Deprecated
 public abstract class AbstractRedstoneGate extends AbstractCustomBlock implements Switchable, BlockTicker {
 
 	public static final BooleanProperty INVERTED = Properties.INVERTED;
@@ -77,7 +79,7 @@ public abstract class AbstractRedstoneGate extends AbstractCustomBlock implement
 
 
 	@Override
-	public boolean onBlockRightClick(Player player, TileState block, ItemStack stack, PlayerInteractEvent event) {
+	public boolean onBlockRightClick(Player player, Block block, ItemStack stack, PlayerInteractEvent event) {
 		if(event.getHand() == EquipmentSlot.HAND) {
 			INVERTED.toggle(block);
 			block.update();

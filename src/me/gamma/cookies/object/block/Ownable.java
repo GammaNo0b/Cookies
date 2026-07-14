@@ -8,53 +8,70 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
-import org.bukkit.persistence.PersistentDataHolder;
 
-import me.gamma.cookies.object.property.Properties;
-import me.gamma.cookies.object.property.UUIDProperty;
 import me.gamma.cookies.object.team.Team;
 
 
 
 /**
- * An Ownable representsa block that can be owned by a player. The owning player's uuid is stored inside the block data.
- * 
- * The {@link AbstractCustomBlock} will automatically store the placing player's uuid inside the block and perforn check on breaking if the owning
- * player is the breaking player or a teammate.
+ * An ownable represents something that can be owned by a player by storing the player's uuid.
  * 
  */
 public interface Ownable {
 
-	public static final UUIDProperty OWNER = Properties.OWNER;
+	/**
+	 * Returns the uuid of the owning player.
+	 * 
+	 * @return the uuid
+	 */
+	UUID getOwner();
 
-	default void setOwner(PersistentDataHolder holder, UUID owner) {
-		OWNER.store(holder, owner);
+	/**
+	 * Sets the uuid of the owner.
+	 * 
+	 * @param uuid the uuid
+	 */
+	void setOwner(UUID uuid);
+
+
+	/**
+	 * Returns the owning player if online.
+	 * 
+	 * @return the player
+	 */
+	default Player getOwningPlayer() {
+		UUID uuid = this.getOwner();
+		return uuid == null ? null : Bukkit.getPlayer(uuid);
 	}
 
 
-	default UUID getOwner(PersistentDataHolder holder) {
-		return OWNER.fetch(holder);
+	/**
+	 * Checks if the given uuid owns this.
+	 * 
+	 * @param uuid the uuid
+	 * @return if owned
+	 */
+	default boolean isOwner(UUID uuid) {
+		return uuid.equals(this.getOwner());
 	}
 
 
-	default Player getOwningPlayer(PersistentDataHolder holder) {
-		return Bukkit.getPlayer(this.getOwner(holder));
-	}
-
-
-	default boolean isOwner(PersistentDataHolder holder, UUID player) {
-		return player.equals(this.getOwner(holder));
-	}
-
-
-	default boolean canAccess(PersistentDataHolder holder, OfflinePlayer player) {
+	/**
+	 * Checks if the given player can access this ownable.
+	 * 
+	 * First checks if the player owns this ownable, otherwise it checks whether the owner and the player are in the same team.
+	 * 
+	 * @param player the player
+	 * @return if the player can access
+	 */
+	default boolean canAccess(OfflinePlayer player) {
 		if(player.isOp() || player instanceof Permissible perm && perm.hasPermission("cookies.ownable"))
 			return true;
 
-		if(this.isOwner(holder, player.getUniqueId()))
+		if(this.isOwner(player.getUniqueId()))
 			return true;
 
-		final Team team = Team.getTeamFromPlayer(this.getOwner(holder));
+		final Team team = Team.getTeamFromPlayer(this.getOwner());
 		return team != null && team.isMember(player.getUniqueId());
 	}
 

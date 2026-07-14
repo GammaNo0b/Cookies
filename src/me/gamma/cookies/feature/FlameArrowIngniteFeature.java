@@ -18,27 +18,32 @@ public class FlameArrowIngniteFeature extends SimpleCookieListener {
 
 	@EventHandler
 	public void onProjectileHit(ProjectileHitEvent event) {
-		if(!this.enabled)
+		if(!this.isEnabled())
 			return;
-		
+
 		Projectile entity = event.getEntity();
-		if(entity instanceof Arrow arrow) {
-			if(arrow.getFireTicks() > 0) {
-				if(event.getHitBlock() != null) {
-					BlockFace face = event.getHitBlockFace();
-					Block block = event.getHitBlock().getRelative(face);
-					if(block.getType() == Material.AIR) {
-						block.setType(Material.FIRE);
-						if(face != BlockFace.UP) {
-							BlockData data = block.getBlockData();
-							if(data instanceof Fire fire) {
-								fire.setFace(face.getOppositeFace(), true);
-								block.setBlockData(fire);
-							}
-						}
-					}
-				}
-			}
+		if(!(entity instanceof Arrow arrow))
+			return;
+
+		if(arrow.getFireTicks() <= 0)
+			return;
+
+		if(event.getHitBlock() == null)
+			return;
+
+		BlockFace face = event.getHitBlockFace();
+		Block block = event.getHitBlock().getRelative(face);
+		if(block.getType() != Material.AIR)
+			return;
+
+		block.setType(Material.FIRE);
+		if(face == BlockFace.UP)
+			return;
+
+		BlockData data = block.getBlockData();
+		if(data instanceof Fire fire) {
+			fire.setFace(face.getOppositeFace(), true);
+			block.setBlockData(fire);
 		}
 	}
 

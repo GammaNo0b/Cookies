@@ -7,11 +7,11 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import me.gamma.cookies.util.NBTUtils;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 
 
-public class NBTProperty extends Property<PersistentDataContainer, NBTTagCompound> {
+public class NBTProperty extends Property<PersistentDataContainer, CompoundTag> {
 
 	public NBTProperty(String name) {
 		super(name);
@@ -19,11 +19,11 @@ public class NBTProperty extends Property<PersistentDataContainer, NBTTagCompoun
 
 
 	@Override
-	public PersistentDataType<PersistentDataContainer, NBTTagCompound> getPersistentDataType() {
-		return new PersistentDataType<PersistentDataContainer, NBTTagCompound>() {
+	public PersistentDataType<PersistentDataContainer, CompoundTag> getPersistentDataType() {
+		return new PersistentDataType<PersistentDataContainer, CompoundTag>() {
 
 			@Override
-			public NBTTagCompound fromPrimitive(PersistentDataContainer primitive, PersistentDataAdapterContext context) {
+			public CompoundTag fromPrimitive(PersistentDataContainer primitive, PersistentDataAdapterContext context) {
 				return NBTUtils.convertPersistentDataToNBT(primitive);
 			}
 
@@ -35,13 +35,13 @@ public class NBTProperty extends Property<PersistentDataContainer, NBTTagCompoun
 
 
 			@Override
-			public Class<NBTTagCompound> getComplexType() {
-				return NBTTagCompound.class;
+			public Class<CompoundTag> getComplexType() {
+				return CompoundTag.class;
 			}
 
 
 			@Override
-			public PersistentDataContainer toPrimitive(NBTTagCompound value, PersistentDataAdapterContext context) {
+			public PersistentDataContainer toPrimitive(CompoundTag value, PersistentDataAdapterContext context) {
 				return NBTUtils.convertNBTToPersistentData(value, context);
 			}
 
@@ -50,8 +50,8 @@ public class NBTProperty extends Property<PersistentDataContainer, NBTTagCompoun
 
 
 	@Override
-	public NBTTagCompound emptyValue(PersistentDataContainer container) {
-		return new NBTTagCompound();
+	public CompoundTag emptyValue(PersistentDataContainer container) {
+		return new CompoundTag();
 	}
 
 }

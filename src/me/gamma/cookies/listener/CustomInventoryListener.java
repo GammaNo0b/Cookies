@@ -11,7 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
 
 import me.gamma.cookies.init.Registries;
-import me.gamma.cookies.object.gui.InventoryHandler;
+import me.gamma.cookies.object.gui.InventoryProvider;
 
 
 
@@ -25,7 +25,7 @@ public class CustomInventoryListener implements Listener {
 	@EventHandler
 	public void onInventoryInteract(InventoryClickEvent event) {
 		Inventory inventory = event.getInventory();
-		InventoryHandler handler = Registries.INVENTORY_HANDLERS.filterFirst(h -> h.check(inventory));
+		InventoryProvider<?> handler = Registries.INVENTORY_HANDLERS.filterFirst(h -> h.check(inventory));
 		if(handler == null)
 			return;
 
@@ -49,10 +49,11 @@ public class CustomInventoryListener implements Listener {
 	@EventHandler
 	public void onClose(InventoryCloseEvent event) {
 		Inventory inventory = event.getInventory();
-		InventoryHandler handler = Registries.INVENTORY_HANDLERS.filterFirst(h -> h.check(inventory));
+		InventoryProvider<?> handler = Registries.INVENTORY_HANDLERS.filterFirst(h -> h.check(inventory));
 		if(handler != null && event.getPlayer() instanceof Player player)
 			if(handler.onInventoryClose(player, inventory, event))
-				player.openInventory(inventory);
+				;
+		// player.openInventory(inventory);
 	}
 
 }

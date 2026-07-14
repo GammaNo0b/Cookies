@@ -9,7 +9,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 
 import com.google.gson.JsonObject;
 
-import me.gamma.cookies.object.block.machine.AbstractMachine;
+import me.gamma.cookies.object.block.machine.AbstractMachineBlock;
 import me.gamma.cookies.object.property.IntegerProperty;
 import me.gamma.cookies.object.recipe.IngredientsListBuilder;
 import me.gamma.cookies.util.ArrayUtils;
@@ -19,14 +19,14 @@ import me.gamma.cookies.util.JsonUtils;
 
 public class AdvancedMachineRecipe implements MachineRecipe {
 
-	private final AbstractMachine machine;
+	private final AbstractMachineBlock<?, ?> machine;
 	private final String identifier;
 	private final ItemStack result;
 	private final ItemStack[] extra;
 	private final int duration;
 	private RecipeChoice[] ingredients;
 
-	public AdvancedMachineRecipe(AbstractMachine machine, String identifier, ItemStack result, int duration, ItemStack... extra) {
+	public AdvancedMachineRecipe(AbstractMachineBlock<?, ?> machine, String identifier, ItemStack result, int duration, ItemStack... extra) {
 		this.machine = machine;
 		this.identifier = identifier;
 		this.result = result;
@@ -71,7 +71,7 @@ public class AdvancedMachineRecipe implements MachineRecipe {
 
 
 	@Override
-	public AbstractMachine getMachine() {
+	public AbstractMachineBlock<?, ?> getMachine() {
 		return this.machine;
 	}
 
@@ -126,7 +126,7 @@ public class AdvancedMachineRecipe implements MachineRecipe {
 	 * @param machine the machine
 	 * @return the read recipe
 	 */
-	public static AdvancedMachineRecipe loadRecipe(JsonObject object, AbstractMachine machine) {
+	public static AdvancedMachineRecipe loadRecipe(JsonObject object, AbstractMachineBlock<?, ?> machine) {
 		String identifier = object.get("name").getAsString();
 		ItemStack result = JsonUtils.parseItemStack(object.get("result").getAsJsonObject());
 		int duration = object.get("duration").getAsInt();

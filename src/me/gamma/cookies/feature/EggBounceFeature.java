@@ -15,21 +15,26 @@ import org.bukkit.util.Vector;
 
 
 
-public class EggBounceFeature implements CookieListener {
+public class EggBounceFeature extends SimpleCookieListener {
 
 	@EventHandler
 	public void onEggCrush(ProjectileHitEvent event) {
-		this.bounceRandomEgg(event);
+		if(!this.isEnabled())
+			return;
+
+		this.bounceEgg(event);
 	}
 
 
 	@EventHandler
 	public void onChickenSpawn(CreatureSpawnEvent event) {
+		if(!this.isEnabled())
+			return;
+
 		event.setCancelled(event.getSpawnReason() == SpawnReason.EGG);
 	}
 
 
-	@SuppressWarnings("unused")
 	private void bounceEgg(ProjectileHitEvent event) {
 		if(event.getEntity() instanceof Egg) {
 			Egg egg = (Egg) event.getEntity();
@@ -64,16 +69,6 @@ public class EggBounceFeature implements CookieListener {
 
 	public static Vector randomizeDirection(Random r, Vector vector) {
 		return vector.add(new Vector(r.nextDouble() - 0.5D, r.nextDouble() - 0.5D, r.nextDouble() - 0.5D)).multiply(-0.45D);
-	}
-
-
-	@Override
-	public void setEnabled(boolean enabled) {}
-
-
-	@Override
-	public boolean isEnabled() {
-		return true;
 	}
 
 }

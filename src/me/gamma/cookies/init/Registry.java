@@ -5,6 +5,7 @@ package me.gamma.cookies.init;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -39,6 +40,12 @@ public class Registry<T> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		return this.registry.iterator();
+	}
+
+
+	public void forEachReversed(Consumer<? super T> action) {
+		for(int i = this.registry.size() - 1; i >= 0; --i)
+			action.accept(this.registry.get(i));
 	}
 
 

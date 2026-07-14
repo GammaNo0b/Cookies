@@ -28,23 +28,28 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class LookInBookshelfFeature implements CookieFeature, Runnable {
 
-	private boolean enabled;
+	private int taskID = -1;
 
 	@Override
-	public void register() {
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(Cookies.INSTANCE, this, 1, 1);
-	}
+	public void register() {}
 
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+		if(enabled) {
+			this.taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Cookies.INSTANCE, this, 1, 1);
+		} else {
+			if(this.taskID != -1) {
+				Bukkit.getScheduler().cancelTask(this.taskID);
+				this.taskID = -1;
+			}
+		}
 	}
 
 
 	@Override
 	public boolean isEnabled() {
-		return this.enabled;
+		return this.taskID != -1;
 	}
 
 
@@ -72,13 +77,12 @@ public class LookInBookshelfFeature implements CookieFeature, Runnable {
 				continue;
 
 			int slot = state.getSlot(result.getHitPosition().subtract(target.getLocation().toVector()));
-			ItemStack stack = state.getInventory().getItem(slot);
-			if(ItemUtils.isEmpty(stack)) {
+			ItemStack stack;
+			if(slot != -1 && !ItemUtils.isEmpty(stack = state.getInventory().getItem(slot))) {
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(this.getBookName(stack)));
+			} else {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(""));
-				continue;
 			}
-
-			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(this.getBookName(stack)));
 		}
 	}
 

@@ -4,7 +4,7 @@ package me.gamma.cookies.object.block.network;
 
 import java.util.List;
 
-import org.bukkit.block.TileState;
+import org.bukkit.block.Block;
 
 
 
@@ -19,41 +19,39 @@ public interface WireConnector<T> extends WireHolder<T> {
 	/**
 	 * Returns a list containing all wires connected to the given block.
 	 * 
-	 * @param block the block
 	 * @return the list of connected wires
 	 */
-	List<Wire<T>> getConnectedWires(TileState block);
+	List<Wire<T>> getConnectedWires();
 
 	/**
 	 * Returns the maximum amount of wires this block can connect to.
 	 * 
-	 * @param block the block
 	 * @return the maximum amount of wires
 	 */
-	int getMaximumWireCount(TileState block);
+	int getMaximumWireCount();
 
 
 	@Override
-	default boolean acceptsWire(TileState block) {
-		return this.getConnectedWires(block).size() < this.getMaximumWireCount(block);
+	default boolean acceptsWire() {
+		return this.getConnectedWires().size() < this.getMaximumWireCount();
 	}
 
 
 	@Override
-	default void addWire(TileState block, Wire<T> wire) {
-		this.getConnectedWires(block).add(wire);
+	default void addWire(Wire<T> wire) {
+		this.getConnectedWires().add(wire);
 	}
 
 
 	@Override
-	default void removeWire(TileState block, Wire<T> wire) {
-		this.getConnectedWires(block).remove(wire);
+	default void removeWire(Wire<T> wire) {
+		this.getConnectedWires().remove(wire);
 	}
 
 
 	@Override
-	default Wire<T> removeWire(TileState block) {
-		List<Wire<T>> wires = this.getConnectedWires(block);
+	default Wire<T> removeWire() {
+		List<Wire<T>> wires = this.getConnectedWires();
 		if(wires.isEmpty())
 			return null;
 
@@ -63,5 +61,23 @@ public interface WireConnector<T> extends WireHolder<T> {
 	}
 
 
+	@Override
+	default void removeWires() {
+		List<Wire<T>> wires = this.getConnectedWires();
+		while(!wires.isEmpty())
+			wires.get(0).destroy();
+
+		wires.clear();
+	}
+
+
+	@Override
+	default boolean hasWireTo(Block destination) {
+		for(Wire<T> wire : this.getConnectedWires())
+			if(wire.isConnectedTo(destination.getLocation()))
+				return true;
+
+		return false;
+	}
 
 }

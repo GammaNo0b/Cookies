@@ -12,7 +12,7 @@ import me.gamma.cookies.util.Utils;
 
 public enum FluidType {
 
-	EMPTY(Material.GRAY_STAINED_GLASS_PANE, 'f'),
+	EMPTY(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 'f'),
 	WATER(Material.BLUE_STAINED_GLASS_PANE, '9'),
 	LAVA(Material.ORANGE_STAINED_GLASS_PANE, '6'),
 	MILK(Material.WHITE_STAINED_GLASS_PANE, 'f'),
@@ -23,7 +23,10 @@ public enum FluidType {
 	GREEN(Material.GREEN_STAINED_GLASS_PANE, '2'),
 	BLUE(Material.BLUE_STAINED_GLASS_PANE, '9'),
 	BLACK(Material.BLACK_STAINED_GLASS_PANE, 'f'),
-	BIO_MASS(Material.LIME_STAINED_GLASS_PANE, 'a');
+	BIO_MASS(Material.LIME_STAINED_GLASS_PANE, 'a'),
+	CRUDE_OIL(Material.BLACK_STAINED_GLASS_PANE, '8'),
+	REFINED_OIL(Material.BLACK_STAINED_GLASS_PANE, '8'),
+	DIESEL(Material.RED_STAINED_GLASS_PANE, 'c');
 
 	private final Material icon;
 	private final char color;
@@ -44,8 +47,13 @@ public enum FluidType {
 	}
 
 
+	public ItemBuilder buildIcon() {
+		return new ItemBuilder(this.icon).setName(this.getName());
+	}
+
+
 	public ItemStack createIcon() {
-		return new ItemBuilder(this.icon).setName(this.getName()).build();
+		return this.buildIcon().build();
 	}
 
 }

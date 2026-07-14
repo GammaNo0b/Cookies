@@ -82,7 +82,7 @@ public interface Provider<T> {
 	 * @return the amount that couldn't be stored
 	 */
 	default int set(T type, int amount) {
-		return this.set(type, amount, Filter.empty());
+		return this.set(type, amount, Filter.any());
 	}
 
 
@@ -109,7 +109,7 @@ public interface Provider<T> {
 	 * @return between 0 and {@code max}
 	 */
 	default int get(int max) {
-		return this.get(max, Filter.empty());
+		return this.get(max, Filter.any());
 	}
 
 

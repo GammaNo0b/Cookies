@@ -20,6 +20,7 @@ import me.gamma.cookies.object.property.PropertyBuilder;
 
 
 
+@Deprecated
 public class WirelessRedstoneTransmitter extends AbstractCustomBlock implements Switchable, BlockTicker {
 
 	public static final ByteProperty REDSTONE_FREQUENCY = Properties.REDSTONE_FREQUENCY;

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.gamma.cookies.object.block.CardPile.Card;
+import me.gamma.cookies.object.block.CardPileBlock.Card;
 import me.gamma.cookies.object.item.AbstractCustomItem;
 
 

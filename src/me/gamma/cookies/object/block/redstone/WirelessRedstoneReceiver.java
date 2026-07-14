@@ -21,6 +21,7 @@ import me.gamma.cookies.util.BlockUtils;
 
 
 
+@Deprecated
 public class WirelessRedstoneReceiver extends AbstractCustomBlock implements TileBlockRegister {
 
 	public static final ByteProperty REDSTONE_FREQUENCY = Properties.REDSTONE_FREQUENCY;

@@ -23,14 +23,14 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.TileState;
 
 import me.gamma.cookies.manager.ParticleManager;
 import me.gamma.cookies.object.Cable;
 import me.gamma.cookies.object.Filter;
 import me.gamma.cookies.object.Provider;
-import me.gamma.cookies.util.BlockUtils;
+import me.gamma.cookies.object.block.network.NetworkComponent;
+import me.gamma.cookies.object.tile.network.NetworkInterface;
+import me.gamma.cookies.object.tile.network.NetworkMainComponent;
 import me.gamma.cookies.util.Utils;
 import me.gamma.cookies.util.collection.Pair;
 
@@ -42,7 +42,6 @@ public class Network<T> {
 	private final int id;
 	private UUID owner;
 	private final TransferRate<T> transferRate;
-	private final Location networkCenter;
 	private final NetworkMainComponent<T> main;
 	private final HashMap<Location, NetworkComponent<T>> components = new HashMap<>();
 	private final HashMap<Location, NetworkInterface<T>> interfaces = new HashMap<>();
@@ -50,22 +49,18 @@ public class Network<T> {
 	/**
 	 * Creates a new network.
 	 * 
-	 * @param clazz         the type class
-	 * @param owner         the owner of this network
-	 * @param transferRate  the transfer rate of this network
-	 * @param networkCenter the location of the main component
-	 * @param main          the main component
-	 * @param id            the network id
+	 * @param clazz        the type class
+	 * @param owner        the owner of this network
+	 * @param transferRate the transfer rate of this network
+	 * @param main         the main component
+	 * @param id           the network id
 	 */
-	Network(Class<T> clazz, UUID owner, TransferRate<T> transferRate, Location networkCenter, NetworkMainComponent<T> main, int id) {
+	Network(Class<T> clazz, UUID owner, TransferRate<T> transferRate, NetworkMainComponent<T> main, int id) {
 		this.clazz = clazz;
 		this.id = id;
 		this.owner = owner;
 		this.transferRate = transferRate;
-		this.networkCenter = networkCenter;
 		this.main = main;
-
-		this.update();
 	}
 
 
@@ -106,7 +101,7 @@ public class Network<T> {
 	 * @return whether the player can access this entwork
 	 */
 	public boolean canAccess(UUID uuid) {
-		return this.main.canAccess(this.getMainBlock(), Bukkit.getOfflinePlayer(uuid));
+		return this.main.canAccess(Bukkit.getOfflinePlayer(uuid));
 	}
 
 
@@ -136,17 +131,7 @@ public class Network<T> {
 	 * @return the center
 	 */
 	public Location getCenter() {
-		return this.networkCenter;
-	}
-
-
-	/**
-	 * Returns the main tile state block of this network.
-	 * 
-	 * @return the main block
-	 */
-	public TileState getMainBlock() {
-		return (TileState) this.networkCenter.getBlock().getState();
+		return this.main.getBlock().getLocation();
 	}
 
 
@@ -221,7 +206,7 @@ public class Network<T> {
 	 */
 	public void update() {
 		this.reset();
-		this.main.getNeighbors(this.networkCenter.getBlock()).forEach(this::update);
+		this.main.getComponentBlock().getNeighbors(this.main.getBlock()).forEach(this::update);
 	}
 
 
@@ -230,15 +215,12 @@ public class Network<T> {
 	 * 
 	 * @param block the centered block
 	 */
-	private void update(Pair<TileState, NetworkComponent<T>> pair) {
-		TileState block = pair.left;
-		NetworkComponent<T> component = pair.right;
-
-		Location location = block.getLocation();
+	private void update(NetworkComponent<T> component) {
+		Location location = component.getBlock().getLocation();
 
 		if(component instanceof NetworkMainComponent<T> main) {
-			if(!this.networkCenter.equals(location))
-				main.breakComponent(block);
+			if(!this.main.getBlock().getLocation().equals(location))
+				main.getComponentBlock().breakComponent(main.getBlock());
 
 			return;
 		}
@@ -246,12 +228,12 @@ public class Network<T> {
 		if(this.components.put(location, component) != null)
 			return;
 
-		component.setNetwork(block, this.id);
+		component.setNetworkID(this.id);
 
 		if(component instanceof NetworkInterface<T> icomponent)
 			this.interfaces.put(location, icomponent);
 
-		component.getNeighbors(block.getBlock()).forEach(this::update);
+		component.getComponentBlock().getNeighbors(component.getBlock()).forEach(this::update);
 	}
 
 
@@ -259,19 +241,18 @@ public class Network<T> {
 	 * Highlightes the entire network using particles.
 	 */
 	public void highlightNetwork() {
-		Set<Location> visited = new HashSet<>();
-		final Set<Location> locations = new HashSet<>();
-		Queue<Pair<TileState, NetworkComponent<T>>> queue = new LinkedList<>();
-		queue.add(new Pair<>(this.getMainBlock(), this.main));
-		locations.add(this.getMainBlock().getLocation());
+		Set<Block> visited = new HashSet<>();
+		Set<Location> locations = new HashSet<>();
+		Queue<NetworkComponent<T>> queue = new LinkedList<>();
+		queue.add(this.main);
 
 		while(!queue.isEmpty()) {
-			Pair<TileState, NetworkComponent<T>> pair = queue.poll();
-			if(!visited.add(pair.left.getLocation()))
+			NetworkComponent<T> component = queue.poll();
+			if(!visited.add(component.getBlock()))
 				continue;
 
-			pair.right.getPotentialNeighbors(pair.left.getBlock()).map(Block::getLocation).forEach(locations::add);
-			pair.right.getNeighbors(pair.left.getBlock()).filter(p -> !visited.contains(p.left.getLocation())).forEach(queue::add);
+			component.getComponentBlock().getPotentialNeighbors(component.getBlock()).map(Block::getLocation).forEach(locations::add);
+			component.getComponentBlock().getNeighbors(component.getBlock()).filter(p -> !visited.contains(p.getBlock())).forEach(queue::add);
 		}
 
 		locations.forEach(l -> l.add(0.5D, 0.5D, 0.5D));
@@ -294,20 +275,14 @@ public class Network<T> {
 	 * @param location   the location
 	 * @return the block and component or null
 	 */
-	private <C extends NetworkComponent<T>> Pair<TileState, C> getComponent(Map<Location, C> components, Location location) {
-		TileState block = BlockUtils.getTileState(location);
-		if(block == null) {
-			this.remove(location);
-			return null;
-		}
-
+	private <C extends NetworkComponent<T>> Pair<Block, C> getComponent(Map<Location, C> components, Location location) {
 		C component = components.get(location);
 		if(component == null) {
 			this.remove(location);
 			return null;
 		}
 
-		return new Pair<>(block, component);
+		return new Pair<>(location.getBlock(), component);
 	}
 
 
@@ -318,7 +293,7 @@ public class Network<T> {
 	 * @param components the map of components
 	 * @return the stream
 	 */
-	private <C extends NetworkComponent<T>> Stream<Pair<TileState, C>> getComponents(Map<Location, C> components) {
+	private <C extends NetworkComponent<T>> Stream<Pair<Block, C>> getComponents(Map<Location, C> components) {
 		return new ArrayList<>(components.keySet()).stream().map(l -> this.getComponent(components, l)).filter(Objects::nonNull);
 	}
 
@@ -328,25 +303,25 @@ public class Network<T> {
 	 */
 	public void tick() {
 		// iterate over all network interfaces sorted by their priority
-		Iterator<Pair<TileState, NetworkInterface<T>>> inputIterator = this.getComponents(this.interfaces).sorted(NetworkInterface.createComparator()).iterator();
+		Iterator<Pair<Block, NetworkInterface<T>>> inputIterator = this.getComponents(this.interfaces).sorted(NetworkInterface.createComparator()).iterator();
 		loop: while(inputIterator.hasNext()) {
-			Pair<TileState, NetworkInterface<T>> inputPair = inputIterator.next();
+			Pair<Block, NetworkInterface<T>> inputPair = inputIterator.next();
 			if(inputPair == null)
 				continue;
 
-			Filter<T> inputFilter = inputPair.right.getInputFiler(inputPair.left);
+			Filter<T> inputFilter = inputPair.right.getInputFiler();
 
 			// iterate over all network interfaces on the same channel sorted by their priority again, this time for distributing the items
-			Iterator<Pair<TileState, NetworkInterface<T>>> outputIterator = this.getComponents(this.interfaces).filter(NetworkInterface.createFilter(inputPair)).sorted(NetworkInterface.createComparator()).iterator();
+			Iterator<Pair<Block, NetworkInterface<T>>> outputIterator = this.getComponents(this.interfaces).filter(NetworkInterface.createFilter(inputPair)).sorted(NetworkInterface.createComparator()).iterator();
 			while(outputIterator.hasNext()) {
-				Pair<TileState, NetworkInterface<T>> outputPair = outputIterator.next();
+				Pair<Block, NetworkInterface<T>> outputPair = outputIterator.next();
 				if(outputPair == null)
 					continue;
 
-				Filter<T> outputFilter = outputPair.right.getOutputFilter(outputPair.left);
+				Filter<T> outputFilter = outputPair.right.getOutputFilter();
 
 				// iterate through all providers
-				List<Provider<T>> inputs = inputPair.right.getInputs(inputPair.left);
+				List<Provider<T>> inputs = inputPair.right.getInputs();
 				for(Provider<T> input : inputs) {
 					if(input.isEmpty())
 						continue;
@@ -363,7 +338,7 @@ public class Network<T> {
 					List<Provider<T>> empty = new ArrayList<>();
 
 					// try to store the resource in one of the outputs
-					List<Provider<T>> outputs = outputPair.right.getOutputs(outputPair.left);
+					List<Provider<T>> outputs = outputPair.right.getOutputs();
 
 					// count total space
 					long space = 0;
@@ -427,12 +402,10 @@ public class Network<T> {
 	 * Resets all components.
 	 */
 	private void reset() {
-		for(Entry<Location, NetworkComponent<T>> entry : this.components.entrySet()) {
-			BlockState state = entry.getKey().getBlock().getState();
-			if(state instanceof TileState tile)
-				entry.getValue().reset(tile);
-		}
+		for(Entry<Location, NetworkComponent<T>> entry : this.components.entrySet())
+			entry.getValue().reset();
 		this.components.clear();
+		this.interfaces.clear();
 	}
 
 

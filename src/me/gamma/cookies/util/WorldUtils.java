@@ -8,6 +8,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 
+import me.gamma.cookies.util.core.MinecraftWorldHelper;
+
 
 
 public class WorldUtils {
@@ -59,6 +61,30 @@ public class WorldUtils {
 	 */
 	public static boolean canBreak(HumanEntity player, Block block) {
 		return canBuild(block.getWorld(), player, block.getX(), block.getZ());
+	}
+
+
+	/**
+	 * Returns a boolean value that is true with the given chance using the random source of the given world.
+	 * 
+	 * @param world  the world
+	 * @param chance the chance
+	 * @return the random boolean value
+	 */
+	public static boolean randomChance(World world, double chance) {
+		return MinecraftWorldHelper.getRandom(world).nextDouble() < chance;
+	}
+
+
+	/**
+	 * Returns a integer between 0 inclusive and max exclusice using the random source of the given world.
+	 * 
+	 * @param world the world
+	 * @param max   the max value
+	 * @return the random integer
+	 */
+	public static int randomInt(World world, int max) {
+		return MinecraftWorldHelper.getRandom(world).nextInt(max);
 	}
 
 }

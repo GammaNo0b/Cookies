@@ -2,29 +2,65 @@
 package me.gamma.cookies.object.item;
 
 
+import java.util.function.Consumer;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.persistence.PersistentDataHolder;
 
 import me.gamma.cookies.init.Config;
 import me.gamma.cookies.object.Configurable;
 import me.gamma.cookies.object.IItemSupplier;
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.block.AbstractCustomBlock;
-import me.gamma.cookies.object.property.Properties;
-import me.gamma.cookies.object.property.PropertyBuilder;
-import me.gamma.cookies.object.property.StringProperty;
 import me.gamma.cookies.util.GameProfileHelper;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
 public abstract class AbstractCustomItem implements IItemSupplier, CustomItemHandler, Configurable {
 
-	public static final StringProperty IDENTIFIER = Properties.IDENTIFIER;
+	public static final String KEY_IDENTIFIER = "itemid";
+
+	/**
+	 * Returns the custom data of the given item stack.
+	 * 
+	 * @param stack the item stack
+	 * @return the custom data
+	 */
+	public static CustomItemData getCustomData(ItemStack stack) {
+		return CustomItemData.getCustomItemData(stack);
+	}
+
+
+	/**
+	 * Returns the identifier of the given custom data.
+	 * 
+	 * @param data the custom data
+	 * @return the idenfitier
+	 */
+	public static String getIdentifier(CustomItemData data) {
+		return data.getData().getString(KEY_IDENTIFIER);
+	}
+
+
+	/**
+	 * Returns the identifier of the given item stack.
+	 * 
+	 * @param stack the item stack
+	 * @return the identifier
+	 */
+	public static String getIdentifier(ItemStack stack) {
+		CustomItemData data = getCustomData(stack);
+		if(data == null)
+			return null;
+
+		return getIdentifier(data);
+	}
+
 
 	@Override
 	public ConfigurationSection getConfig() {
@@ -51,9 +87,20 @@ public abstract class AbstractCustomItem implements IItemSupplier, CustomItemHan
 	 * Builds the lore of this item.
 	 * 
 	 * @param builder the lore builder
-	 * @param holder  the {@link PersistentDataHolder}
+	 * @param meta    the item meta
+	 * @param data    the custom data
 	 */
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {}
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {}
+
+
+	/**
+	 * Initializes custom data for an item.
+	 * 
+	 * @param customData the custom data
+	 */
+	protected void createData(PersistentDataObject customData) {
+		customData.setString(KEY_IDENTIFIER, this.getIdentifier());
+	}
 
 
 	/**
@@ -87,13 +134,7 @@ public abstract class AbstractCustomItem implements IItemSupplier, CustomItemHan
 
 
 	@Override
-	public ItemStack get() {
-		return this.get(null);
-	}
-
-
-	@Override
-	public ItemStack get(PersistentDataHolder holder) {
+	public ItemStack get(Consumer<PersistentDataObject> dataConsumer) {
 		ItemStack stack = new ItemStack(this.getMaterial());
 		ItemMeta meta = stack.getItemMeta();
 
@@ -104,26 +145,46 @@ public abstract class AbstractCustomItem implements IItemSupplier, CustomItemHan
 		if(texture != null && meta instanceof SkullMeta skull)
 			GameProfileHelper.setSkullTexture(skull, texture);
 
-		PropertyBuilder builder = this.buildItemProperties(new PropertyBuilder());
-		builder.buildAndStore(meta);
-		builder.buildAndTransfer(holder, meta);
+		PersistentDataObject data = new PersistentDataObject(meta.getPersistentDataContainer().getAdapterContext());
+		this.createData(data);
+		dataConsumer.accept(data);
 
-		this.editItemMeta(meta);
-		this.updateDescription(meta);
+		this.editItemMeta(meta, data);
+		this.updateDescription(meta, data);
+
+		CustomItemData.initCustomData(meta, data);
+
 		stack.setItemMeta(meta);
 		return stack;
 	}
 
 
 	/**
-	 * Updates the description of the given item meta.
+	 * Updates the description of an item with the given item meta and custom data.
 	 * 
 	 * @param meta the item meta
+	 * @param data the custom data
 	 */
-	protected void updateDescription(ItemMeta meta) {
+	protected void updateDescription(ItemMeta meta, PersistentDataObject data) {
 		LoreBuilder builder = new LoreBuilder();
-		this.getDescription(builder, meta);
+		this.buildDescription(builder, meta, data);
 		meta.setLore(builder.build());
+	}
+
+
+	/**
+	 * Updates the description of the given item.
+	 * 
+	 * @param stack the item
+	 */
+	public void updateDescription(ItemStack stack) {
+		CustomItemData data = getCustomData(stack);
+		if(data == null)
+			return;
+
+		ItemMeta meta = stack.getItemMeta();
+		this.updateDescription(meta, data.getData());
+		stack.setItemMeta(meta);
 	}
 
 
@@ -132,19 +193,9 @@ public abstract class AbstractCustomItem implements IItemSupplier, CustomItemHan
 	 * the item, meaning it may override values that were set before.
 	 * 
 	 * @param meta the item meta
+	 * @param data the custom data
 	 */
-	protected void editItemMeta(ItemMeta meta) {}
-
-
-	/**
-	 * Builds a set containing all properties that are stored inside the item when created.
-	 * 
-	 * @param builder the property builder
-	 * @return the same property builder
-	 */
-	protected PropertyBuilder buildItemProperties(PropertyBuilder builder) {
-		return builder.add(IDENTIFIER, this.getIdentifier());
-	}
+	protected void editItemMeta(ItemMeta meta, PersistentDataObject data) {}
 
 
 	/**
@@ -154,7 +205,7 @@ public abstract class AbstractCustomItem implements IItemSupplier, CustomItemHan
 	 * @return if the stack is an instance
 	 */
 	public boolean isInstanceOf(ItemStack stack) {
-		return stack != null && stack.getItemMeta() != null && this.getIdentifier().equals(IDENTIFIER.fetch(stack.getItemMeta()));
+		return this.getIdentifier().equals(getIdentifier(stack));
 	}
 
 

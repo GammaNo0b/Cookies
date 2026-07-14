@@ -22,7 +22,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
 import org.bukkit.loot.LootTables;
@@ -33,17 +32,17 @@ import me.gamma.cookies.Cookies;
 import me.gamma.cookies.init.Items;
 import me.gamma.cookies.object.gui.InventoryProvider;
 import me.gamma.cookies.object.item.AbstractCustomItem;
+import me.gamma.cookies.object.item.CustomItemData;
 import me.gamma.cookies.object.list.HeadTextures;
-import me.gamma.cookies.object.property.PropertyBuilder;
-import me.gamma.cookies.object.property.StringProperty;
 import me.gamma.cookies.util.InventoryUtils;
 import me.gamma.cookies.util.ItemUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
 public class Lootbox extends AbstractCustomItem implements InventoryProvider<Lootbox.LootData> {
 
-	private static final StringProperty LOOT_TABLE = new StringProperty("loot_table");
+	private static final String KEY_LOOT_TABLE = "loot_table";
 
 	@Override
 	public String getIdentifier() {
@@ -64,20 +63,29 @@ public class Lootbox extends AbstractCustomItem implements InventoryProvider<Loo
 
 
 	@Override
-	protected PropertyBuilder buildItemProperties(PropertyBuilder builder) {
-		return super.buildItemProperties(builder).add(LOOT_TABLE);
+	protected void createData(PersistentDataObject customData) {
+		super.createData(customData);
+
+		customData.setString(KEY_LOOT_TABLE, "");
 	}
 
 
 	public void setLootTable(ItemStack stack, NamespacedKey lootTable) {
-		ItemMeta meta = stack.getItemMeta();
-		LOOT_TABLE.store(meta, lootTable.toString());
-		stack.setItemMeta(meta);
+		CustomItemData data = getCustomData(stack);
+		if(data == null)
+			return;
+
+		data.getData().setString(KEY_LOOT_TABLE, lootTable.toString());
+		data.save();
 	}
 
 
 	private LootTable getLootTable(ItemStack stack) {
-		String string = LOOT_TABLE.fetch(stack.getItemMeta());
+		CustomItemData data = getCustomData(stack);
+		if(data == null)
+			return null;
+
+		String string = data.getData().getString(KEY_LOOT_TABLE);
 		if(string == null)
 			return null;
 

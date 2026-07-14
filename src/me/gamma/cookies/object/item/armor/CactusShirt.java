@@ -13,6 +13,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import me.gamma.cookies.util.collection.PersistentDataObject;
+
 
 
 public class CactusShirt extends AbstractCustomArmorItem {
@@ -42,10 +44,11 @@ public class CactusShirt extends AbstractCustomArmorItem {
 
 
 	@Override
-	protected void editItemMeta(ItemMeta meta) {
+	protected void editItemMeta(ItemMeta meta, PersistentDataObject data) {
 		meta.addEnchant(Enchantment.THORNS, 5, true);
 		((LeatherArmorMeta) meta).setColor(Color.fromRGB(0, 140, 20));
 	}
+
 
 	@Override
 	public Listener getListener() {

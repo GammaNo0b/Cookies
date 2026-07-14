@@ -2,45 +2,119 @@
 package me.gamma.cookies.object.block.network;
 
 
-import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.TileState;
-import org.bukkit.entity.LivingEntity;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+
+import me.gamma.cookies.init.Items;
 import me.gamma.cookies.manager.WireManager;
 import me.gamma.cookies.object.Provider;
-import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.object.item.resources.WireItem;
+import me.gamma.cookies.object.tile.AbstractCustomTileEntity;
+import me.gamma.cookies.object.tile.TileEntityStorage;
+import me.gamma.cookies.util.PersistentDataUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
 public class Wire<T> {
 
+	private static final String TAG_START = "start";
+	private static final String TAG_END = "end";
+	private static final String TAG_HOLDER = "holder";
+	private static final String TAG_HELD = "held";
+	private static final String TAG_ITEM = "item";
+
 	private final Location pos1;
 	private final Location pos2;
 	private final WireHolder<T> holder1;
 	private final WireHolder<T> holder2;
-	private final LivingEntity holder;
-	private final LivingEntity held;
+	private final UUID holder;
+	private final UUID held;
 
-	private final AbstractCustomItem wireItem;
+	private final WireItem wireItem;
 
 	private final int transfer;
 
-	public Wire(TileState state1, TileState state2, WireHolder<T> holder1, WireHolder<T> holder2, BlockFace face1, BlockFace face2, WireItem wireItem) {
-		this.pos1 = state1.getLocation();
-		this.pos2 = state2.getLocation();
+	public Wire(Location pos1, Location pos2, WireHolder<T> holder1, WireHolder<T> holder2, UUID holder, UUID held, WireItem wireItem) {
+		this.pos1 = pos1;
+		this.pos2 = pos2;
 		this.holder1 = holder1;
 		this.holder2 = holder2;
-		this.holder = WireManager.spawnWireHook(holder1.getWireLocation(state1, face1), WireManager.Y_OFFSET_HOLDER);
-		this.held = WireManager.spawnWireHook(holder2.getWireLocation(state2, face2), WireManager.Y_OFFSET_HELD);
+		this.holder = holder;
+		this.held = held;
+
+		this.holder1.addWire(this);
+		this.holder2.addWire(this);
 
 		this.wireItem = wireItem;
 		this.transfer = wireItem.getTransfer();
+	}
 
-		this.holder1.addWire(state1, this);
-		this.holder2.addWire(state2, this);
-		this.held.setLeashHolder(this.holder);
+
+	@SuppressWarnings("unchecked")
+	public static <T> Wire<T> load(PersistentDataObject data) {
+		Location pos1 = PersistentDataUtils.getLocation(data, TAG_START);
+		if(pos1 == null)
+			return null;
+
+		Location pos2 = PersistentDataUtils.getLocation(data, TAG_END);
+		if(pos2 == null)
+			return null;
+
+		WireHolder<T> holder1, holder2;
+
+		try {
+			AbstractCustomTileEntity<?, ?> tileEntity = TileEntityStorage.TILE_ENTITY_STORAGE.getTileEntity(pos1.getBlock());
+			if(tileEntity == null || !(tileEntity instanceof WireHolder h1))
+				return null;
+
+			holder1 = (WireHolder<T>) h1;
+
+			tileEntity = TileEntityStorage.TILE_ENTITY_STORAGE.getTileEntity(pos2.getBlock());
+			if(tileEntity == null || !(tileEntity instanceof WireHolder h2))
+				return null;
+
+			holder2 = (WireHolder<T>) h2;
+		} catch(ClassCastException _) {
+			return null;
+		}
+
+		UUID holder = PersistentDataUtils.getUUID(data, TAG_HOLDER);
+		if(holder == null)
+			return null;
+
+		UUID held = PersistentDataUtils.getUUID(data, TAG_HELD);
+		if(held == null)
+			return null;
+
+		String identifier = data.getString(TAG_ITEM);
+		if(identifier == null || !(Items.getCustomItemFromIdentifier(identifier) instanceof WireItem item))
+			return null;
+
+		return new Wire<>(pos1, pos2, holder1, holder2, holder, held, item);
+	}
+
+
+	public void save(PersistentDataObject data) {
+		PersistentDataUtils.setLocation(data, TAG_START, this.pos1);
+		PersistentDataUtils.setLocation(data, TAG_END, this.pos2);
+		PersistentDataUtils.setUUID(data, TAG_HOLDER, this.holder);
+		PersistentDataUtils.setUUID(data, TAG_HELD, this.held);
+		data.setString(TAG_ITEM, this.wireItem.getIdentifier());
+	}
+
+
+	public Chunk getFirstChunk() {
+		return this.pos1.getChunk();
+	}
+
+
+	public Chunk getSecondChunk() {
+		return this.pos2.getChunk();
 	}
 
 
@@ -55,6 +129,11 @@ public class Wire<T> {
 	}
 
 
+	public boolean isConnectedTo(Location l) {
+		return this.pos1.equals(l) || this.pos2.equals(l);
+	}
+
+
 	public void transfer() {
 		WireComponentType type1 = this.holder1.getWireComponentType();
 		WireComponentType type2 = this.holder2.getWireComponentType();
@@ -62,13 +141,8 @@ public class Wire<T> {
 		boolean atob = type1.canTransferTo(type2);
 		boolean btoa = type2.canTransferTo(type1);
 
-		if(!(this.pos1.getBlock().getState() instanceof TileState state1))
-			return;
-		if(!(this.pos2.getBlock().getState() instanceof TileState state2))
-			return;
-
-		Provider<T> provider1 = this.holder1.getWireProvider(state1);
-		Provider<T> provider2 = this.holder2.getWireProvider(state2);
+		Provider<T> provider1 = this.holder1.getWireProvider();
+		Provider<T> provider2 = this.holder2.getWireProvider();
 
 		if(!provider1.match(provider2.getType()))
 			return;
@@ -104,16 +178,18 @@ public class Wire<T> {
 
 
 	public void destroy() {
-		if(this.pos1.getBlock().getState() instanceof TileState state1)
-			this.holder1.removeWire(state1, this);
+		this.holder1.removeWire(this);
+		this.holder2.removeWire(this);
 
-		if(this.pos2.getBlock().getState() instanceof TileState state2)
-			this.holder2.removeWire(state2, this);
+		Entity e;
+		e = Bukkit.getEntity(this.holder);
+		if(e != null)
+			e.remove();
+		e = Bukkit.getEntity(this.held);
+		if(e != null)
+			e.remove();
 
-		this.holder.remove();
-		this.held.remove();
-
-		WireManager.removeWire(this);
+		WireManager.WIRE_MANAGER.removeWire(this);
 	}
 
 
@@ -123,7 +199,7 @@ public class Wire<T> {
 	}
 
 
-	public AbstractCustomItem getWireItem() {
+	public WireItem getWireItem() {
 		return this.wireItem;
 	}
 

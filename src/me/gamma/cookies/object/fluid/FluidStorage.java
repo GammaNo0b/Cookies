@@ -4,7 +4,9 @@ package me.gamma.cookies.object.fluid;
 
 import java.util.List;
 
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.Chunk;
+
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -16,24 +18,35 @@ import org.bukkit.persistence.PersistentDataHolder;
  */
 public interface FluidStorage extends FluidConsumer, FluidSupplier {
 
-	/**
-	 * Returns the list of {@link FluidProvider} of the given data holder that act as inputs and as outputs at the same time.
-	 * 
-	 * @param holder the data holder
-	 * @return the list of fluid providers
-	 */
-	List<FluidProvider> getFluidProviders(PersistentDataHolder holder);
-
-
 	@Override
-	default List<FluidProvider> getFluidInputs(PersistentDataHolder holder) {
-		return this.getFluidProviders(holder);
+	default boolean load(Chunk chunk, PersistentDataObject data) {
+		return FluidConsumer.super.load(chunk, data) & FluidSupplier.super.load(chunk, data);
 	}
 
 
 	@Override
-	default List<FluidProvider> getFluidOutputs(PersistentDataHolder holder) {
-		return this.getFluidProviders(holder);
+	default boolean save(Chunk chunk, PersistentDataObject data) {
+		return FluidConsumer.super.save(chunk, data) & FluidSupplier.super.load(chunk, data);
+	}
+
+
+	/**
+	 * Returns the list of {@link FluidProvider} of this fluid storage that act as inputs and as outputs at the same time.
+	 * 
+	 * @return the list of fluid providers
+	 */
+	List<FluidProvider> getFluidProviders();
+
+
+	@Override
+	default List<FluidProvider> getFluidInputs() {
+		return this.getFluidProviders();
+	}
+
+
+	@Override
+	default List<FluidProvider> getFluidOutputs() {
+		return this.getFluidProviders();
 	}
 
 }

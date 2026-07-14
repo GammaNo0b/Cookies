@@ -37,7 +37,7 @@ import me.gamma.cookies.object.gui.task.SmithingRecipeInventoryTask;
 import me.gamma.cookies.object.gui.task.StaticInventoryTask;
 import me.gamma.cookies.object.gui.task.StonecuttingRecipeInventoryTask;
 import me.gamma.cookies.object.item.AbstractCustomItem;
-import me.gamma.cookies.object.item.MachineItem;
+import me.gamma.cookies.object.item.resources.MachineItem;
 import me.gamma.cookies.object.recipe.CustomRecipe;
 import me.gamma.cookies.object.recipe.CustomRecipeChoice;
 import me.gamma.cookies.object.recipe.machine.AdvancedMachineRecipe;

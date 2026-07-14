@@ -21,6 +21,18 @@ public class CollectionUtils {
 	private static final Random r = new Random();
 
 	/**
+	 * Returns a random element from the array or null if the array is empty.
+	 * 
+	 * @param <T>   the type of elements stored
+	 * @param array the array
+	 * @return the random element
+	 */
+	public static <T> T randomElement(T[] array) {
+		return array.length == 0 ? null : array[r.nextInt(array.length)];
+	}
+
+
+	/**
 	 * Returns a random element from the list or null if the list is empty.
 	 * 
 	 * @param <T>  the type of elements stored

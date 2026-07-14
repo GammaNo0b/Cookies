@@ -4,22 +4,18 @@ package me.gamma.cookies.util;
 
 import java.util.function.UnaryOperator;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.TileState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Rotatable;
 import org.bukkit.block.data.type.Snow;
-import org.bukkit.craftbukkit.v1_21_R3.block.CraftBlock;
-import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.block.CraftBlock;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-
-import me.gamma.cookies.object.property.Properties;
 
 
 
@@ -34,6 +30,11 @@ public class BlockUtils {
 	 * All {@link BlockUtils#cartesian} fields that only move along the x or z axis.
 	 */
 	public static final BlockFace[] horizontal = ArrayUtils.filter(cartesian, face -> face.getModY() == 0, BlockFace[]::new);
+
+	/**
+	 * All {@link BlockFace} fields that only move along the x or z axis.
+	 */
+	public static final BlockFace[] horizontal_rotation = ArrayUtils.filter(BlockFace.values(), face -> face != BlockFace.SELF && face.getModY() == 0, BlockFace[]::new);
 
 	/**
 	 * All block materials that get's replaces when placing a block on their location.
@@ -168,12 +169,12 @@ public class BlockUtils {
 	 */
 	public static enum BlockFaceDirection {
 
-		FRONT(UnaryOperator.identity()),
 		BACK(BlockFace::getOppositeFace),
-		TOP(BlockFace.UP),
-		BOTTOM(BlockFace.DOWN),
+		RIGHT(BlockUtils::rotateYCounterClockwise),
+		FRONT(UnaryOperator.identity()),
 		LEFT(BlockUtils::rotateYClockwise),
-		RIGHT(BlockUtils::rotateYCounterClockwise);
+		TOP(BlockFace.UP),
+		BOTTOM(BlockFace.DOWN);
 
 		private final UnaryOperator<BlockFace> transformer;
 
@@ -251,7 +252,7 @@ public class BlockUtils {
 		if(ItemUtils.isEmpty(tool) || !block.isPreferredTool(tool))
 			return Math.round(6.0F * hardness);
 
-		float speedMultiplier = CraftItemStack.asNMSCopy(tool).a(((CraftBlock) block).getNMS());
+		float speedMultiplier = CraftItemStack.asNMSCopy(tool).getDestroySpeed(((CraftBlock) block).getNMS());
 
 		int efficiency = tool.getEnchantmentLevel(Enchantment.EFFICIENCY);
 		if(efficiency > 0)
@@ -262,61 +263,6 @@ public class BlockUtils {
 			return 0;
 
 		return (int) Math.ceil(1.0F / damage);
-	}
-
-
-	/**
-	 * Returns the {@link TileState} at the given location or null of none found.
-	 * 
-	 * @param location the location
-	 * @return the tile state
-	 */
-	public static TileState getTileState(Location location) {
-		return location == null ? null : getTileState(location.getBlock());
-	}
-
-
-	/**
-	 * Returns the {@link TileState} at the given block or null of none found.
-	 * 
-	 * @param block the block
-	 * @return the tile state
-	 */
-	public static TileState getTileState(Block block) {
-		return block == null ? null : getTileState(block.getState());
-	}
-
-
-	/**
-	 * Returns the {@link TileState} if the given {@link BlockState} is one.
-	 * 
-	 * @param state the block state
-	 * @return the casted tile state or null
-	 */
-	public static TileState getTileState(BlockState state) {
-		return state instanceof TileState tile ? tile : null;
-	}
-
-
-	/**
-	 * Checks if the given block is a custom block and stores data from this Cookie plugin.
-	 * 
-	 * @param block the block to be checked
-	 * @return if the block is custom
-	 */
-	public static boolean isCustomBlock(TileState block) {
-		return Properties.IDENTIFIER.isPropertyOf(block);
-	}
-
-
-	/**
-	 * Checks if the given block is a custom block and stores data from this Cookie plugin.
-	 * 
-	 * @param block the block to be checked
-	 * @return if the block is custom
-	 */
-	public static boolean isCustomBlock(Block block) {
-		return block.getState() instanceof TileState state && isCustomBlock(state);
 	}
 
 }

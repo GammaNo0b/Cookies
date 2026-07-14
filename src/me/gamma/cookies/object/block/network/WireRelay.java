@@ -2,7 +2,7 @@
 package me.gamma.cookies.object.block.network;
 
 
-import org.bukkit.block.TileState;
+import org.bukkit.block.Block;
 
 
 
@@ -17,47 +17,58 @@ public interface WireRelay<T> extends WireHolder<T> {
 	/**
 	 * Returns the wire connected to this block.
 	 * 
-	 * @param block the block
 	 * @return the connected wire
 	 */
-	Wire<T> getConnectedWire(TileState block);
+	Wire<T> getConnectedWire();
 
 	/**
 	 * Sets the wire connected to this block.
 	 * 
-	 * @param block the block
-	 * @param wire  the wire
+	 * @param wire the wire
 	 */
-	void setConnectedWire(TileState block, Wire<T> wire);
+	void setConnectedWire(Wire<T> wire);
 
 
 	@Override
-	default boolean acceptsWire(TileState block) {
-		return this.getConnectedWire(block) == null;
+	default boolean acceptsWire() {
+		return this.getConnectedWire() == null;
 	}
 
 
 	@Override
-	default void addWire(TileState block, Wire<T> wire) {
-		this.setConnectedWire(block, wire);
+	default void addWire(Wire<T> wire) {
+		this.setConnectedWire(wire);
 	}
 
 
 	@Override
-	default void removeWire(TileState block, Wire<T> wire) {
-		if(this.getConnectedWire(block) == wire)
-			this.setConnectedWire(block, null);
+	default void removeWire(Wire<T> wire) {
+		if(this.getConnectedWire() == wire)
+			this.setConnectedWire(null);
 	}
 
 
 	@Override
-	default Wire<T> removeWire(TileState block) {
-		Wire<T> wire = this.getConnectedWire(block);
+	default Wire<T> removeWire() {
+		Wire<T> wire = this.getConnectedWire();
 		if(wire != null) {
-			this.setConnectedWire(block, null);
+			this.setConnectedWire(null);
 			wire.destroy();
 		}
 		return wire;
+	}
+
+
+	@Override
+	default void removeWires() {
+		this.removeWire();
+	}
+
+
+	@Override
+	default boolean hasWireTo(Block destination) {
+		Wire<T> wire = this.getConnectedWire();
+		return wire != null && wire.isConnectedTo(destination.getLocation());
 	}
 
 }

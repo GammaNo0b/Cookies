@@ -15,24 +15,13 @@ import me.gamma.cookies.util.Utils;
 
 
 
-public class SpawnerFix implements CookieListener {
-
-	private boolean enabled;
-
-	@Override
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-
-	@Override
-	public boolean isEnabled() {
-		return this.enabled;
-	}
-
+public class SpawnerFix extends SimpleCookieListener {
 
 	@EventHandler
 	public void onBlockPlace(final BlockPlaceEvent event) {
+		if(!this.isEnabled())
+			return;
+
 		final ItemStack stackUsed = event.getItemInHand().clone();
 		if(event.getBlockPlaced().getType() != Material.SPAWNER || !ItemUtils.isType(stackUsed, Material.SPAWNER))
 			return;

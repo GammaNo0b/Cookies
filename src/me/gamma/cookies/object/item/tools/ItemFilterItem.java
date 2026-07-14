@@ -6,12 +6,13 @@ import java.util.function.Predicate;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.util.ItemUtils;
 import me.gamma.cookies.util.Utils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -49,8 +50,8 @@ public class ItemFilterItem extends AbstractCustomItem implements Predicate<Item
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
-		super.getDescription(builder, holder);
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
+		super.buildDescription(builder, meta, data);
 		builder.createSection(this.description, false);
 	}
 

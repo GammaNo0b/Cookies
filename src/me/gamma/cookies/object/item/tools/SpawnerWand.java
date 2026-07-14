@@ -10,12 +10,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.util.ItemUtils;
 import me.gamma.cookies.util.Utils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -34,7 +35,7 @@ public class SpawnerWand extends AbstractCustomItem {
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		builder.createSection("§7Powerfull wand to move spawners.", true).add("  §7Right-Click: Print spawner info").add("  §7Left-Click: Pick up spawner");
 	}
 

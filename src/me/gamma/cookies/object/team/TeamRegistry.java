@@ -17,6 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import me.gamma.cookies.Cookies;
 import me.gamma.cookies.object.WorldPersistentDataStorage;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 import me.gamma.cookies.util.core.MinecraftPersistentDataHelper;
 
 
@@ -77,8 +78,8 @@ public class TeamRegistry implements WorldPersistentDataStorage {
 
 
 	@Override
-	public void load(World world, PersistentDataContainer container) {
-		List<PersistentDataContainer> containers = container.getOrDefault(new NamespacedKey(Cookies.INSTANCE, TAG_TEAMS), PersistentDataType.LIST.dataContainers(), new ArrayList<>());
+	public void load(World world, PersistentDataObject object) {
+		List<PersistentDataContainer> containers = object.getContainer().getOrDefault(new NamespacedKey(Cookies.INSTANCE, TAG_TEAMS), PersistentDataType.LIST.dataContainers(), new ArrayList<>());
 		for(PersistentDataContainer c : containers) {
 			Team team = Team.loadTeam(c);
 			if(team != null)
@@ -88,14 +89,14 @@ public class TeamRegistry implements WorldPersistentDataStorage {
 
 
 	@Override
-	public void save(World world, PersistentDataContainer container) {
+	public void save(World world, PersistentDataObject object) {
 		List<PersistentDataContainer> containers = new ArrayList<>(this.teams.size());
 		for(Team team : this.teams.values()) {
-			PersistentDataContainer c = MinecraftPersistentDataHelper.createNewPersistentDataContainer(container);
+			PersistentDataContainer c = MinecraftPersistentDataHelper.createNewPersistentDataContainer(object.getContainer());
 			team.save(c);
 			containers.add(c);
 		}
-		container.set(new NamespacedKey(Cookies.INSTANCE, TAG_TEAMS), PersistentDataType.LIST.dataContainers(), containers);
+		object.getContainer().set(new NamespacedKey(Cookies.INSTANCE, TAG_TEAMS), PersistentDataType.LIST.dataContainers(), containers);
 	}
 
 }

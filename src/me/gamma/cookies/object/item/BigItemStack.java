@@ -2,8 +2,6 @@
 package me.gamma.cookies.object.item;
 
 
-import java.util.Collection;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -14,39 +12,45 @@ import me.gamma.cookies.util.ItemUtils;
 
 public class BigItemStack {
 
-	public static final BigItemStack EMPTY = new BigItemStack(Material.AIR, 0);
+	public static final BigItemStack EMPTY = new BigItemStack(Material.AIR, 0, 0);
 
 	private ItemStack stack;
 	private int amount;
+	private int maxStackSize;
+	private boolean locked = false;
 
-	public BigItemStack(ItemStack type, int amount) {
-		if(type == null) {
-			this.stack = null;
-			this.amount = 0;
-		} else {
-			this.stack = type.clone();
-			this.stack.setAmount(1);
-			this.amount = amount;
-		}
+	public BigItemStack(ItemStack type, int amount, int maxStackSize) {
+		this.setType(type);
+		this.amount = amount;
+		this.maxStackSize = maxStackSize;
 	}
 
 
-	public BigItemStack(ItemStack type) {
-		this(type, 0);
+	public BigItemStack(Material type, int amount, int maxStackSize) {
+		this(new ItemStack(type), amount, maxStackSize);
 	}
 
 
-	public BigItemStack(Material type, int amount) {
-		this(new ItemStack(type), amount);
+	public ItemStack getType() {
+		return this.stack;
 	}
 
 
-	public BigItemStack(Material type) {
-		this(new ItemStack(type), 0);
+	public void setType(ItemStack stack) {
+		if(stack == null)
+			return;
+
+		this.stack = stack.clone();
+		this.stack.setAmount(1);
 	}
 
 
-	public void set(int amount) {
+	public int getAmount() {
+		return this.amount;
+	}
+
+
+	public void setAmount(int amount) {
 		this.amount = amount;
 	}
 
@@ -57,17 +61,32 @@ public class BigItemStack {
 
 
 	public void shrink(int amount) {
-		this.grow(-amount);
+		this.amount -= amount;
 	}
 
 
-	public ItemStack getStack() {
-		return this.stack;
+	public int getMaxStackSize() {
+		return this.maxStackSize;
 	}
 
 
-	public void setStack(ItemStack stack) {
-		this.stack = stack;
+	public void setMaxStackSize(int maxStackSize) {
+		this.maxStackSize = maxStackSize;
+	}
+
+
+	public boolean isLocked() {
+		return this.locked;
+	}
+
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
+
+
+	public boolean toggleLocked() {
+		return (this.locked = !this.locked);
 	}
 
 
@@ -91,35 +110,14 @@ public class BigItemStack {
 	}
 
 
-	public boolean isRepresentedIn(Collection<? extends ItemStack> stacks) {
-		for(ItemStack stack : stacks)
-			if(this.isSimilar(stack))
-				return true;
-		return false;
-	}
-
-
-	public boolean isTypeRepresentedIn(Collection<? extends ItemStack> stacks) {
-		for(ItemStack stack : stacks)
-			if(this.sameType(stack))
-				return true;
-		return false;
-	}
-
-
 	public boolean isEmpty() {
 		return this.stack == null || this.stack.getType() == Material.AIR || this.amount == 0;
 	}
 
 
-	public int getAmount() {
-		return this.amount;
-	}
-
-
 	@Override
 	public String toString() {
-		return this.stack == null ? "null" : this.amount + " X " + this.stack.toString();
+		return this.stack == null ? "null" : this.amount + " x " + this.stack.toString();
 	}
 
 
@@ -128,15 +126,14 @@ public class BigItemStack {
 			return;
 
 		int max = this.stack.getMaxStackSize();
-		int full = this.amount / max;
-
-		ItemStack stack = this.stack.clone();
-		stack.setAmount(max);
-		for(int i = 0; i < full; i++)
+		int amount = this.amount;
+		while(amount > 0) {
+			int drop = Math.min(amount, max);
+			amount -= drop;
+			ItemStack stack = this.stack.clone();
+			stack.setAmount(drop);
 			ItemUtils.dropItem(stack, location);
-
-		stack.setAmount(this.amount - full * max);
-		ItemUtils.dropItem(stack, location);
+		}
 	}
 
 }

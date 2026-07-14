@@ -9,6 +9,8 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import me.gamma.cookies.util.collection.PersistentDataObject;
+
 
 
 public class GlowHat extends AbstractCustomArmorItem {
@@ -38,7 +40,7 @@ public class GlowHat extends AbstractCustomArmorItem {
 
 
 	@Override
-	protected void editItemMeta(ItemMeta meta) {
+	protected void editItemMeta(ItemMeta meta, PersistentDataObject data) {
 		((LeatherArmorMeta) meta).setColor(Color.fromRGB(232, 255, 0));
 	}
 

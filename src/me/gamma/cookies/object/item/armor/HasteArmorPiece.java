@@ -85,7 +85,7 @@ public class HasteArmorPiece extends AbstractCustomArmorItem {
 		int count = 0;
 		for(ArmorType type : ArmorType.values()) {
 			ItemStack armor = type.getArmor(player.getInventory());
-			if(armor != null && armor.getType() != Material.AIR && ("haste_" + type.name().toLowerCase()).equals(IDENTIFIER.fetch(armor.getItemMeta())))
+			if(armor != null && armor.getType() != Material.AIR && ("haste_" + type.name().toLowerCase()).equals(getIdentifier(armor)))
 				count++;
 		}
 		return count;

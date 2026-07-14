@@ -59,7 +59,7 @@ public class ChairFeature implements CookieListener {
 
 	@EventHandler
 	public void onRightClick(PlayerInteractEvent event) {
-		if(!this.enabled)
+		if(!this.isEnabled())
 			return;
 
 		if(event.getAction() != Action.RIGHT_CLICK_BLOCK)
@@ -98,7 +98,7 @@ public class ChairFeature implements CookieListener {
 			}
 		} else if(data instanceof Bed) {
 			this.createChair(event.getPlayer(), location, "bed");
-		} else if(block.getState() instanceof Skull skull && Blocks.getCustomBlockFromBlock(skull) == null) {
+		} else if(block.getState() instanceof Skull && Blocks.getCustomBlockFromBlock(block) == null) {
 			this.createChair(player, location, "head");
 		} else if(name.contains("CARPET")) {
 			this.createChair(player, location, "carpet");

@@ -11,6 +11,7 @@ import me.gamma.cookies.util.BlockUtils;
 
 
 
+@Deprecated
 public class DoubleInputRedstoneGate extends AbstractRedstoneGate {
 
 	private final String identifier;
@@ -20,7 +21,8 @@ public class DoubleInputRedstoneGate extends AbstractRedstoneGate {
 		this.identifier = identifier;
 		this.operation = operation;
 	}
-	
+
+
 	@Override
 	public String getIdentifier() {
 		return this.identifier;

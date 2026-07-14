@@ -72,6 +72,7 @@ public class VanillaRecipeBook implements Book<SortType> {
 			gui.setItem(9 * i, filler);
 			gui.setItem(9 * i + 8, filler);
 		}
+		gui.setItem(SORT_TYPE_SLOT, data.data().createIcon());
 		return gui;
 	}
 
@@ -95,25 +96,14 @@ public class VanillaRecipeBook implements Book<SortType> {
 
 
 	@Override
-	public SortType loadData(Inventory inventory) {
-		return SortType.fromStack(inventory.getItem(SORT_TYPE_SLOT));
-	}
-
-
-	public void saveData(Inventory inventory, SortType data) {
-		inventory.setItem(SORT_TYPE_SLOT, data.createIcon());
-	}
-
-
-	@Override
-	public void onInventoryClick(HumanEntity player, Inventory gui, ItemStack stack, int slot, InventoryClickEvent event, int page) {
+	public void onInventoryClick(HumanEntity player, Inventory gui, ItemStack stack, int slot, int page, SortType data, InventoryClickEvent event) {
 		if(slot == SORT_TYPE_SLOT)
-			this.openGui(player, new BookData<>(page, EnumUtils.cycle(this.loadData(gui))), false, true);
+			this.openGui(player, new BookData<>(page, EnumUtils.cycle(data)), false, true);
 	}
 
 
 	@Override
-	public void onItemClick(HumanEntity player, Inventory gui, ItemStack stack, InventoryClickEvent event, int page) {
+	public void onItemClick(HumanEntity player, Inventory gui, ItemStack stack, int page, SortType data, InventoryClickEvent event) {
 		RecipeBook.openBook(player, stack, ResultChoice.ORDERED);
 	}
 

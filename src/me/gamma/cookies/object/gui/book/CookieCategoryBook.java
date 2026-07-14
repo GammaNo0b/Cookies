@@ -79,23 +79,7 @@ public class CookieCategoryBook implements Book<CategoryInformation> {
 
 
 	@Override
-	public CategoryInformation loadData(Inventory inventory) {
-		RecipeCategory category = RecipeCategory.getCategoryFromIconStack(inventory.getItem(CATEGORY_SLOT));
-		boolean cheating = InventoryUtils.isMarked(this.getIdentifierStack(inventory), CHEATING_KEY);
-		return new CategoryInformation(category, cheating);
-	}
-
-
-	@Override
-	public void saveData(Inventory inventory, CategoryInformation data) {
-		if(data.cheating)
-			InventoryUtils.markItem(this.getIdentifierStack(inventory), CHEATING_KEY);
-	}
-
-
-	@Override
-	public void onItemClick(HumanEntity player, Inventory gui, ItemStack stack, InventoryClickEvent event, int page) {
-		CategoryInformation data = this.loadData(gui);
+	public void onItemClick(HumanEntity player, Inventory gui, ItemStack stack, int page, CategoryInformation data, InventoryClickEvent event) {
 		if(data.cheating) {
 			player.getInventory().addItem(this.getItem(gui, event.getSlot()));
 		} else {

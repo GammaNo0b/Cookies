@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.object.item.AbstractCustomItem;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -32,7 +33,9 @@ public class MagicMetal extends AbstractCustomItem {
 
 
 	@Override
-	protected void editItemMeta(ItemMeta meta) {
+	protected void editItemMeta(ItemMeta meta, PersistentDataObject data) {
+		super.editItemMeta(meta, data);
+
 		meta.addEnchant(Enchantment.PROTECTION, 1, true);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 	}

@@ -2,25 +2,31 @@
 package me.gamma.cookies.object;
 
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataHolder;
+
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
 public interface IItemSupplier extends Supplier<ItemStack> {
 
+	@Override
+	default ItemStack get() {
+		return this.get(_ -> {});
+	}
+
+
 	/**
-	 * Creates a new item stack with initial properties stored inside the given data holder.
+	 * Creates a new item stack with initial properties stored inside the given data.
 	 * 
-	 * @param holder the data holder
+	 * @param dataConsumer the data
 	 * @return the created item stack
 	 */
-	default ItemStack get(PersistentDataHolder holder) {
-		return this.get();
-	}
+	ItemStack get(Consumer<PersistentDataObject> dataConsumer);
 
 
 	/**
@@ -29,8 +35,8 @@ public interface IItemSupplier extends Supplier<ItemStack> {
 	 * @param material the material
 	 * @return the item supplier
 	 */
-	static IItemSupplier of(Material material) {
-		return () -> new ItemStack(material);
+	static IItemSupplier of(final Material material) {
+		return _ -> new ItemStack(material);
 	}
 
 
@@ -40,8 +46,8 @@ public interface IItemSupplier extends Supplier<ItemStack> {
 	 * @param stack the item stack
 	 * @return the item supplier
 	 */
-	static IItemSupplier of(ItemStack stack) {
-		return () -> stack;
+	static IItemSupplier of(final ItemStack stack) {
+		return _ -> stack.clone();
 	}
 
 }

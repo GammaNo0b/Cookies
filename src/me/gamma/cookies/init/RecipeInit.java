@@ -3,8 +3,6 @@ package me.gamma.cookies.init;
 
 
 import static me.gamma.cookies.init.Items.*;
-import static me.gamma.cookies.object.block.Backpack.BACKPACKS;
-import static me.gamma.cookies.object.block.Backpack.uuid;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -12,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -28,11 +27,12 @@ import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.StonecuttingRecipe;
 
 import me.gamma.cookies.object.IItemSupplier;
-import me.gamma.cookies.object.block.machine.AbstractCraftingMachine;
-import me.gamma.cookies.object.block.machine.AbstractMachine;
-import me.gamma.cookies.object.block.network.item.StorageCrateBlock;
+import me.gamma.cookies.object.block.machine.AbstractCraftingMachineBlock;
 import me.gamma.cookies.object.item.AbstractCustomItem;
 import me.gamma.cookies.object.item.CustomBlockItem;
+import me.gamma.cookies.object.item.resources.BackpackItem;
+import me.gamma.cookies.object.item.resources.ItemStorageCrateItem;
+import me.gamma.cookies.object.item.resources.MachineItem;
 import me.gamma.cookies.object.recipe.CookieRecipe;
 import me.gamma.cookies.object.recipe.CustomRecipe;
 import me.gamma.cookies.object.recipe.CustomRecipeChoice;
@@ -147,7 +147,6 @@ public class RecipeInit {
 		c.registerItem(RABBIT_BOOTS);
 		c.registerItem(ANGEL_WINGS);
 		c.registerItem(RAINBOW_HELMET);
-		c.registerItem(RAINBOW_CHESTPLATE);
 		c.registerItem(RAINBOW_LEGGINGS);
 		c.registerItem(RAINBOW_BOOTS);
 		c.registerItem(COLORED_HELMET);
@@ -219,6 +218,7 @@ public class RecipeInit {
 		c.registerItem(ENDERIUM);
 		c.registerItem(ENERGETIC_ALLOY);
 		c.registerItem(REDSTONIUM);
+		c.registerItem(IRON_ROD);
 		c.registerItem(CARBON);
 		c.registerItem(COMPRESSED_CARBON);
 		c.registerItem(CARBON_CHUNK);
@@ -231,12 +231,10 @@ public class RecipeInit {
 		c.registerItem(RAINBOW_DUST);
 
 		c = RecipeCategory.REDSTONE;
-		c.registerItem(REDSTONE_FREQUENCY_GADGET);
-		c.registerItem(WIRELESS_REDSTONE_TRANSMITTER);
-		c.registerItem(WIRELESS_REDSTONE_RECEIVER);
-		c.registerItem(REDSTONE_OR_GATE);
-		c.registerItem(REDSTONE_AND_GATE);
-		c.registerItem(REDSTONE_XOR_GATE);
+		/*
+		 * c.registerItem(REDSTONE_FREQUENCY_GADGET); c.registerItem(WIRELESS_REDSTONE_TRANSMITTER); c.registerItem(WIRELESS_REDSTONE_RECEIVER);
+		 * c.registerItem(REDSTONE_OR_GATE); c.registerItem(REDSTONE_AND_GATE); c.registerItem(REDSTONE_XOR_GATE);
+		 */
 
 		c = RecipeCategory.ELECTRIC_COMPONENTS;
 		c.registerItem(COPPER_WIRE);
@@ -290,6 +288,7 @@ public class RecipeInit {
 		c.registerItem(UPGRADE_ENERGY_STORAGE);
 		c.registerItem(UPGRADE_RANGE);
 		c.registerItem(UPGRADE_LUCK);
+		c.registerItem(TRADING_CARD);
 
 		c = RecipeCategory.MACHINES;
 		c.registerItem(COBBLESTONE_GENERATOR);
@@ -318,6 +317,7 @@ public class RecipeInit {
 		c.registerItem(PERFECTED_VOID_ORE_MINER);
 		c.registerItem(DYE_PRESS);
 		c.registerItem(DYE_MIXER);
+		c.registerItem(TRADING_MACHINE);
 		c.registerItem(ENCHANTER);
 		c.registerItem(DISENCHANTER);
 		c.registerItem(ENCHANTMENT_COMBINER);
@@ -395,6 +395,8 @@ public class RecipeInit {
 		c.registerItem(ADVANCED_BIO_GENERATOR);
 		c.registerItem(IMPROVED_BIO_GENERATOR);
 		c.registerItem(PERFECTED_BIO_GENERATOR);
+		c.registerItem(DIESEL_GENERATOR);
+		c.registerItem(LIGHTNING_GENERATOR);
 
 		c = RecipeCategory.STORAGE;
 		c.registerItem(BROWN_BACKPACK);
@@ -420,8 +422,17 @@ public class RecipeInit {
 		c.registerItem(DIAMOND_STORAGE_CRATE);
 		c.registerItem(EMERALD_STORAGE_CRATE);
 		c.registerItem(CLOWNFISH_STORAGE_CRATE);
+		c.registerItem(CLOWNFISH_CHEST);
 		c.registerItem(ENDER_CHEST);
 		c.registerItem(TRASHCAN);
+		c.registerItem(ITEM_PIPE);
+		c.registerItem(ITEM_EXTRACTION_PIPE);
+		c.registerItem(ITEM_INSERTION_PIPE);
+		c.registerItem(ITEM_SPEED_PIPE);
+		c.registerItem(ITEM_DIRECTIONAL_PIPE);
+		c.registerItem(ITEM_VACUUM_PIPE);
+		c.registerItem(ITEM_VOID_PIPE);
+		c.registerItem(ITEM_FILTER_PIPE);
 		c.registerItem(STORAGE_CASING);
 		c.registerItem(STORAGE_CONNECTOR);
 		c.registerItem(STORAGE_MAIN_COMPONENT);
@@ -430,11 +441,18 @@ public class RecipeInit {
 		c.registerItem(STORAGE_READER);
 		c.registerItem(ENDER_ACCESSOR);
 		c.registerItem(STORAGE_MONITOR);
+		c.registerItem(BLOCK_FILTER);
 		c.registerItem(NONSTACKABLE_FILTER);
 		c.registerItem(DAMAGEABLE_FILTER);
+		c.registerItem(DAMAGED_FILTER);
 		c.registerItem(NBT_FILTER);
 		c.registerItem(ENCHANTED_FILTER);
 		c.registerItem(FOOD_FILTER);
+		c.registerItem(COMPOSTER_FILTER);
+		c.registerItem(FLAMMABLE_FILTER);
+		c.registerItem(BURNABLE_FILTER);
+		c.registerItem(FUEL_FILTER);
+		c.registerItem(RECORD_FILTER);
 		c.registerItem(COOKIES_FILTER);
 
 		c = RecipeCategory.FLUIDS;
@@ -443,6 +461,8 @@ public class RecipeInit {
 		c.registerItem(IMPROVED_TANK);
 		c.registerItem(PERFECTED_TANK);
 		c.registerItem(FLUID_PUMP);
+		c.registerItem(OIL_PUMP);
+		c.registerItem(OIL_REFINERY);
 		c.registerItem(ENDER_TANK);
 		c.registerItem(WASTE_BARREL);
 
@@ -815,6 +835,9 @@ public class RecipeInit {
 
 		// Resources
 
+		recipe = shapelessRecipe(IRON_ROD, 2, type, "I", "I", "I");
+		recipe.setIngredient('I', Material.IRON_INGOT);
+
 		recipe = shapelessRecipe(STICKY_BALL, 1, type, "BWC", "SG ");
 		recipe.setIngredient('B', Material.WATER_BUCKET);
 		recipe.setIngredient('W', Material.WHEAT);
@@ -900,37 +923,37 @@ public class RecipeInit {
 
 		type = RecipeType.ENGINEER;
 
-		recipe = customRecipe(REDSTONE_FREQUENCY_GADGET, type, " T ", "GEG", " R ");
-		recipe.setIngredient('T', Material.REDSTONE_TORCH);
-		recipe.setIngredient('G', Material.GOLD_INGOT);
-		recipe.setIngredient('E', Material.ENDER_PEARL);
-		recipe.setIngredient('R', Material.REDSTONE);
-
-		recipe = customRecipe(WIRELESS_REDSTONE_TRANSMITTER, type, "RET", "SSS");
-		recipe.setIngredient('R', Material.REDSTONE);
-		recipe.setIngredient('E', Material.ENDER_PEARL);
-		recipe.setIngredient('T', Material.REDSTONE_TORCH);
-		recipe.setIngredient('S', Material.STONE);
-
-		recipe = customRecipe(WIRELESS_REDSTONE_RECEIVER, type, "TCR", "SSS");
-		recipe.setIngredient('T', Material.REDSTONE_TORCH);
-		recipe.setIngredient('C', Material.COMPARATOR);
-		recipe.setIngredient('R', Material.REDSTONE);
-		recipe.setIngredient('S', Material.STONE);
-
-		recipe = customRecipe(REDSTONE_OR_GATE, type, "R", "S");
-		recipe.setIngredient('R', Material.REDSTONE);
-		recipe.setIngredient('S', Material.SMOOTH_STONE_SLAB);
-
-		recipe = customRecipe(REDSTONE_AND_GATE, type, " T ", "TRT", "SSS");
-		recipe.setIngredient('S', Material.SMOOTH_STONE_SLAB);
-		recipe.setIngredient('R', Material.REDSTONE);
-		recipe.setIngredient('T', Material.REDSTONE_TORCH);
-
-		recipe = customRecipe(REDSTONE_XOR_GATE, type, "T  ", "RTR", "SSS");
-		recipe.setIngredient('S', Material.SMOOTH_STONE_SLAB);
-		recipe.setIngredient('R', Material.REDSTONE);
-		recipe.setIngredient('T', Material.REDSTONE_TORCH);
+		// recipe = customRecipe(REDSTONE_FREQUENCY_GADGET, type, " T ", "GEG", " R ");
+		// recipe.setIngredient('T', Material.REDSTONE_TORCH);
+		// recipe.setIngredient('G', Material.GOLD_INGOT);
+		// recipe.setIngredient('E', Material.ENDER_PEARL);
+		// recipe.setIngredient('R', Material.REDSTONE);
+		//
+		// recipe = customRecipe(WIRELESS_REDSTONE_TRANSMITTER, type, "RET", "SSS");
+		// recipe.setIngredient('R', Material.REDSTONE);
+		// recipe.setIngredient('E', Material.ENDER_PEARL);
+		// recipe.setIngredient('T', Material.REDSTONE_TORCH);
+		// recipe.setIngredient('S', Material.STONE);
+		//
+		// recipe = customRecipe(WIRELESS_REDSTONE_RECEIVER, type, "TCR", "SSS");
+		// recipe.setIngredient('T', Material.REDSTONE_TORCH);
+		// recipe.setIngredient('C', Material.COMPARATOR);
+		// recipe.setIngredient('R', Material.REDSTONE);
+		// recipe.setIngredient('S', Material.STONE);
+		//
+		// recipe = customRecipe(REDSTONE_OR_GATE, type, "R", "S");
+		// recipe.setIngredient('R', Material.REDSTONE);
+		// recipe.setIngredient('S', Material.SMOOTH_STONE_SLAB);
+		//
+		// recipe = customRecipe(REDSTONE_AND_GATE, type, " T ", "TRT", "SSS");
+		// recipe.setIngredient('S', Material.SMOOTH_STONE_SLAB);
+		// recipe.setIngredient('R', Material.REDSTONE);
+		// recipe.setIngredient('T', Material.REDSTONE_TORCH);
+		//
+		// recipe = customRecipe(REDSTONE_XOR_GATE, type, "T ", "RTR", "SSS");
+		// recipe.setIngredient('S', Material.SMOOTH_STONE_SLAB);
+		// recipe.setIngredient('R', Material.REDSTONE);
+		// recipe.setIngredient('T', Material.REDSTONE_TORCH);
 
 		// Electric Components
 
@@ -1046,8 +1069,8 @@ public class RecipeInit {
 		recipe.setIngredient('I', Material.IRON_NUGGET);
 		recipe.setIngredient('C', CARBONADO);
 
-		recipe = customRecipe(ELECTROMAGNET, type, "I", "C", "I");
-		recipe.setIngredient('I', Material.IRON_NUGGET);
+		recipe = shapelessRecipe(ELECTROMAGNET, type, "CI");
+		recipe.setIngredient('I', IRON_ROD);
 		recipe.setIngredient('C', COPPER_COIL);
 
 		recipe = customRecipe(MOTOR, type, " M ", "WIW", "MAM");
@@ -1100,29 +1123,29 @@ public class RecipeInit {
 
 		recipe = customRecipe(PHOTOVOLTAIC_CELL_1, 3, type, "GGG", "ARA", "BIB");
 		recipe.setIngredient('G', Material.GLASS_PANE);
-		recipe.setIngredient('A', Material.AMETHYST_SHARD);
+		recipe.setIngredient('A', QUARTZ_DUST);
 		recipe.setIngredient('B', Material.QUARTZ);
 		recipe.setIngredient('I', EINGOT_1);
 		recipe.setIngredient('R', RED_1);
 
 		recipe = customRecipe(PHOTOVOLTAIC_CELL_2, 3, type, "GGG", "ARA", "BIB");
 		recipe.setIngredient('G', PHOTOVOLTAIC_CELL_1);
-		recipe.setIngredient('A', Material.LAPIS_LAZULI);
-		recipe.setIngredient('B', QUARTZ_DUST);
+		recipe.setIngredient('A', Material.GLOWSTONE_DUST);
+		recipe.setIngredient('B', Material.BLAZE_POWDER);
 		recipe.setIngredient('I', EINGOT_2);
 		recipe.setIngredient('R', RED_2);
 
 		recipe = customRecipe(PHOTOVOLTAIC_CELL_3, 3, type, "GGG", "ARA", "BIB");
 		recipe.setIngredient('G', PHOTOVOLTAIC_CELL_2);
-		recipe.setIngredient('A', Material.GLOW_INK_SAC);
-		recipe.setIngredient('B', Material.GLOW_BERRIES);
+		recipe.setIngredient('A', Material.LAPIS_LAZULI);
+		recipe.setIngredient('B', Material.GLOW_INK_SAC);
 		recipe.setIngredient('I', EINGOT_3);
 		recipe.setIngredient('R', RED_2);
 
 		recipe = customRecipe(PHOTOVOLTAIC_CELL_4, 3, type, "GGG", "ARA", "BIB");
 		recipe.setIngredient('G', PHOTOVOLTAIC_CELL_3);
-		recipe.setIngredient('A', Material.GLOWSTONE_DUST);
-		recipe.setIngredient('B', Material.BLAZE_POWDER);
+		recipe.setIngredient('A', Material.AMETHYST_SHARD);
+		recipe.setIngredient('B', Material.RESIN_CLUMP);
 		recipe.setIngredient('I', EINGOT_4);
 		recipe.setIngredient('R', RED_3);
 
@@ -1203,6 +1226,11 @@ public class RecipeInit {
 		recipe.setIngredient('B', Material.LAPIS_LAZULI);
 		recipe.setIngredient('U', UPGRADE_BASE);
 
+		recipe = customRecipe(TRADING_CARD, type, " G ", "EUE", " G ");
+		recipe.setIngredient('G', Material.GOLD_INGOT);
+		recipe.setIngredient('E', Material.EMERALD);
+		recipe.setIngredient('U', GILDED_PAPER);
+
 		// Machines
 
 		Function<List<Pair<Integer, Integer>>, CustomRecipe.ResultProducer> MACHINE_UPGRADER = positions -> {
@@ -1212,7 +1240,7 @@ public class RecipeInit {
 					Pair<Integer, Integer> pos = positions.get(i);
 					machines[i] = ingredients[pos.left][pos.right];
 				}
-				AbstractMachine.upgradeMachine(result, machines);
+				MachineItem.upgradeMachine(result, machines);
 				return result;
 			};
 		};
@@ -1232,7 +1260,7 @@ public class RecipeInit {
 		recipe.setIngredient('P', Material.DIAMOND_PICKAXE);
 
 		recipe = customRecipe(DRIPSTONE_GENERATOR, type, "CWC", "PMC", "CDC");
-		recipe.setIngredient('C', Material.COBBLESTONE);
+		recipe.setIngredient('C', Material.DRIPSTONE_BLOCK);
 		recipe.setIngredient('W', Material.WATER_BUCKET);
 		recipe.setIngredient('M', BASIC_MACHINE_CASING);
 		recipe.setIngredient('D', Material.POINTED_DRIPSTONE);
@@ -1399,6 +1427,13 @@ public class RecipeInit {
 		recipe.setIngredient('B', Material.BLUE_DYE);
 		recipe.setIngredient('C', Material.CAULDRON);
 		recipe.setIngredient('M', BASIC_MACHINE_CASING);
+
+		recipe = customRecipe(TRADING_MACHINE, type, "IGI", "ELE", "ICI");
+		recipe.setIngredient('I', IINGOT_3);
+		recipe.setIngredient('E', Material.EMERALD);
+		recipe.setIngredient('L', Material.LECTERN);
+		recipe.setIngredient('G', Material.GLASS);
+		recipe.setIngredient('C', IMPROVED_MACHINE_CASING);
 
 		recipe = customRecipe(ENCHANTER, type, " B ", "DCD", "OMO");
 		recipe.setIngredient('B', Material.BOOK);
@@ -1942,12 +1977,20 @@ public class RecipeInit {
 		recipe.setIngredient('I', IINGOT_4);
 		recipe.setIngredient('F', FINGOT_4);
 
+		recipe = customRecipe(LIGHTNING_GENERATOR, type, "INI", "BLB", "ECE");
+		recipe.setIngredient('I', IINGOT_5);
+		recipe.setIngredient('E', EINGOT_4);
+		recipe.setIngredient('B', BATTERY_BLACK);
+		recipe.setIngredient('L', Material.LIGHTNING_ROD);
+		recipe.setIngredient('N', Material.NETHER_STAR);
+		recipe.setIngredient('C', PERFECTED_MACHINE_CASING);
+
 		// Storage
 
 		type = RecipeType.CUSTOM;
 
 		CustomRecipe.ResultProducer BACKPACK_UPGRADER = (result, ingredients) -> {
-			BACKPACKS.upgradeInventory(uuid.fetch(ingredients[1][1].getItemMeta()), uuid.fetch(result.getItemMeta()));
+			BackpackItem.upgradeBackpack(ingredients[1][1], result);
 			return result;
 		};
 
@@ -1990,7 +2033,7 @@ public class RecipeInit {
 		CustomRecipe.ResultProducer CRATE_COMBINER = (result, ingredients) -> {
 			ItemStack left = ingredients[1][0];
 			ItemStack right = ingredients[1][2];
-			StorageCrateBlock.storeItems(result, left, right);
+			ItemStorageCrateItem.storeItems(result, left, right);
 			return result;
 		};
 
@@ -2096,6 +2139,11 @@ public class RecipeInit {
 		recipe.setIngredient('S', EMERALD_STORAGE_CRATE);
 		recipe.setIngredient('N', Material.NETHER_STAR);
 
+		recipe = customRecipe(CLOWNFISH_CHEST, type, "LFL", "FCF", "LFL");
+		recipe.setIngredient('L', Material.LAPIS_LAZULI);
+		recipe.setIngredient('F', Material.TROPICAL_FISH);
+		recipe.setIngredient('C', Material.CHEST);
+
 		recipe = customRecipe(ENDER_CHEST, type, "OEO", "BCB", "ODO");
 		recipe.setIngredient('O', Material.OBSIDIAN);
 		recipe.setIngredient('B', Material.BLAZE_ROD);
@@ -2120,7 +2168,7 @@ public class RecipeInit {
 		recipe.setIngredient('B', Material.BLUE_DYE);
 		recipe.setIngredient('I', TIN_INGOT);
 		recipe.setIngredient('C', STORAGE_CASING);
-		
+
 		recipe = customRecipe(STORAGE_MAIN_COMPONENT, type, "IHI", "BCB", "ISI");
 		recipe.setIngredient('B', Material.BROWN_DYE);
 		recipe.setIngredient('H', Material.CHEST);
@@ -2165,6 +2213,10 @@ public class RecipeInit {
 
 		type = RecipeType.CUSTOM;
 
+		recipe = shapelessRecipe(BLOCK_FILTER, type, "PI");
+		recipe.setIngredient('P', GILDED_PAPER);
+		recipe.setIngredient('I', new RecipeChoice.MaterialChoice(Material.STONE, Material.COBBLESTONE, Material.DIRT));
+
 		recipe = shapelessRecipe(NONSTACKABLE_FILTER, type, "PI");
 		recipe.setIngredient('P', GILDED_PAPER);
 		recipe.setIngredient('I', Tag.ITEMS_CHEST_BOATS);
@@ -2172,6 +2224,12 @@ public class RecipeInit {
 		recipe = shapelessRecipe(DAMAGEABLE_FILTER, type, "PI");
 		recipe.setIngredient('P', GILDED_PAPER);
 		recipe.setIngredient('I', Material.GOLDEN_PICKAXE);
+
+		recipe = shapelessRecipe(DAMAGED_FILTER, type, "F");
+		recipe.setIngredient('F', DAMAGEABLE_FILTER);
+
+		recipe = shapelessRecipe(DAMAGEABLE_FILTER, type, "F");
+		recipe.setIngredient('F', DAMAGED_FILTER);
 
 		recipe = shapelessRecipe(NBT_FILTER, type, "PI");
 		recipe.setIngredient('P', GILDED_PAPER);
@@ -2184,6 +2242,26 @@ public class RecipeInit {
 		recipe = shapelessRecipe(FOOD_FILTER, type, "PI");
 		recipe.setIngredient('P', GILDED_PAPER);
 		recipe.setIngredient('I', Material.CAKE);
+
+		recipe = shapelessRecipe(COMPOSTER_FILTER, type, "PI");
+		recipe.setIngredient('P', GILDED_PAPER);
+		recipe.setIngredient('I', new RecipeChoice.MaterialChoice(Material.WHEAT, Material.SUGAR_CANE, Material.CACTUS, Material.KELP, Material.MELON));
+
+		recipe = shapelessRecipe(FLAMMABLE_FILTER, type, "PI");
+		recipe.setIngredient('P', GILDED_PAPER);
+		recipe.setIngredient('I', Material.NETHERRACK);
+
+		recipe = shapelessRecipe(BURNABLE_FILTER, type, "PI");
+		recipe.setIngredient('P', GILDED_PAPER);
+		recipe.setIngredient('I', Tag.LOGS_THAT_BURN);
+
+		recipe = shapelessRecipe(FUEL_FILTER, type, "PI");
+		recipe.setIngredient('P', GILDED_PAPER);
+		recipe.setIngredient('I', new RecipeChoice.MaterialChoice(Material.COAL, Material.CHARCOAL, Material.DRIED_KELP_BLOCK, Material.BLAZE_ROD));
+
+		recipe = shapelessRecipe(RECORD_FILTER, type, "PI");
+		recipe.setIngredient('P', GILDED_PAPER);
+		recipe.setIngredient('I', Tag.ITEMS_CREEPER_DROP_MUSIC_DISCS);
 
 		recipe = shapelessRecipe(COOKIES_FILTER, type, "PI");
 		recipe.setIngredient('P', GILDED_PAPER);
@@ -2325,7 +2403,7 @@ public class RecipeInit {
 		recipe.setIngredient('I', Material.IRON_INGOT);
 
 		recipe = customRecipe(TESSERACT, type, "EYE", "BCB", "APA");
-		recipe.setIngredient('E', ENDERIUM);
+		recipe.setIngredient('E', IINGOT_5);
 		recipe.setIngredient('A', ENERGETIC_ALLOY);
 		recipe.setIngredient('B', BATTERY_BLACK);
 		recipe.setIngredient('Y', ENDER_CRYSTAL);
@@ -2500,7 +2578,7 @@ public class RecipeInit {
 		recipe.setIngredient('Z', Material.SUGAR);
 		recipe.setIngredient('E', Material.ENDER_PEARL);
 		recipe.setIngredient('I', new RecipeChoice.MaterialChoice(Material.INK_SAC, Material.GLOW_INK_SAC));
-		recipe.setIngredient('W', Material.WATER_BUCKET);
+		recipe.setIngredient('W', Material.RESIN_CLUMP);
 		recipe.setIngredient('C', Material.COBWEB);
 
 		recipe = customRecipe(COMPACT_PEBBLE, type, "234", "1C5", "876");
@@ -2809,7 +2887,7 @@ public class RecipeInit {
 		recipe.setIngredient('3', Material.BLACK_DYE);
 
 		// machine recipes
-		Registries.BLOCKS.filterByClass(AbstractCraftingMachine.class).stream().flatMap(m -> m.getMachineRecipes(null).stream()).forEach(RecipeInit::registerRecipe);
+		Registries.BLOCKS.stream().map(block -> block instanceof AbstractCraftingMachineBlock<?, ?> machine ? machine : null).filter(Objects::nonNull).flatMap(m -> m.getAllMachineRecipes().stream()).forEach(RecipeInit::registerRecipe);
 
 		testPlushieDuplicates();
 	}
@@ -2897,7 +2975,7 @@ public class RecipeInit {
 
 	public static List<Recipe> getAllRecipesFor(ItemStack result) {
 		List<Recipe> recipes = new ArrayList<>();
-		Bukkit.getRecipesFor(result).stream().filter(recipe -> ItemUtils.match(recipe.getResult(), result)).forEach(recipes::add);
+		Bukkit.getRecipesFor(result).stream().filter(recipe -> ItemUtils.similar(recipe.getResult(), result)).forEach(recipes::add);
 		recipes.addAll(getCookieRecipesFromStack(result));
 		recipes.addAll(getMachineRecipesFromStack(result));
 		return recipes;
@@ -2905,17 +2983,17 @@ public class RecipeInit {
 
 
 	public static Recipe getRecipeFromResult(ItemStack result) {
-		return RECIPES.filterFirst(recipe -> ItemUtils.match(result, recipe.getResult()));
+		return RECIPES.filterFirst(recipe -> ItemUtils.similar(recipe.getResult(), result));
 	}
 
 
 	public static List<CookieRecipe> getCookieRecipesFromStack(ItemStack stack) {
-		return COOKIE_RECIPES.filter(recipe -> ItemUtils.match(recipe.getResult(), stack));
+		return COOKIE_RECIPES.filter(recipe -> ItemUtils.similar(recipe.getResult(), stack));
 	}
 
 
 	public static List<MachineRecipe> getMachineRecipesFromStack(ItemStack stack) {
-		return MACHINE_RECIPES.filter(recipe -> ItemUtils.match(recipe.getResult(), stack));
+		return MACHINE_RECIPES.filter(recipe -> ItemUtils.similar(recipe.getResult(), stack));
 	}
 
 

@@ -73,8 +73,8 @@ public interface EnergyCable {
 		Map<TileState, EnergyStorage> storages = new HashMap<>();
 
 		Consumer<TileState> inspectBlock = state -> {
-			EnergySupplier supplier = EnergySupplier.getEnergySupplier(state);
-			EnergyConsumer consumer = EnergyConsumer.getEnergyConsumer(state);
+			EnergySupplier supplier = EnergySupplier.getEnergySupplier(state.getBlock());
+			EnergyConsumer consumer = EnergyConsumer.getEnergyConsumer(state.getBlock());
 
 			if(supplier != null) {
 				if(supplier instanceof EnergyStorage storage) {
@@ -117,11 +117,11 @@ public interface EnergyCable {
 	 */
 	default void transmitEnergy(TileState block, Map<TileState, EnergySupplier> supplier, Map<TileState, EnergyConsumer> consumer, Map<TileState, EnergyStorage> storage) {
 		ArrayList<EnergyProvider> supplierlist = new ArrayList<>();
-		supplier.forEach((state, sup) -> supplierlist.add(sup.getEnergyOutput(state)));
+		supplier.forEach((_, sup) -> supplierlist.add(sup.getEnergyOutput()));
 		ArrayList<EnergyProvider> consumerlist = new ArrayList<>();
-		consumer.forEach((state, con) -> consumerlist.add(con.getEnergyInput(state)));
+		consumer.forEach((_, con) -> consumerlist.add(con.getEnergyInput()));
 		ArrayList<EnergyProvider> storagelist = new ArrayList<>();
-		storage.forEach((state, sto) -> storagelist.add(sto.getEnergyProvider(state)));
+		storage.forEach((_, sto) -> storagelist.add(sto.getEnergyProvider()));
 		Cable.transfer(this.getTransferMode(block), this.getBuffer(block), this.getTransferRate(block), supplierlist, consumerlist, storagelist);
 	}
 
@@ -146,8 +146,8 @@ public interface EnergyCable {
 	 */
 	default void collectEnergy(TileState block, Map<TileState, EnergySupplier> supplier, Map<TileState, EnergyStorage> storage) {
 		ArrayList<EnergyProvider> supplierlist = new ArrayList<>();
-		supplier.forEach((state, sup) -> supplierlist.add(sup.getEnergyOutput(state)));
-		storage.forEach((state, sto) -> supplierlist.add(sto.getEnergyProvider(state)));
+		supplier.forEach((_, sup) -> supplierlist.add(sup.getEnergyOutput()));
+		storage.forEach((_, sto) -> supplierlist.add(sto.getEnergyProvider()));
 		EnergyProvider buffer = this.getBuffer(block);
 		buffer.add(Cable.collect(this.getTransferMode(block), Math.min(buffer.space(), this.getTransferRate(block)), supplierlist));
 	}
@@ -173,8 +173,8 @@ public interface EnergyCable {
 	 */
 	default void distributeEnergy(TileState block, Map<TileState, EnergyConsumer> supplier, Map<TileState, EnergyStorage> storage) {
 		ArrayList<EnergyProvider> consumerlist = new ArrayList<>();
-		supplier.forEach((state, sup) -> consumerlist.add(sup.getEnergyInput(state)));
-		storage.forEach((state, sto) -> consumerlist.add(sto.getEnergyProvider(state)));
+		supplier.forEach((_, sup) -> consumerlist.add(sup.getEnergyInput()));
+		storage.forEach((_, sto) -> consumerlist.add(sto.getEnergyProvider()));
 		EnergyProvider buffer = this.getBuffer(block);
 		buffer.add(Cable.distribute(this.getTransferMode(block), buffer.get(this.getTransferRate(block)), consumerlist));
 	}

@@ -12,12 +12,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataContainer;
 
 import me.gamma.cookies.init.Items;
 import me.gamma.cookies.object.WorldPersistentDataStorage;
 import me.gamma.cookies.object.property.UUIDArrayProperty;
 import me.gamma.cookies.util.ItemUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -39,16 +39,16 @@ public class TutorialListener implements Listener, WorldPersistentDataStorage {
 
 
 	@Override
-	public void load(World world, PersistentDataContainer container) {
-		UUID[] uuids = TUTORIALISTS.fetchEmpty(container);
+	public void load(World world, PersistentDataObject object) {
+		UUID[] uuids = TUTORIALISTS.fetchEmpty(object.getContainer());
 		for(UUID uuid : uuids)
 			this.players.add(uuid);
 	}
 
 
 	@Override
-	public void save(World world, PersistentDataContainer container) {
-		TUTORIALISTS.store(container, this.players.toArray(UUID[]::new));
+	public void save(World world, PersistentDataObject object) {
+		TUTORIALISTS.store(object.getContainer(), this.players.toArray(UUID[]::new));
 		this.players.clear();
 	}
 

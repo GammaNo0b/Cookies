@@ -2,15 +2,14 @@
 package me.gamma.cookies.object.item.resources;
 
 
-import static me.gamma.cookies.object.block.network.EnderLinkedBlock.COLOR;
-import static me.gamma.cookies.object.block.network.EnderLinkedBlock.colorcodes;
-
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.object.LoreBuilder;
 import me.gamma.cookies.object.LoreBuilder.Section;
 import me.gamma.cookies.object.block.network.EnderLinkedBlock;
 import me.gamma.cookies.object.item.AbstractBlockItem;
+import me.gamma.cookies.object.tile.network.EnderLinkedTileEntity;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -31,12 +30,20 @@ public class EnderLinkedBlockItem<T, E extends EnderLinkedBlock<T>> extends Abst
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
-		int color = COLOR.fetch(holder);
+	protected void createData(PersistentDataObject customData) {
+		super.createData(customData);
+
+		customData.setInteger(EnderLinkedTileEntity.KEY_COLOR, 0);
+	}
+
+
+	@Override
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
+		int color = data.getInteger(EnderLinkedTileEntity.KEY_COLOR, 0);
 		Section section = builder.createSection("§7Ender Color:", false);
 		for(int i = 0; i < 3; i++) {
 			int c = (color >> (i << 2)) & 0xF;
-			section.add(String.format("  §%c%d", colorcodes[c], c));
+			section.add(String.format("  §%c%d", EnderLinkedTileEntity.colorcodes[c], c));
 		}
 		section.build();
 		builder.createSection("§7Change the color using an eye of ender.", true);

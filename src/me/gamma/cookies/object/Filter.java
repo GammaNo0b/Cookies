@@ -22,13 +22,24 @@ public interface Filter<T> {
 
 
 	/**
-	 * Returns an empty filter that will allow every resource.
+	 * Returns a filter that will allow every resource.
 	 * 
-	 * @param <T> the type of the filter
+	 * @param <T> the type of the filter resource
+	 * @return the any filter
+	 */
+	static <T> Filter<T> any() {
+		return (_, amount) -> amount;
+	}
+
+
+	/**
+	 * Returns a filter that will deny every resource.
+	 * 
+	 * @param <T> the type of the filter resource
 	 * @return the empty filter
 	 */
 	static <T> Filter<T> empty() {
-		return (_, amount) -> amount;
+		return (_, _) -> 0;
 	}
 
 

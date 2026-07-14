@@ -2,16 +2,19 @@
 package me.gamma.cookies.util.core;
 
 
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftChicken;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.entity.CraftChicken;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 
-import net.minecraft.nbt.NBTTagCompound;
+import me.gamma.cookies.Cookies;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueOutput;
 
 
 
@@ -33,8 +36,7 @@ public class MinecraftEntityHelper {
 	 */
 	public static void setChickenJockey(Chicken chicken, boolean jockey) {
 		if(chicken instanceof CraftChicken c)
-			// EntityChicken#setChickenJockey(boolean)
-			c.getHandle().w(jockey);
+			c.getHandle().setChickenJockey(jockey);
 	}
 
 
@@ -44,17 +46,15 @@ public class MinecraftEntityHelper {
 	 * @param entity the entity
 	 * @return the entity stored in an nbt tag compound
 	 */
-	public static NBTTagCompound saveEntity(Entity entity) {
+	public static CompoundTag saveEntity(Entity entity) {
 		if(!(entity instanceof CraftEntity craftentity))
-			return new NBTTagCompound();
+			return new CompoundTag();
 
-		NBTTagCompound compound = new NBTTagCompound();
-		// Entity#getEncodedId()
-		compound.a("id", craftentity.getHandle().bK());
-		// Entity#saveWithoutId(NBTTagCompound)
-		craftentity.getHandle().f(compound);
-
-		return compound;
+		try(ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(craftentity.getHandle().problemPath(), Cookies.LOGGER)) {
+			TagValueOutput output = TagValueOutput.createWithContext(reporter, craftentity.getHandle().registryAccess());
+			craftentity.getHandle().save(output);
+			return output.buildResult();
+		}
 	}
 
 
@@ -65,8 +65,7 @@ public class MinecraftEntityHelper {
 	 * @param attacker the attacking player
 	 */
 	public static void setLastHurtByPlayer(LivingEntity entity, HumanEntity attacker) {
-		// EntityLiving#setLastHurtByPlayer(EntityHuman)
-		((CraftLivingEntity) entity).getHandle().c(((CraftHumanEntity) attacker).getHandle());
+		((CraftLivingEntity) entity).getHandle().setLastHurtByPlayer(((CraftHumanEntity) attacker).getHandle(), 20);
 	}
 
 }

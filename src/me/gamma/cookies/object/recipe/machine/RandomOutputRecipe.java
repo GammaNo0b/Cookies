@@ -16,7 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import me.gamma.cookies.object.IItemSupplier;
-import me.gamma.cookies.object.block.machine.AbstractMachine;
+import me.gamma.cookies.object.block.machine.AbstractMachineBlock;
 import me.gamma.cookies.object.gui.task.RecipeInventoryTask;
 import me.gamma.cookies.object.gui.task.RecipeInventoryTask.ResultChoice;
 import me.gamma.cookies.util.ItemBuilder;
@@ -29,7 +29,7 @@ public class RandomOutputRecipe implements MachineRecipe {
 
 	private static final DecimalFormat DURATION = new DecimalFormat("0.0s");
 
-	private final AbstractMachine machine;
+	private final AbstractMachineBlock<?, ?> machine;
 	private final Random r;
 	private int maxChance;
 	private final Map<ItemStack, Integer> outputs = new HashMap<>();
@@ -37,17 +37,17 @@ public class RandomOutputRecipe implements MachineRecipe {
 	private final String identifier;
 	private final int duration;
 
-	public RandomOutputRecipe(AbstractMachine machine, String identifier, ItemStack ingredient, int duration) {
+	public RandomOutputRecipe(AbstractMachineBlock<?, ?> machine, String identifier, ItemStack ingredient, int duration) {
 		this(machine, identifier, ingredient, duration, new Random());
 	}
 
 
-	public RandomOutputRecipe(AbstractMachine machine, String identifier, ItemStack ingredient, int duration, long seed) {
+	public RandomOutputRecipe(AbstractMachineBlock<?, ?> machine, String identifier, ItemStack ingredient, int duration, long seed) {
 		this(machine, identifier, ingredient, duration, new Random(seed));
 	}
 
 
-	public RandomOutputRecipe(AbstractMachine machine, String identifier, ItemStack ingredient, int duration, Random random) {
+	public RandomOutputRecipe(AbstractMachineBlock<?, ?> machine, String identifier, ItemStack ingredient, int duration, Random random) {
 		this.machine = machine;
 		this.identifier = identifier;
 		this.duration = duration;
@@ -96,7 +96,7 @@ public class RandomOutputRecipe implements MachineRecipe {
 
 
 	@Override
-	public AbstractMachine getMachine() {
+	public AbstractMachineBlock<?, ?> getMachine() {
 		return this.machine;
 	}
 
@@ -154,7 +154,7 @@ public class RandomOutputRecipe implements MachineRecipe {
 	 * @param machine the machine
 	 * @return the read recipe
 	 */
-	public static RandomOutputRecipe loadRecipe(JsonObject object, AbstractMachine machine) {
+	public static RandomOutputRecipe loadRecipe(JsonObject object, AbstractMachineBlock<?, ?> machine) {
 		String identifier = object.get("name").getAsString();
 		ItemStack ingredient = JsonUtils.parseItemStack(object.get("ingredient").getAsJsonObject());
 		int duration = object.get("duration").getAsInt();

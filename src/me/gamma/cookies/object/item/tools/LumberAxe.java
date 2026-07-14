@@ -7,9 +7,10 @@ import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.object.LoreBuilder;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
@@ -30,7 +31,7 @@ public class LumberAxe extends VeinMinerTool {
 
 
 	@Override
-	public void getDescription(LoreBuilder builder, PersistentDataHolder holder) {
+	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		builder.createSection(null, true).add("§7Fells a whole tree.");
 	}
 

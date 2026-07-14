@@ -2,13 +2,11 @@
 package me.gamma.cookies.object.block.machine;
 
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.TileState;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -17,21 +15,19 @@ import org.bukkit.inventory.ItemStack;
 
 import me.gamma.cookies.init.Config;
 import me.gamma.cookies.object.block.AbstractCustomTileBlock;
+import me.gamma.cookies.object.block.Cartesian;
 import me.gamma.cookies.object.block.RedstoneMode;
 import me.gamma.cookies.object.block.network.Wire;
 import me.gamma.cookies.object.gui.util.MachineUpgradeGui;
-import me.gamma.cookies.object.property.DoubleProperty;
-import me.gamma.cookies.object.property.EnergyProperty;
-import me.gamma.cookies.object.property.EnumProperty;
-import me.gamma.cookies.object.property.Properties;
-import me.gamma.cookies.object.property.StringProperty;
-import me.gamma.cookies.object.property.VectorProperty;
+import me.gamma.cookies.object.tile.generator.AbstractGenerator;
 import me.gamma.cookies.object.tile.machine.AbstractMachine;
 import me.gamma.cookies.util.ItemUtils;
+import me.gamma.cookies.util.PersistentDataUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
-public abstract class AbstractMachineBlock extends AbstractCustomTileBlock {
+public abstract class AbstractMachineBlock<B extends AbstractMachineBlock<B, T>, T extends AbstractMachine<T, B>> extends AbstractCustomTileBlock<B, T> implements Cartesian {
 
 	protected final MachineTier tier;
 
@@ -110,6 +106,7 @@ public abstract class AbstractMachineBlock extends AbstractCustomTileBlock {
 		return this.upgradeSlots;
 	}
 
+
 	/**
 	 * Returns the base speed.
 	 * 
@@ -118,7 +115,6 @@ public abstract class AbstractMachineBlock extends AbstractCustomTileBlock {
 	public double getBaseSpeed() {
 		return this.baseSpeed;
 	}
-
 
 
 	/**
@@ -139,17 +135,28 @@ public abstract class AbstractMachineBlock extends AbstractCustomTileBlock {
 
 
 	@Override
-	public boolean onBlockBreak(Player player, TileState block, BlockBreakEvent event) {
+	protected void transferCustomData(PersistentDataObject tileData, PersistentDataObject itemData) {
+		super.transferCustomData(tileData, itemData);
+
+		itemData.setInteger(AbstractGenerator.KEY_ENERGY, tileData.getInteger(AbstractGenerator.KEY_ENERGY, 0));
+		PersistentDataUtils.setEnum(itemData, AbstractGenerator.KEY_REDSTONE_MODE, PersistentDataUtils.getEnum(tileData, AbstractGenerator.KEY_REDSTONE_MODE, RedstoneMode.class));
+	}
+
+
+	@Override
+	public boolean onBlockBreak(Player player, Block block, BlockBreakEvent event) {
 		if(super.onBlockBreak(player, block, event))
 			return true;
 
-		AbstractMachine<?> machine = this.getTileEntity(block.getBlock());
+		AbstractMachine<?, ?> machine = this.getTileEntity(block);
 		if(machine == null)
 			return false;
 
-		for(MachineUpgrade upgrade : machine.getAllowedUpgrades()) {
+		List<MachineUpgrade> upgrades = new ArrayList<>();
+		machine.getAllowedUpgrades(upgrades);
+		for(MachineUpgrade upgrade : upgrades) {
 			ItemStack item = upgrade.getItem().get();
-			item.setAmount(upgrade.fetch(block));
+			item.setAmount(machine.getUpgradeLevel(upgrade));
 			ItemUtils.dropItem(item, block);
 		}
 
@@ -162,14 +169,11 @@ public abstract class AbstractMachineBlock extends AbstractCustomTileBlock {
 
 
 	@Override
-	public boolean onBlockRightClick(Player player, TileState block, ItemStack stack, PlayerInteractEvent event) {
-		if(super.onBlockRightClick(player, block, stack, event))
-			return true;
-
-		if(!player.isSneaking())
+	public boolean onBlockRightClick(Player player, Block block, ItemStack stack, PlayerInteractEvent event) {
+		if(!super.onBlockRightClick(player, block, stack, event))
 			return false;
-		
-		AbstractMachine<?> machine = this.getTileEntity(block.getBlock());
+
+		T machine = this.getTileEntity(block);
 		if(machine == null)
 			return false;
 
@@ -179,11 +183,12 @@ public abstract class AbstractMachineBlock extends AbstractCustomTileBlock {
 				player.sendMessage("§cRedstone mode set to " + machine.getRedstoneMode().getTitle());
 				return true;
 			} else if(ItemUtils.isType(stack, Material.DIAMOND) && machine.getUpgradeSlots() > 0) {
-				MachineUpgradeGui.open(player, block, machine);
+				MachineUpgradeGui.open(player, machine);
 				return true;
 			}
 		}
-		return false;
+
+		return true;
 	}
 
 }

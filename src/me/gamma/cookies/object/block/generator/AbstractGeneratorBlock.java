@@ -2,8 +2,11 @@
 package me.gamma.cookies.object.block.generator;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
-import org.bukkit.block.TileState;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -12,16 +15,19 @@ import org.bukkit.inventory.ItemStack;
 
 import me.gamma.cookies.init.Config;
 import me.gamma.cookies.object.block.AbstractCustomTileBlock;
+import me.gamma.cookies.object.block.RedstoneMode;
 import me.gamma.cookies.object.block.machine.MachineTier;
 import me.gamma.cookies.object.block.machine.MachineUpgrade;
 import me.gamma.cookies.object.block.network.Wire;
 import me.gamma.cookies.object.gui.util.MachineUpgradeGui;
 import me.gamma.cookies.object.tile.generator.AbstractGenerator;
 import me.gamma.cookies.util.ItemUtils;
+import me.gamma.cookies.util.PersistentDataUtils;
+import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
-public abstract class AbstractGeneratorBlock extends AbstractCustomTileBlock {
+public abstract class AbstractGeneratorBlock<B extends AbstractGeneratorBlock<B, T>, T extends AbstractGenerator<T, B>> extends AbstractCustomTileBlock<B, T> {
 
 	protected final MachineTier tier;
 
@@ -124,17 +130,28 @@ public abstract class AbstractGeneratorBlock extends AbstractCustomTileBlock {
 
 
 	@Override
-	public boolean onBlockBreak(Player player, TileState block, BlockBreakEvent event) {
+	protected void transferCustomData(PersistentDataObject tileData, PersistentDataObject itemData) {
+		super.transferCustomData(tileData, itemData);
+
+		itemData.setInteger(AbstractGenerator.KEY_ENERGY, tileData.getInteger(AbstractGenerator.KEY_ENERGY, 0));
+		PersistentDataUtils.setEnum(itemData, AbstractGenerator.KEY_REDSTONE_MODE, PersistentDataUtils.getEnum(tileData, AbstractGenerator.KEY_REDSTONE_MODE, RedstoneMode.class));
+	}
+
+
+	@Override
+	public boolean onBlockBreak(Player player, Block block, BlockBreakEvent event) {
 		if(super.onBlockBreak(player, block, event))
 			return true;
 
-		AbstractGenerator<?> generator = this.getTileEntity(block.getBlock());
+		T generator = this.getTileEntity(block);
 		if(generator == null)
 			return false;
 
-		for(MachineUpgrade upgrade : generator.getAllowedUpgrades()) {
+		List<MachineUpgrade> upgrades = new ArrayList<>();
+		generator.getAllowedUpgrades(upgrades);
+		for(MachineUpgrade upgrade : upgrades) {
 			ItemStack item = upgrade.getItem().get();
-			item.setAmount(upgrade.fetch(block));
+			item.setAmount(generator.getUpgradeLevel(upgrade));
 			ItemUtils.dropItem(item, block);
 		}
 
@@ -147,14 +164,11 @@ public abstract class AbstractGeneratorBlock extends AbstractCustomTileBlock {
 
 
 	@Override
-	public boolean onBlockRightClick(Player player, TileState block, ItemStack stack, PlayerInteractEvent event) {
-		if(super.onBlockRightClick(player, block, stack, event))
-			return true;
-
-		if(!player.isSneaking())
+	public boolean onBlockRightClick(Player player, Block block, ItemStack stack, PlayerInteractEvent event) {
+		if(!super.onBlockRightClick(player, block, stack, event))
 			return false;
 
-		AbstractGenerator<?> generator = this.getTileEntity(block.getBlock());
+		T generator = this.getTileEntity(block);
 		if(generator == null)
 			return false;
 
@@ -164,11 +178,12 @@ public abstract class AbstractGeneratorBlock extends AbstractCustomTileBlock {
 				player.sendMessage("§cRedstone mode set to " + generator.getRedstoneMode().getTitle());
 				return true;
 			} else if(ItemUtils.isType(stack, Material.DIAMOND)) {
-				MachineUpgradeGui.open(player, block, generator);
+				MachineUpgradeGui.open(player, generator);
 				return true;
 			}
 		}
-		return false;
+		
+		return true;
 	}
 
 }
