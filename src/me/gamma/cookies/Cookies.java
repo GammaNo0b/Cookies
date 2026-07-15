@@ -21,9 +21,8 @@ import com.mojang.logging.LogUtils;
 import me.gamma.cookies.command.Commands;
 import me.gamma.cookies.command.GodCommand;
 import me.gamma.cookies.feature.ChairFeature;
-import me.gamma.cookies.feature.ChangeRepeaterDelayFeature;
 import me.gamma.cookies.feature.ColorEntityFeature;
-import me.gamma.cookies.feature.CookieFeature;
+import me.gamma.cookies.feature.CookieFeatures;
 import me.gamma.cookies.feature.DispenserBlockPlacerFeature;
 import me.gamma.cookies.feature.DispenserBucketCauldronFeature;
 import me.gamma.cookies.feature.DispenserMilkFeature;
@@ -33,7 +32,7 @@ import me.gamma.cookies.feature.FlowerSpreadFeature;
 import me.gamma.cookies.feature.KnockDoorFeature;
 import me.gamma.cookies.feature.LookInBookshelfFeature;
 import me.gamma.cookies.feature.SpawnerFix;
-import me.gamma.cookies.feature.SuspiciousHiding;
+import me.gamma.cookies.feature.SuspiciousHidingFeature;
 import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.init.BookInit;
 import me.gamma.cookies.init.Config;
@@ -88,6 +87,7 @@ public class Cookies extends JavaPlugin {
 	public static Cookies INSTANCE;
 
 	public final HologramManager holograms = new HologramManager();
+	public final CookieFeatures features = new CookieFeatures();
 
 	private PluginManager pmanager;
 
@@ -183,30 +183,19 @@ public class Cookies extends JavaPlugin {
 	}
 
 
-	/**
-	 * Registers the given {@link CookieFeature}.
-	 * 
-	 * @param feature the cookie feature
-	 */
-	public void registerFeature(CookieFeature feature) {
-		feature.register();
-	}
-
-
 	private void registerFeatures() {
-		this.registerFeature(new ChairFeature());
-		this.registerFeature(new ChangeRepeaterDelayFeature());
-		this.registerFeature(new ColorEntityFeature());
-		this.registerFeature(new DispenserBlockPlacerFeature());
-		this.registerFeature(new DispenserBucketCauldronFeature());
-		this.registerFeature(new DispenserMilkFeature());
-		this.registerFeature(new EggBounceFeature());
-		this.registerFeature(new FlameArrowIngniteFeature());
-		this.registerFeature(new FlowerSpreadFeature());
-		this.registerFeature(new KnockDoorFeature());
-		this.registerFeature(new LookInBookshelfFeature());
-		this.registerFeature(new SpawnerFix());
-		this.registerFeature(new SuspiciousHiding());
+		this.features.register(new ChairFeature());
+		this.features.register(new ColorEntityFeature());
+		this.features.register(new DispenserBlockPlacerFeature());
+		this.features.register(new DispenserBucketCauldronFeature());
+		this.features.register(new DispenserMilkFeature());
+		this.features.register(new EggBounceFeature());
+		this.features.register(new FlameArrowIngniteFeature());
+		this.features.register(new FlowerSpreadFeature());
+		this.features.register(new KnockDoorFeature());
+		this.features.register(new LookInBookshelfFeature());
+		this.features.register(new SpawnerFix());
+		this.features.register(new SuspiciousHidingFeature());
 	}
 
 

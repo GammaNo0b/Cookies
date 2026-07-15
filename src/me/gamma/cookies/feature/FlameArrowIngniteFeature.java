@@ -16,6 +16,11 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 
 public class FlameArrowIngniteFeature extends SimpleCookieListener {
 
+	public FlameArrowIngniteFeature() {
+		super("flaming_arrow_ingite");
+	}
+
+
 	@EventHandler
 	public void onProjectileHit(ProjectileHitEvent event) {
 		if(!this.isEnabled())

@@ -17,6 +17,10 @@ import me.gamma.cookies.util.Utils;
 
 public class SpawnerFix extends SimpleCookieListener {
 
+	public SpawnerFix() {
+		super("spawner_data_placement_fix");
+	}
+
 	@EventHandler
 	public void onBlockPlace(final BlockPlaceEvent event) {
 		if(!this.isEnabled())

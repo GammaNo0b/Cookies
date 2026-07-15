@@ -20,6 +20,10 @@ import me.gamma.cookies.util.ItemUtils;
 
 public class DispenserBlockPlacerFeature extends SimpleCookieListener {
 
+	public DispenserBlockPlacerFeature() {
+		super("dispenser_block_placer");
+	}
+
 	@EventHandler
 	public void onDispense(BlockDispenseEvent event) {
 		if(!this.isEnabled())

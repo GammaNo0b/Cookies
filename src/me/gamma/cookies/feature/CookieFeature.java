@@ -4,6 +4,8 @@ package me.gamma.cookies.feature;
 
 public interface CookieFeature {
 
+	String getName();
+
 	/**
 	 * Is called once when the plugin is (re-) starting.
 	 */

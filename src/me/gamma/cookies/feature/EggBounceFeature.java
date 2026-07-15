@@ -17,6 +17,11 @@ import org.bukkit.util.Vector;
 
 public class EggBounceFeature extends SimpleCookieListener {
 
+	public EggBounceFeature() {
+		super("egg_bounce");
+	}
+
+
 	@EventHandler
 	public void onEggCrush(ProjectileHitEvent event) {
 		if(!this.isEnabled())

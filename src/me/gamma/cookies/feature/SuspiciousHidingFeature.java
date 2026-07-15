@@ -17,9 +17,14 @@ import me.gamma.cookies.util.ItemUtils;
 
 
 
-public class SuspiciousHiding extends SimpleCookieListener {
+public class SuspiciousHidingFeature extends SimpleCookieListener {
 
 	private static final Map<Material, Material> suspiciousBlocks = Map.of(Material.SAND, Material.SUSPICIOUS_SAND, Material.GRAVEL, Material.SUSPICIOUS_GRAVEL);
+
+	public SuspiciousHidingFeature() {
+		super("suspicious_hiding");
+	}
+
 
 	@EventHandler
 	public void onSuspiciousBlockClick(PlayerInteractEvent event) {

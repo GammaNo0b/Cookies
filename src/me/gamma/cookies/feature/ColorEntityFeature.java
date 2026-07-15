@@ -19,6 +19,10 @@ import net.minecraft.world.entity.Entity;
 
 public class ColorEntityFeature extends SimpleCookieListener {
 
+	public ColorEntityFeature() {
+		super("color_entity_name");
+	}
+
 	@EventHandler
 	public void onEntityRightClick(PlayerInteractAtEntityEvent event) {
 		if(!this.isEnabled())

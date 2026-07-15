@@ -23,6 +23,11 @@ public class DispenserMilkFeature extends SimpleCookieListener {
 
 	private static final Class<?>[] milkable = { Cow.class, Goat.class };
 
+	public DispenserMilkFeature() {
+		super("dispenser_milk");
+	}
+
+
 	@EventHandler
 	public void onDispense(BlockDispenseEvent event) {
 		if(!this.isEnabled())

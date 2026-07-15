@@ -34,25 +34,13 @@ import me.gamma.cookies.init.Blocks;
 
 
 
-public class ChairFeature implements CookieListener {
-
-	private boolean enabled = false;
-
-	@Override
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-
-	@Override
-	public boolean isEnabled() {
-		return this.enabled;
-	}
+public class ChairFeature extends SimpleCookieListener {
 
 	private final HashMap<UUID, Chair> chairs = new HashMap<>();
 	private final ConfigurationSection config;
 
 	public ChairFeature() {
+		super("chairs");
 		this.config = Cookies.INSTANCE.getConfig().getConfigurationSection("chairs");
 	}
 

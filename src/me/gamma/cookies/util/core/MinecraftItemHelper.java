@@ -62,11 +62,12 @@ public class MinecraftItemHelper {
 	 * @return the color
 	 */
 	public static Color getItemRarityColor(Rarity rarity) {
-		Integer i = rarity.color().getColor();
-		if(i == null)
-			return null;
-
-		return Color.fromRGB(i);
+		return Color.fromRGB(switch (rarity) {
+			case COMMON -> 0xFFFFFF;
+			case UNCOMMON -> 0xFFFF35;
+			case RARE -> 0x55FFFF;
+			case EPIC -> 0xFF55FF;
+		});
 	}
 
 

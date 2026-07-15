@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -254,9 +253,4 @@ public class CustomBlockListener implements Listener {
 			event.setInventory(null);
 	}
 
-	@EventHandler
-	private void onBlockPick(PickEve e) {
-		
-	}
-	
 }

@@ -24,6 +24,11 @@ import net.minecraft.util.RandomSource;
 
 public class FlowerSpreadFeature extends SimpleCookieListener {
 
+	public FlowerSpreadFeature() {
+		super("flower_spread");
+	}
+
+
 	@EventHandler
 	public void onBoneMeal(PlayerInteractEvent event) {
 		if(!this.isEnabled())

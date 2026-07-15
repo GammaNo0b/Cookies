@@ -7,11 +7,14 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
+import org.bukkit.block.data.Directional;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Vector;
 
 import me.gamma.cookies.object.block.BlockInventoryProvider;
 import me.gamma.cookies.object.gui.InventoryProvider;
@@ -439,7 +442,9 @@ public class InventoryUtils {
 	 */
 	public static void removeItemFromDispenser(Block block, ItemStack stack) {
 		Utils.runLater(() -> {
-			Dispenser dispenser = ((Dispenser) block.getState());
+			if(!(block.getState() instanceof Dispenser dispenser))
+				return;
+
 			Inventory inventory = dispenser.getSnapshotInventory();
 			for(int i = 0; i < inventory.getSize(); i++) {
 				ItemStack item = inventory.getItem(i);
@@ -449,6 +454,30 @@ public class InventoryUtils {
 					return;
 				}
 			}
+		});
+	}
+
+
+	/**
+	 * Inserts the given item or dispenses it from the dispenser.
+	 * 
+	 * @param block    the dispenser
+	 * @param stack    the item
+	 * @param velocity the velocity
+	 */
+	public static void insertOrDispenseItemFromDispenser(Block block, ItemStack stack, Vector velocity) {
+		Utils.runLater(() -> {
+			if(!(block.getState() instanceof Dispenser dispenser))
+				return;
+
+			if(!(block.getBlockData() instanceof Directional directional))
+				return;
+
+			BlockFace facing = directional.getFacing();
+			Inventory inventory = dispenser.getSnapshotInventory();
+			for(ItemStack rest : inventory.addItem(stack).values())
+				block.getWorld().dropItem(block.getLocation().add(facing.getDirection()).add(0.5D, 0.3D, 0.5D), rest).setVelocity(velocity);
+			dispenser.update();
 		});
 	}
 

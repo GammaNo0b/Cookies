@@ -2,8 +2,7 @@
 package me.gamma.cookies.listener;
 
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -35,7 +34,7 @@ import me.gamma.cookies.util.ItemUtils;
 
 public class PlayerArmorEquipEventListener implements Listener {
 
-	private static final List<Material> blockedBlocks = Arrays.asList(Material.FURNACE, Material.CHEST, Material.TRAPPED_CHEST, Material.BEACON, Material.DISPENSER, Material.DROPPER, Material.HOPPER, Material.CRAFTING_TABLE, Material.ENCHANTING_TABLE, Material.ENDER_CHEST, Material.ANVIL, Material.BLACK_BED, Material.BLUE_BED, Material.BROWN_BED, Material.CYAN_BED, Material.GRAY_BED, Material.GREEN_BED, Material.LIGHT_BLUE_BED, Material.LIME_BED, Material.MAGENTA_BED, Material.ORANGE_BED, Material.PINK_BED, Material.PURPLE_BED, Material.RED_BED, Material.LIGHT_GRAY_BED, Material.WHITE_BED, Material.YELLOW_BED, Material.OAK_FENCE_GATE, Material.SPRUCE_FENCE_GATE, Material.BIRCH_FENCE_GATE, Material.ACACIA_FENCE_GATE, Material.JUNGLE_FENCE_GATE, Material.DARK_OAK_FENCE_GATE, Material.IRON_DOOR, Material.OAK_DOOR, Material.SPRUCE_DOOR, Material.BIRCH_DOOR, Material.JUNGLE_DOOR, Material.ACACIA_DOOR, Material.DARK_OAK_DOOR, Material.SPRUCE_DOOR, Material.BIRCH_DOOR, Material.JUNGLE_DOOR, Material.ACACIA_DOOR, Material.DARK_OAK_DOOR, Material.SPRUCE_BUTTON, Material.OAK_BUTTON, Material.DARK_OAK_BUTTON, Material.JUNGLE_BUTTON, Material.ACACIA_BUTTON, Material.BIRCH_BUTTON, Material.STONE_BUTTON, Material.OAK_TRAPDOOR, Material.DARK_OAK_TRAPDOOR, Material.BIRCH_TRAPDOOR, Material.SPRUCE_TRAPDOOR, Material.JUNGLE_TRAPDOOR, Material.ACACIA_TRAPDOOR, Material.IRON_TRAPDOOR, Material.REPEATER, Material.COMPARATOR, Material.OAK_FENCE, Material.SPRUCE_FENCE, Material.BIRCH_FENCE, Material.JUNGLE_FENCE, Material.DARK_OAK_FENCE, Material.ACACIA_FENCE, Material.NETHER_BRICK_FENCE, Material.BREWING_STAND, Material.CAULDRON, Material.DARK_OAK_SIGN, Material.OAK_SIGN, Material.DARK_OAK_WALL_SIGN, Material.OAK_WALL_SIGN, Material.BIRCH_SIGN, Material.BIRCH_WALL_SIGN, Material.SPRUCE_SIGN, Material.SPRUCE_WALL_SIGN, Material.ACACIA_SIGN, Material.ACACIA_WALL_SIGN, Material.JUNGLE_SIGN, Material.JUNGLE_WALL_SIGN, Material.LEVER, Material.BLACK_BED, Material.BLUE_BED, Material.BROWN_BED, Material.CYAN_BED, Material.GRAY_BED, Material.GREEN_BED, Material.LIGHT_BLUE_BED, Material.LIME_BED, Material.MAGENTA_BED, Material.ORANGE_BED, Material.PINK_BED, Material.PURPLE_BED, Material.RED_BED, Material.LIGHT_GRAY_BED, Material.WHITE_BED, Material.YELLOW_BED, Material.DAYLIGHT_DETECTOR);
+	private static final Set<Material> blockedBlocks = Set.of(Material.FURNACE, Material.CHEST, Material.TRAPPED_CHEST, Material.BEACON, Material.DISPENSER, Material.DROPPER, Material.HOPPER, Material.CRAFTING_TABLE, Material.ENCHANTING_TABLE, Material.ENDER_CHEST, Material.ANVIL, Material.BLACK_BED, Material.BLUE_BED, Material.BROWN_BED, Material.CYAN_BED, Material.GRAY_BED, Material.GREEN_BED, Material.LIGHT_BLUE_BED, Material.LIME_BED, Material.MAGENTA_BED, Material.ORANGE_BED, Material.PINK_BED, Material.PURPLE_BED, Material.RED_BED, Material.LIGHT_GRAY_BED, Material.WHITE_BED, Material.YELLOW_BED, Material.OAK_FENCE_GATE, Material.SPRUCE_FENCE_GATE, Material.BIRCH_FENCE_GATE, Material.ACACIA_FENCE_GATE, Material.JUNGLE_FENCE_GATE, Material.DARK_OAK_FENCE_GATE, Material.IRON_DOOR, Material.OAK_DOOR, Material.SPRUCE_DOOR, Material.BIRCH_DOOR, Material.JUNGLE_DOOR, Material.ACACIA_DOOR, Material.DARK_OAK_DOOR, Material.SPRUCE_BUTTON, Material.OAK_BUTTON, Material.DARK_OAK_BUTTON, Material.JUNGLE_BUTTON, Material.ACACIA_BUTTON, Material.BIRCH_BUTTON, Material.STONE_BUTTON, Material.OAK_TRAPDOOR, Material.DARK_OAK_TRAPDOOR, Material.BIRCH_TRAPDOOR, Material.SPRUCE_TRAPDOOR, Material.JUNGLE_TRAPDOOR, Material.ACACIA_TRAPDOOR, Material.IRON_TRAPDOOR, Material.REPEATER, Material.COMPARATOR, Material.OAK_FENCE, Material.SPRUCE_FENCE, Material.BIRCH_FENCE, Material.JUNGLE_FENCE, Material.DARK_OAK_FENCE, Material.ACACIA_FENCE, Material.NETHER_BRICK_FENCE, Material.BREWING_STAND, Material.CAULDRON, Material.DARK_OAK_SIGN, Material.OAK_SIGN, Material.DARK_OAK_WALL_SIGN, Material.OAK_WALL_SIGN, Material.BIRCH_SIGN, Material.BIRCH_WALL_SIGN, Material.SPRUCE_SIGN, Material.SPRUCE_WALL_SIGN, Material.ACACIA_SIGN, Material.ACACIA_WALL_SIGN, Material.JUNGLE_SIGN, Material.JUNGLE_WALL_SIGN, Material.LEVER, Material.DAYLIGHT_DETECTOR);
 
 	@EventHandler
 	public void inventoryClickEvent(InventoryClickEvent event) {
@@ -111,9 +110,8 @@ public class PlayerArmorEquipEventListener implements Listener {
 	public void playerInteractEvent(PlayerInteractEvent event) {
 		if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if(event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
-				for(Material m : blockedBlocks)
-					if(event.getClickedBlock().getType() == m)
-						return;
+				if(event.getClickedBlock().getType().isInteractable() || blockedBlocks.contains(event.getClickedBlock().getType()))
+					return;
 			}
 			ArmorType type = ArmorType.get(event.getItem());
 			if(type != null && ItemUtils.isEmpty(type.getArmor(event.getPlayer().getInventory()))) {

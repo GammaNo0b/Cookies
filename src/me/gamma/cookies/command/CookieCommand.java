@@ -4,6 +4,7 @@ package me.gamma.cookies.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -16,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.RayTraceResult;
 
+import me.gamma.cookies.Cookies;
+import me.gamma.cookies.feature.CookieFeature;
 import me.gamma.cookies.init.Registries;
 import me.gamma.cookies.object.block.AbstractCustomBlock;
 import me.gamma.cookies.object.block.CustomBlockStorage;
@@ -61,7 +64,7 @@ public class CookieCommand implements TabExecutor {
 			return true;
 		} else if(parameters[0].equals("data")) {
 			if(!player.hasPermission("cookies.data")) {
-				player.sendMessage("$cYou don't have the required permission to do that!");
+				player.sendMessage("§cYou don't have the required permission to do that!");
 				return false;
 			}
 
@@ -102,6 +105,45 @@ public class CookieCommand implements TabExecutor {
 			tile.save(null, object);
 			String nbt = NBTUtils.convertPersistentDataToNBT(object.getContainer()).toString();
 			player.sendMessage(nbt);
+		} else if(parameters[0].equals("feature")) {
+			if(!player.hasPermission("cookies.feature")) {
+				player.sendMessage("§cYou don't have the required permission to do that!");
+				return false;
+			}
+
+			if(parameters.length == 2) {
+				if(parameters[1].equals("list")) {
+					if(Cookies.INSTANCE.features.isEmpty()) {
+						player.sendMessage("§cNo registered cookie features.");
+						return true;
+					}
+
+					player.sendMessage("§6Cookie Features:");
+					Cookies.INSTANCE.features.stream().sorted(Comparator.comparing(CookieFeature::getName)).forEach(feature -> player.sendMessage("  §e" + feature.getName() + "§6: " + (feature.isEnabled() ? "§aenabled" : "§cdisabled")));
+
+					return true;
+				}
+
+				player.sendMessage("§cSyntax: §e/cookies §6[disable | enable | list]");
+				return false;
+			} else if(parameters.length == 3) {
+				boolean disable = parameters[1].equals("disable");
+				boolean enable = parameters[1].equals("enable");
+				if(!disable && !enable) {
+					player.sendMessage("§cSyntax: §e/cookies §6[disable | enable] <name>");
+					return false;
+				}
+
+				String name = parameters[2];
+				CookieFeature feature = Cookies.INSTANCE.features.getFeature(name);
+				if(feature == null) {
+					player.sendMessage("§cUnknown feature \"" + name + "\".");
+					return false;
+				}
+
+				feature.setEnabled(enable);
+				return true;
+			}
 		} else if(parameters[0].equals("give")) {
 			if(!player.hasPermission("cookies.cheat")) {
 				player.sendMessage("§cYou don't have the required permission to do that!");
@@ -201,7 +243,7 @@ public class CookieCommand implements TabExecutor {
 		List<String> values = new ArrayList<>();
 
 		if(parameters.length == 1) {
-			Arrays.asList("cheat", "data", "give", "team").stream().filter(val -> val.contains(parameters[0])).forEach(values::add);
+			Arrays.asList("cheat", "data", "feature", "give", "team").stream().filter(val -> val.contains(parameters[0])).forEach(values::add);
 		} else if(parameters.length == 2) {
 			if(parameters[0].equals("data")) {
 				if(sender instanceof LivingEntity entity) {
@@ -212,6 +254,8 @@ public class CookieCommand implements TabExecutor {
 							values.add(s);
 					}
 				}
+			} else if(parameters[0].equals("feature")) {
+				Arrays.asList("disable", "enable", "list").stream().filter(val -> val.contains(parameters[1])).forEach(values::add);
 			} else if(parameters[0].equals("give")) {
 				Registries.ITEMS.stream().map(AbstractCustomItem::getIdentifier).filter(id -> id.contains(parameters[1])).forEach(values::add);
 				values.sort(String::compareTo);
@@ -227,6 +271,10 @@ public class CookieCommand implements TabExecutor {
 						if(s.startsWith(parameters[2]))
 							values.add(s);
 					}
+				}
+			} else if(parameters[0].equals("feature")) {
+				if(parameters[1].equals("disable") || parameters[1].equals("enable")) {
+					Cookies.INSTANCE.features.stream().map(CookieFeature::getName).filter(id -> id.contains(parameters[2])).forEach(values::add);
 				}
 			}
 		} else if(parameters.length == 4) {

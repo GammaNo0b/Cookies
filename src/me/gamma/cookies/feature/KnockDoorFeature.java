@@ -13,6 +13,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class KnockDoorFeature extends SimpleCookieListener {
 
+	public KnockDoorFeature() {
+		super("knock_door");
+	}
+
+
 	@EventHandler
 	public void onDoorKnock(PlayerInteractEvent event) {
 		if(!this.isEnabled())

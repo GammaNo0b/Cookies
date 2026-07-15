@@ -9,11 +9,11 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionType;
 
+import me.gamma.cookies.util.InventoryUtils;
 import me.gamma.cookies.util.ItemBuilder;
 import me.gamma.cookies.util.ItemUtils;
 
@@ -21,8 +21,15 @@ import me.gamma.cookies.util.ItemUtils;
 
 public class DispenserBucketCauldronFeature extends SimpleCookieListener {
 
+	public DispenserBucketCauldronFeature() {
+		super("dispenser_bucket_cauldron");
+	}
+
+
 	static void insertOrDispense(BlockDispenseEvent event, ItemStack replacement) {
-		event.setItem(event.getBlock().getState() instanceof BlockInventoryHolder holder && holder.getInventory().addItem(replacement).isEmpty() ? null : replacement);
+		event.setCancelled(true);
+		InventoryUtils.removeItemFromDispenser(event.getBlock(), event.getItem());
+		InventoryUtils.insertOrDispenseItemFromDispenser(event.getBlock(), replacement, event.getVelocity());
 	}
 
 
@@ -102,10 +109,7 @@ public class DispenserBucketCauldronFeature extends SimpleCookieListener {
 			if(bucket == null)
 				return;
 
-			if(!(target.getBlockData() instanceof Levelled cauldron))
-				return;
-
-			if(cauldron.getLevel() < cauldron.getMaximumLevel())
+			if(target.getBlockData() instanceof Levelled cauldron && cauldron.getLevel() < cauldron.getMaximumLevel())
 				return;
 
 			target.setType(Material.CAULDRON);
@@ -115,9 +119,9 @@ public class DispenserBucketCauldronFeature extends SimpleCookieListener {
 			Material cauldron = null;
 			if(ItemUtils.isType(stack, Material.WATER_BUCKET)) {
 				cauldron = Material.WATER_CAULDRON;
-			} else if(ItemUtils.isType(stack, Material.WATER_BUCKET)) {
+			} else if(ItemUtils.isType(stack, Material.LAVA_BUCKET)) {
 				cauldron = Material.LAVA_CAULDRON;
-			} else if(ItemUtils.isType(stack, Material.WATER_BUCKET)) {
+			} else if(ItemUtils.isType(stack, Material.POWDER_SNOW_BUCKET)) {
 				cauldron = Material.POWDER_SNOW_CAULDRON;
 			}
 
@@ -125,6 +129,10 @@ public class DispenserBucketCauldronFeature extends SimpleCookieListener {
 				return;
 
 			target.setType(cauldron);
+			if(target.getBlockData() instanceof Levelled levelled) {
+				levelled.setLevel(levelled.getMaximumLevel());
+				target.setBlockData(levelled);
+			}
 			insertOrDispense(event, new ItemStack(Material.BUCKET));
 		}
 	}

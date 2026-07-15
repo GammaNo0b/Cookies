@@ -83,7 +83,7 @@ public class Pouch extends AbstractCustomItem {
 				return false;
 
 			NBTWrapper tagWrapper = new NBTWrapper(this.store(block));
-			meta.setLore(Arrays.asList("", "§dMaterial: " + Utils.toCapitalWords(block.getType()), "§bBlockstates: " + tagWrapper.getNBTTagList("data").e(), "§eTags: " + tagWrapper.getNBTTagList("tile").e()));
+			meta.setLore(Arrays.asList("", "§dMaterial: " + Utils.toCapitalWords(block.getType()), "§bBlockstates: " + tagWrapper.getNBTTagList("data").size(), "§eTags: " + tagWrapper.getNBTTagList("tile").size()));
 			data.getData().setObject(KEY_BLOCK, new PersistentDataObject(NBTUtils.convertNBTToPersistentData(tagWrapper.getTag(), data.getData().getAdapterContext())));
 			data.save(meta);
 			// remove block after event

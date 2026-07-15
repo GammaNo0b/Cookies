@@ -29,6 +29,11 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class LookInBookshelfFeature implements CookieFeature, Runnable {
 
 	private int taskID = -1;
+	
+	@Override
+	public String getName() {
+		return "look_in_bookshelf";
+	}
 
 	@Override
 	public void register() {}
