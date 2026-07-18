@@ -3,6 +3,7 @@ package me.gamma.cookies.util.collection;
 
 
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataAdapterContext;
@@ -291,6 +292,26 @@ public class PersistentDataObject {
 
 	public void setObjectList(String name, List<PersistentDataObject> containers) {
 		this.set(name, PersistentDataType.LIST.dataContainers(), containers.stream().map(PersistentDataObject::getContainer).toList());
+	}
+
+
+	public UUID getUUID(String name) {
+		long[] bits = this.getLongs(name);
+		if(bits == null || bits.length != 2)
+			return null;
+
+		return new UUID(bits[0], bits[1]);
+	}
+
+
+	public UUID getUUID(String name, UUID defaultValue) {
+		UUID uuid = this.getUUID(name);
+		return uuid == null ? defaultValue : uuid;
+	}
+
+
+	public void setUUID(String name, UUID uuid) {
+		this.setLongs(name, new long[] { uuid.getMostSignificantBits(), uuid.getLeastSignificantBits() });
 	}
 
 }

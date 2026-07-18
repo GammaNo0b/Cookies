@@ -2,15 +2,16 @@
 package me.gamma.cookies.util;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -113,6 +114,22 @@ public class ItemUtils {
 		ItemStack clone = stack.clone();
 		clone.setAmount(amount);
 		return clone;
+	}
+
+
+	/**
+	 * Returns a list of item stacks to get a total of amount of type items.
+	 * 
+	 * @param type   the item
+	 * @param amount the total amount
+	 * @return the list of items
+	 */
+	public static List<ItemStack> getManyItems(ItemStack type, int amount) {
+		List<ItemStack> items = new ArrayList<>();
+		for(int max = type.getMaxStackSize(); amount >= max; amount -= max)
+			items.add(cloneItem(type, max));
+		items.add(cloneItem(type, amount));
+		return items;
 	}
 
 
@@ -347,28 +364,6 @@ public class ItemUtils {
 			return false;
 
 		return stack.getEnchantments().size() > 0;
-	}
-
-
-	/**
-	 * Checks if the given material is a flower type.
-	 * 
-	 * @param m the material to be checked
-	 * @return if the material is a flower
-	 */
-	public static boolean isFlower(Material m) {
-		return Tag.SMALL_FLOWERS.isTagged(m);
-	}
-
-
-	/**
-	 * Checks if the given material is a block on that a flower can be placed.
-	 * 
-	 * @param m the material to be checked
-	 * @return if flowers can be placed on top of this material
-	 */
-	public static boolean isFlowerSoil(Material m) {
-		return Tag.DIRT.isTagged(m) || m == Material.FARMLAND;
 	}
 
 

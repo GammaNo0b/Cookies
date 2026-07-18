@@ -135,12 +135,8 @@ public abstract class AbstractItemProcessingMachine<T extends AbstractItemProces
 	}
 
 
-	/**
-	 * Returns the item input slots.
-	 * 
-	 * @return the input slots
-	 */
-	protected int[] getInputSlots() {
+	@Override
+	public int[] getInputSlots() {
 		return MachineConstants.getInputSlots(this.customBlock.getTier());
 	}
 

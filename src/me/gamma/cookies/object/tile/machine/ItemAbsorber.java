@@ -22,6 +22,7 @@ import me.gamma.cookies.manager.ParticleManager;
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.machine.ItemAbsorberBlock;
 import me.gamma.cookies.object.gui.BlockFaceConfig.Config;
+import me.gamma.cookies.object.gui.ItemInventoryHolder;
 import me.gamma.cookies.object.item.ItemConsumer;
 import me.gamma.cookies.object.item.ItemProvider;
 import me.gamma.cookies.object.item.ItemSupplier;
@@ -32,7 +33,7 @@ import me.gamma.cookies.util.core.MinecraftItemHelper;
 
 
 
-public class ItemAbsorber extends AbstractGuiMachine<ItemAbsorber, ItemAbsorberBlock> implements ItemSupplier {
+public class ItemAbsorber extends AbstractGuiMachine<ItemAbsorber, ItemAbsorberBlock> implements ItemSupplier, ItemInventoryHolder {
 
 	private static final String KEY_ITEM = "item";
 
@@ -117,6 +118,24 @@ public class ItemAbsorber extends AbstractGuiMachine<ItemAbsorber, ItemAbsorberB
 		contents.removeIf(ItemUtils::isEmpty);
 
 		return contents;
+	}
+
+
+	@Override
+	public Inventory getInventory() {
+		return super.getInventory();
+	}
+
+
+	@Override
+	public int[] getInputSlots() {
+		return new int[0];
+	}
+
+
+	@Override
+	public int[] getOutputSlots() {
+		return slots;
 	}
 
 

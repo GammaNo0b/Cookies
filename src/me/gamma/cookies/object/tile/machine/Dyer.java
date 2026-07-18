@@ -10,17 +10,12 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import me.gamma.cookies.manager.ParticleManager;
-import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.machine.DyerBlock;
-import me.gamma.cookies.object.fluid.FluidProvider;
-import me.gamma.cookies.object.fluid.FluidSupplier;
-import me.gamma.cookies.object.gui.BlockFaceConfig.Config;
 import me.gamma.cookies.util.ItemBuilder;
 import me.gamma.cookies.util.ItemUtils;
 import me.gamma.cookies.util.collection.Holder;
@@ -95,13 +90,13 @@ public class Dyer extends AbstractItemProcessingMachine<Dyer, DyerBlock> {
 
 
 	@Override
-	protected int[] getInputSlots() {
+	public int[] getInputSlots() {
 		return new int[] { INPUT_SLOT };
 	}
 
 
 	@Override
-	protected int[] getOutputSlots() {
+	public int[] getOutputSlots() {
 		return new int[] { OUTPUT_SLOT };
 	}
 

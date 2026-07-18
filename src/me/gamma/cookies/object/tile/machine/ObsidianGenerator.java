@@ -141,7 +141,7 @@ public class ObsidianGenerator extends AbstractItemGenerationMachine<ObsidianGen
 
 
 	@Override
-	protected int[] getOutputSlots() {
+	public int[] getOutputSlots() {
 		return output_slots;
 	}
 

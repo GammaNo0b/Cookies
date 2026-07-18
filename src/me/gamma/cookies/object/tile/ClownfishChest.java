@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.ClownfishChestBlock;
+import me.gamma.cookies.object.gui.ItemInventoryHolder;
 import me.gamma.cookies.object.item.ItemProvider;
 import me.gamma.cookies.object.item.ItemStorage;
 import me.gamma.cookies.util.ColorUtils;
@@ -22,7 +23,7 @@ import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
-public class ClownfishChest extends AbstractCustomTileEntity<ClownfishChest, ClownfishChestBlock> implements BlockInventoryHolder, ItemStorage {
+public class ClownfishChest extends AbstractCustomTileEntity<ClownfishChest, ClownfishChestBlock> implements BlockInventoryHolder, ItemStorage, ItemInventoryHolder {
 
 	public static final String KEY_INVENTORY = "inventory";
 
@@ -93,6 +94,18 @@ public class ClownfishChest extends AbstractCustomTileEntity<ClownfishChest, Clo
 	@Override
 	public Inventory getInventory() {
 		return this.inventory;
+	}
+
+
+	@Override
+	public int[] getInputSlots() {
+		return null;
+	}
+
+
+	@Override
+	public int[] getOutputSlots() {
+		return null;
 	}
 
 

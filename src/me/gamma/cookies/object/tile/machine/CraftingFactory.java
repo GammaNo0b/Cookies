@@ -24,6 +24,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.machine.CraftingFactoryBlock;
 import me.gamma.cookies.object.block.machine.MachineConstants;
+import me.gamma.cookies.object.gui.ItemInventoryHolder;
 import me.gamma.cookies.object.item.ItemConsumer;
 import me.gamma.cookies.object.item.ItemProvider;
 import me.gamma.cookies.object.item.ItemSupplier;
@@ -36,7 +37,7 @@ import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
-public class CraftingFactory extends AbstractProcessingMachine<CraftingFactory, CraftingFactoryBlock> implements ItemConsumer, ItemSupplier {
+public class CraftingFactory extends AbstractProcessingMachine<CraftingFactory, CraftingFactoryBlock> implements ItemConsumer, ItemSupplier, ItemInventoryHolder {
 
 	private static final String KEY_PROCESSING_STEPS = "steps";
 	private static final String KEY_PROCESSING_STEP = "step";
@@ -44,6 +45,8 @@ public class CraftingFactory extends AbstractProcessingMachine<CraftingFactory, 
 	public static final int PROCESS_DURATION = 20;
 
 	public static final IntegerProperty PROCESSING_STEPS = new IntegerProperty("processing_steps");
+
+	private static final int[] craftingSlots = { 29, 30, 32, 33 };
 
 	private final int craftingSteps;
 	private byte itemInputAccessFlags = 0x3f;
@@ -77,6 +80,9 @@ public class CraftingFactory extends AbstractProcessingMachine<CraftingFactory, 
 		this.processingStep = data.getInteger(KEY_PROCESSING_STEP, 0);
 		this.processing = PersistentDataUtils.getItemStack(data, "processing");
 
+		for(int i = 0; i < this.craftingSteps; i++)
+			gui.setItem(craftingSlots[i], this.steps[i].icon);
+
 		return true;
 	}
 
@@ -91,7 +97,7 @@ public class CraftingFactory extends AbstractProcessingMachine<CraftingFactory, 
 
 		Inventory gui = this.getInventory();
 		for(int i = 0; i < this.craftingSteps; i++)
-			PersistentDataUtils.setItemStack(data, "processing" + i, gui.getItem(i));
+			PersistentDataUtils.setItemStack(data, "processing" + i, gui.getItem(20 + i));
 
 		data.setInteger(KEY_PROCESSING_STEPS, ProcessingStep.saveSteps(this.steps));
 		data.setInteger(KEY_PROCESSING_STEP, this.processingStep);
@@ -106,14 +112,9 @@ public class CraftingFactory extends AbstractProcessingMachine<CraftingFactory, 
 		super.setupInventory(inventory);
 
 		ItemStack filler = MachineConstants.FILLER_MATERIAL;
-		int[] slots = { 29, 30, 32, 33 };
-		int i = 0;
-		for(; i < this.craftingSteps; i++) {
-			inventory.setItem(slots[i], this.steps[i].icon);
-		}
-		for(; i < 4; i++) {
+		for(int i = this.craftingSteps; i < 4; i++) {
 			inventory.setItem(21 + i, filler);
-			inventory.setItem(slots[i], filler);
+			inventory.setItem(craftingSlots[i], filler);
 		}
 	}
 
@@ -211,6 +212,24 @@ public class CraftingFactory extends AbstractProcessingMachine<CraftingFactory, 
 	@Override
 	public List<Provider<ItemStack>> getItemOutputs() {
 		return List.of(ItemProvider.fromInventory(this.getInventory(), 20 + this.craftingSteps));
+	}
+
+
+	@Override
+	public int[] getInputSlots() {
+		return new int[] { 20 };
+	}
+
+
+	@Override
+	public int[] getOutputSlots() {
+		return new int[] { 20 + this.craftingSteps };
+	}
+
+
+	@Override
+	public Inventory getInventory() {
+		return super.getInventory();
 	}
 
 

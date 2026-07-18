@@ -352,7 +352,7 @@ public class Items {
 	public static final MachineItem PERFECTED_VOID_ORE_MINER = ITEMS.register(new MachineItem(Blocks.PERFECTED_VOID_ORE_MINER));
 	public static final MachineItem DYE_PRESS = ITEMS.register(new MachineItem(Blocks.DYE_PRESS));
 	public static final MachineItem DYE_MIXER = ITEMS.register(new MachineItem(Blocks.DYE_MIXER));
-	public static final MachineItem TRADING_MACHINE = ITEMS.register(new MachineItem(Blocks.TRADING_MACHINE));
+	public static final MachineItem TRADING_MACHINE = ITEMS.register(new MachineItem(Blocks.TRADING_MACHINE).setDescription("§7Has to be placed above the workstation of the trading villager."));
 	public static final MachineItem ENCHANTER = ITEMS.register(new MachineItem(Blocks.ENCHANTER).setDescription("§7Removed enchantments from books and stores them into an item.", "§7Can enchant gold ingots into magic metal."));
 	public static final MachineItem DISENCHANTER = ITEMS.register(new MachineItem(Blocks.DISENCHANTER).setDescription("§7Removes enchantments from an item and stores them onto a book."));
 	public static final MachineItem ENCHANTMENT_COMBINER = ITEMS.register(new MachineItem(Blocks.ENCHANTMENT_COMBINER).setDescription("§7Combines the enchantments of two books and stores all in one.", "§7Two enchantments of the same level will be combined with the level increased by one."));

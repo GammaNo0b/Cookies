@@ -9,11 +9,13 @@ import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.Ownable;
 import me.gamma.cookies.object.block.network.item.EnderAccessorBlock;
+import me.gamma.cookies.object.gui.ItemInventoryHolder;
 import me.gamma.cookies.object.item.ItemProvider;
 import me.gamma.cookies.object.item.ItemStorage;
 import me.gamma.cookies.object.tile.AbstractCustomTileEntity;
@@ -22,7 +24,7 @@ import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
-public class EnderAccessor extends AbstractCustomTileEntity<EnderAccessor, EnderAccessorBlock> implements ItemStorage, Ownable {
+public class EnderAccessor extends AbstractCustomTileEntity<EnderAccessor, EnderAccessorBlock> implements ItemStorage, Ownable, ItemInventoryHolder {
 
 	private static final String KEY_OWNER = "owner";
 
@@ -103,14 +105,33 @@ public class EnderAccessor extends AbstractCustomTileEntity<EnderAccessor, Ender
 
 	@Override
 	public List<Provider<ItemStack>> getItemProviders() {
-		Player player = this.getOwningPlayer();
-		return player == null ? List.of() : ItemProvider.fromInventory(player.getEnderChest());
+		Inventory inventory = this.getInventory();
+		return inventory == null ? List.of() : ItemProvider.fromInventory(inventory);
 	}
 
 
 	@Override
 	public EnderAccessor castTileEntity() {
 		return this;
+	}
+
+
+	@Override
+	public Inventory getInventory() {
+		Player player = this.getOwningPlayer();
+		return player == null ? null : player.getEnderChest();
+	}
+
+
+	@Override
+	public int[] getInputSlots() {
+		return null;
+	}
+
+
+	@Override
+	public int[] getOutputSlots() {
+		return null;
 	}
 
 }

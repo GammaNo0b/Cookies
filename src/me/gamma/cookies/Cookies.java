@@ -76,11 +76,11 @@ public class Cookies extends JavaPlugin {
 		initializers.add(new Initializer("config", Config::init));
 		initializers.add(new Initializer("blocks", Blocks::init));
 		initializers.add(new Initializer("items", Items::init));
+		initializers.add(new Initializer("recipes", RecipeInit::init));
 		initializers.add(new Initializer("blockconfig", () -> Registries.BLOCKS.forEach(Configurable::configure)));
 		initializers.add(new Initializer("multiblocks", MultiBlockInit::init));
 		initializers.add(new Initializer("books", BookInit::init));
 		initializers.add(new Initializer("inventories", Inventories::init));
-		initializers.add(new Initializer("recipes", RecipeInit::init));
 		initializers.add(new Initializer("playerregisters", PlayerRegister::init));
 	}
 

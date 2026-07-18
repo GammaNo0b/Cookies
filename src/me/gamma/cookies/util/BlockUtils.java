@@ -16,6 +16,7 @@ import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 
 
@@ -82,7 +83,21 @@ public class BlockUtils {
 	 * @return the corresponding facing
 	 */
 	public static BlockFace getFacingByMod(int modX, int modY, int modZ) {
-		return facingByMod[modX + 2][modY + 1][modZ + 2];
+		if(-2 <= modX && modX <= 2 && -1 <= modY && modY <= 1 && -2 <= modZ && modZ <= 2)
+			return facingByMod[modX + 2][modY + 1][modZ + 2];
+		
+		return null;
+	}
+
+
+	/**
+	 * Returns the facing with the given offset.
+	 * 
+	 * @param offset the offset
+	 * @return the corresponding facing
+	 */
+	public static BlockFace getFacingByOffset(Vector offset) {
+		return getFacingByMod(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
 	}
 
 

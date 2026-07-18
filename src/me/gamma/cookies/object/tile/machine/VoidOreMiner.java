@@ -50,7 +50,7 @@ public class VoidOreMiner extends AbstractItemGenerationMachine<VoidOreMiner, Vo
 
 
 	@Override
-	protected int[] getOutputSlots() {
+	public int[] getOutputSlots() {
 		return new int[] { 13, 14, 15, 16, 22, 23, 24, 25, 31, 32, 33, 34 };
 	}
 

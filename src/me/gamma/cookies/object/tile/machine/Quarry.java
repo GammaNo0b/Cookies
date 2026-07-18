@@ -119,13 +119,13 @@ public class Quarry extends AbstractItemProcessingMachine<Quarry, QuarryBlock> {
 
 
 	@Override
-	protected int[] getInputSlots() {
+	public int[] getInputSlots() {
 		return new int[] { 10, 11, 19, 20 };
 	}
 
 
 	@Override
-	protected int[] getOutputSlots() {
+	public int[] getOutputSlots() {
 		return new int[] { 15, 16, 17, 24, 25, 26, 33, 34, 35 };
 	}
 

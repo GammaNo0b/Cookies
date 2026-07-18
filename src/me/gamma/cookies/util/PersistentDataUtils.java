@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.IntFunction;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -439,6 +440,19 @@ public class PersistentDataUtils {
 		PersistentDataObject o = new PersistentDataObject(object.getAdapterContext());
 		saveItemFilter(o, filter);
 		object.setObject(key, o);
+	}
+
+
+	public static <T> T[] getArray(PersistentDataObject object, String key, IntFunction<T[]> arrayGenerator, DataLoader<T> elementLoader) {
+		List<PersistentDataObject> elements = object.getObjectList(key);
+		if(elements == null || elements.isEmpty())
+			return null;
+
+		T[] array = arrayGenerator.apply(elements.size());
+		for(int i = 0; i < array.length; ++i)
+			array[i] = elementLoader.load(elements.get(i));
+
+		return array;
 	}
 
 

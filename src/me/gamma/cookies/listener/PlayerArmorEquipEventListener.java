@@ -110,7 +110,7 @@ public class PlayerArmorEquipEventListener implements Listener {
 	public void playerInteractEvent(PlayerInteractEvent event) {
 		if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if(event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
-				if(event.getClickedBlock().getType().isInteractable() || blockedBlocks.contains(event.getClickedBlock().getType()))
+				if(blockedBlocks.contains(event.getClickedBlock().getType()))
 					return;
 			}
 			ArmorType type = ArmorType.get(event.getItem());

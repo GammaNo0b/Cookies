@@ -156,13 +156,13 @@ public class StarMaker extends AbstractItemProcessingMachine<StarMaker, StarMake
 
 
 	@Override
-	protected int[] getInputSlots() {
+	public int[] getInputSlots() {
 		return new int[] { 9, 10, 11, 18, 19, 20, 27, 28, 29 };
 	}
 
 
 	@Override
-	protected int[] getOutputSlots() {
+	public int[] getOutputSlots() {
 		return new int[] { 25 };
 	}
 

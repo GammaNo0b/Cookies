@@ -6,10 +6,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gamma.cookies.object.LoreBuilder;
@@ -47,7 +47,7 @@ public class TradingCardItem extends AbstractCustomItem {
 	@Override
 	protected void buildDescription(LoreBuilder builder, ItemMeta meta, PersistentDataObject data) {
 		TradingData tradingData = PersistentDataUtils.get(data, KEY_TRADING_DATA, new TradingData());
-		Section section = builder.createSection("§8" + tradingData.getMerchant(), true);
+		Section section = builder.createSection("§8" + tradingData.getName(), true);
 		section.add("  §7Trades: §3" + tradingData.getTrades());
 	}
 
@@ -87,15 +87,16 @@ public class TradingCardItem extends AbstractCustomItem {
 
 	@Override
 	public boolean onEntityRightClick(Player player, ItemStack stack, Entity entity, PlayerInteractEntityEvent event) {
-		if(!(entity instanceof Merchant merchant))
+		if(!(entity instanceof Villager villager))
 			return true;
 
 		CustomItemData cdata = getCustomData(stack);
 		TradingData data = PersistentDataUtils.get(cdata.getData(), KEY_TRADING_DATA, new TradingData());
-		if(data.loadTrades(merchant)) {
+		if(data.loadData(villager)) {
 			stack.setType(Material.FILLED_MAP);
 		} else {
 			stack.setType(Material.MAP);
+			data.clear();
 		}
 		PersistentDataUtils.set(cdata.getData(), KEY_TRADING_DATA, data);
 		cdata.save();

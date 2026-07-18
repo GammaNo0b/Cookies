@@ -24,14 +24,15 @@ public class TeamQueueListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		final UUID uuid = event.getPlayer().getUniqueId();
 		Set<String> requests = Team.requests.remove(uuid);
-		if(requests != null) {
-			requests.forEach(string -> {
-				Team team = Team.TEAM_REGISTRY.getTeamByName(string);
-				if(team != null) {
-					team.sendRequest(uuid);
-				}
-			});
-		}
+		if(requests == null)
+			return;
+
+		requests.forEach(string -> {
+			Team team = Team.TEAM_REGISTRY.getTeamByName(string);
+			if(team != null) {
+				team.sendRequest(uuid);
+			}
+		});
 	}
 
 }

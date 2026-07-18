@@ -11,13 +11,14 @@ import org.bukkit.inventory.ItemStack;
 
 import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.network.EnderLinkedBlock;
+import me.gamma.cookies.object.gui.ItemInventoryHolder;
 import me.gamma.cookies.object.item.ItemProvider;
 import me.gamma.cookies.object.item.ItemStorage;
 import me.gamma.cookies.object.tile.network.EnderLinkedTileEntity;
 
 
 
-public class EnderChest extends EnderLinkedTileEntity<Inventory> implements ItemStorage {
+public class EnderChest extends EnderLinkedTileEntity<Inventory> implements ItemStorage, ItemInventoryHolder {
 
 	public EnderChest(EnderLinkedBlock<Inventory> customBlock, Block block) {
 		super(customBlock, block);
@@ -59,6 +60,24 @@ public class EnderChest extends EnderLinkedTileEntity<Inventory> implements Item
 	@Override
 	public List<Provider<ItemStack>> getItemProviders() {
 		return ItemProvider.fromInventory(this.getResource());
+	}
+
+
+	@Override
+	public Inventory getInventory() {
+		return this.getResource();
+	}
+
+
+	@Override
+	public int[] getInputSlots() {
+		return null;
+	}
+
+
+	@Override
+	public int[] getOutputSlots() {
+		return null;
 	}
 
 }

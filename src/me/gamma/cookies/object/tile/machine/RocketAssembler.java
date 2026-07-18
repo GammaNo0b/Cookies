@@ -100,13 +100,13 @@ public class RocketAssembler extends AbstractItemProcessingMachine<RocketAssembl
 
 
 	@Override
-	protected int[] getInputSlots() {
+	public int[] getInputSlots() {
 		return new int[] { PAPER_SLOT, GUNPOWDER_SLOT, FIREWORK_STAR_SLOT };
 	}
 
 
 	@Override
-	protected int[] getOutputSlots() {
+	public int[] getOutputSlots() {
 		return new int[] { 25 };
 	}
 

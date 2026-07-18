@@ -80,13 +80,13 @@ public abstract class EnchantmentMachine<D extends EnchantmentMachine.Processing
 
 
 	@Override
-	protected int[] getInputSlots() {
+	public int[] getInputSlots() {
 		return new int[] { INPUT_ITEM_SLOT, INPUT_BOOK_SLOT };
 	}
 
 
 	@Override
-	protected int[] getOutputSlots() {
+	public int[] getOutputSlots() {
 		return new int[] { OUTPUT_ITEM_SLOT, OUTPUT_BOOK_SLOT };
 	}
 

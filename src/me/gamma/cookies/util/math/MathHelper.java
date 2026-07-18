@@ -176,6 +176,19 @@ public class MathHelper {
 
 
 	/**
+	 * Returns x if x is between min and max, otherwise the value x is closer to is returned.
+	 * 
+	 * @param min the lower bound
+	 * @param max the upper bound
+	 * @param x   the value
+	 * @return the clamped value
+	 */
+	public static double clamp(double min, double max, double x) {
+		return x >= max ? max : x <= min ? min : x;
+	}
+
+
+	/**
 	 * Generates random ids as long as the exists predicate returns true.
 	 * 
 	 * @param exists predicate that determines whether an id already exists

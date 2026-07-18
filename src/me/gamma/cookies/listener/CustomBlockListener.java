@@ -19,14 +19,19 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.HopperInventorySearchEvent;
+import org.bukkit.event.inventory.HopperInventorySearchEvent.ContainerType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.gamma.cookies.init.Blocks;
 import me.gamma.cookies.object.block.AbstractCustomBlock;
+import me.gamma.cookies.object.block.AbstractCustomTileBlock;
 import me.gamma.cookies.object.block.CustomBlockStorage;
+import me.gamma.cookies.object.gui.ItemInventoryHolder;
+import me.gamma.cookies.object.tile.AbstractCustomTileEntity;
 import me.gamma.cookies.util.ItemUtils;
 
 
@@ -248,9 +253,29 @@ public class CustomBlockListener implements Listener {
 	 */
 	@EventHandler
 	private void onHopperInventorySearch(HopperInventorySearchEvent event) {
-		// TODO redirect to gui providers
-		if(CustomBlockStorage.BLOCK_STORAGE.isCustomBlock(event.getSearchBlock()))
-			event.setInventory(null);
+		Block target = event.getSearchBlock();
+		AbstractCustomBlock customBlock = CustomBlockStorage.BLOCK_STORAGE.getCustomBlock(target);
+		if(customBlock == null)
+			return;
+
+		event.setInventory(null);
+
+		if(!(customBlock instanceof AbstractCustomTileBlock<?, ?> tileBlock))
+			return;
+
+		AbstractCustomTileEntity<?, ?> tileEntity = tileBlock.getTileEntity(target);
+		if(!(tileEntity instanceof ItemInventoryHolder holder))
+			return;
+
+		Inventory inventory = null;
+		ContainerType type = event.getContainerType();
+		if(type == ContainerType.SOURCE) {
+			inventory = holder.createOutputInventory();
+		} else if(type == ContainerType.DESTINATION) {
+			inventory = holder.createInputInventory();
+		}
+
+		event.setInventory(inventory);
 	}
 
 }

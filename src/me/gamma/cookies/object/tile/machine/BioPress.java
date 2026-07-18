@@ -19,6 +19,7 @@ import me.gamma.cookies.object.fluid.FluidProvider;
 import me.gamma.cookies.object.fluid.FluidSupplier;
 import me.gamma.cookies.object.fluid.FluidType;
 import me.gamma.cookies.object.gui.BlockFaceConfig.Config;
+import me.gamma.cookies.object.gui.ItemInventoryHolder;
 import me.gamma.cookies.object.item.ItemConsumer;
 import me.gamma.cookies.object.item.ItemProvider;
 import me.gamma.cookies.util.ArrayUtils;
@@ -29,7 +30,7 @@ import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
-public class BioPress extends AbstractProcessingMachine<BioPress, BioPressBlock> implements ItemConsumer, FluidSupplier {
+public class BioPress extends AbstractProcessingMachine<BioPress, BioPressBlock> implements ItemConsumer, FluidSupplier, ItemInventoryHolder {
 
 	private static final String KEY_BIOMASS = "biomass";
 	private static final String KEY_INPUT = "input";
@@ -160,8 +161,21 @@ public class BioPress extends AbstractProcessingMachine<BioPress, BioPressBlock>
 	}
 
 
-	private int[] getInputSlots() {
+	@Override
+	public Inventory getInventory() {
+		return super.getInventory();
+	}
+
+
+	@Override
+	public int[] getInputSlots() {
 		return MachineConstants.inputSlots[this.customBlock.getTier().ordinal()];
+	}
+
+
+	@Override
+	public int[] getOutputSlots() {
+		return new int[0];
 	}
 
 

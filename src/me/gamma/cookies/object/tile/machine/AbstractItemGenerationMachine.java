@@ -16,6 +16,7 @@ import me.gamma.cookies.object.Provider;
 import me.gamma.cookies.object.block.machine.AbstractItemGenerationMachineBlock;
 import me.gamma.cookies.object.block.machine.MachineConstants;
 import me.gamma.cookies.object.gui.BlockFaceConfig;
+import me.gamma.cookies.object.gui.ItemInventoryHolder;
 import me.gamma.cookies.object.item.ItemConsumer;
 import me.gamma.cookies.object.item.ItemProvider;
 import me.gamma.cookies.object.item.ItemSupplier;
@@ -26,7 +27,7 @@ import me.gamma.cookies.util.collection.PersistentDataObject;
 
 
 
-public abstract class AbstractItemGenerationMachine<T extends AbstractItemGenerationMachine<T, B>, B extends AbstractItemGenerationMachineBlock<B, T>> extends AbstractProcessingMachine<T, B> implements ItemSupplier {
+public abstract class AbstractItemGenerationMachine<T extends AbstractItemGenerationMachine<T, B>, B extends AbstractItemGenerationMachineBlock<B, T>> extends AbstractProcessingMachine<T, B> implements ItemSupplier, ItemInventoryHolder {
 
 	private byte itemOutputAccessFlags = 0x3F;
 
@@ -86,12 +87,20 @@ public abstract class AbstractItemGenerationMachine<T extends AbstractItemGenera
 	}
 
 
-	/**
-	 * Returns the item output slots.
-	 * 
-	 * @return the output slots
-	 */
-	protected int[] getOutputSlots() {
+	@Override
+	public Inventory getInventory() {
+		return super.getInventory();
+	}
+
+
+	@Override
+	public int[] getInputSlots() {
+		return null;
+	}
+
+
+	@Override
+	public int[] getOutputSlots() {
 		return MachineConstants.getOutputSlots(this.customBlock.getTier());
 	}
 

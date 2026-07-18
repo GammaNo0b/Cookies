@@ -86,8 +86,9 @@ public class Crafter extends AbstractItemProcessingMachine<Crafter, CrafterBlock
 	public Crafter(CrafterBlock customBlock, Block block) {
 		super(customBlock, block);
 
-		int patterns = customBlock.getPatterns();
-		this.patterns = new Pattern[patterns];
+		this.patterns = new Pattern[customBlock.getPatterns()];
+		for(int i = 0; i < this.patterns.length; i++)
+			this.patterns[i] = new Pattern(i);
 	}
 
 
@@ -97,15 +98,28 @@ public class Crafter extends AbstractItemProcessingMachine<Crafter, CrafterBlock
 			return false;
 
 		List<PersistentDataObject> patterns = data.getObjectList(KEY_PATTERNS, new ArrayList<>());
-		for(int i = 0; i < this.patterns.length && i < patterns.size(); i++) {
-			this.patterns[i] = new Pattern(i);
+		int i = 0;
+		for(; i < patterns.size(); i++)
 			this.patterns[i].load(null, patterns.get(i));
-		}
+		for(; i < this.patterns.length; i++)
+			this.patterns[i].reset();
 
 		this.selectedPattern = data.getInteger(KEY_SELECTED, 0);
 		this.reuse = data.getBoolean(KEY_REUSE, false);
 		this.strategy = PersistentDataUtils.getEnum(data, KEY_STRATEGY, CraftingStrategy.class);
+		if(this.strategy == null)
+			this.strategy = CraftingStrategy.IN_ORDER;
 		this.processing = PersistentDataUtils.getItemStack(data, KEY_PROCESSING);
+
+		Inventory gui = this.getInventory();
+		for(Pattern pattern : this.patterns)
+			pattern.updateIcon(gui);
+
+		Pattern selected = this.patterns[this.selectedPattern];
+		selected.findRecipe();
+		selected.update(gui);
+
+		gui.setItem(CRAFTING_STRATEGY_SLOT, this.strategy.createIcon());
 
 		return true;
 	}
@@ -119,9 +133,10 @@ public class Crafter extends AbstractItemProcessingMachine<Crafter, CrafterBlock
 		List<PersistentDataObject> patterns = new ArrayList<>(this.patterns.length);
 		for(int i = 0; i < this.patterns.length; i++) {
 			PersistentDataObject object = new PersistentDataObject(data.getAdapterContext());
-			this.patterns[i].save(null, data);
+			this.patterns[i].save(null, object);
 			patterns.add(object);
 		}
+		data.setObjectList(KEY_PATTERNS, patterns);
 
 		data.setInteger(KEY_SELECTED, this.selectedPattern);
 		data.setBoolean(KEY_REUSE, this.reuse);
@@ -133,26 +148,13 @@ public class Crafter extends AbstractItemProcessingMachine<Crafter, CrafterBlock
 
 
 	@Override
-	public void setupInventory(Inventory inventory) {
-		super.setupInventory(inventory);
-
-		for(Pattern pattern : this.patterns)
-			pattern.updateIcon(inventory);
-
-		this.patterns[this.selectedPattern].update(inventory);
-
-		inventory.setItem(CRAFTING_STRATEGY_SLOT, this.strategy.createIcon());
-	}
-
-
-	@Override
-	protected int[] getInputSlots() {
+	public int[] getInputSlots() {
 		return new int[] { 15, 16, 17, 24, 25, 26, 33, 34, 35 };
 	}
 
 
 	@Override
-	protected int[] getOutputSlots() {
+	public int[] getOutputSlots() {
 		return new int[] { 43 };
 	}
 
@@ -425,6 +427,16 @@ public class Crafter extends AbstractItemProcessingMachine<Crafter, CrafterBlock
 
 		public Pattern(int index) {
 			this.index = index;
+		}
+
+
+		/**
+		 * Resets this pattern.
+		 */
+		private void reset() {
+			Arrays.fill(this.pattern, null);
+			this.recipe = null;
+			this.reuse = false;
 		}
 
 
